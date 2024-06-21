@@ -13,19 +13,16 @@ export default (env) => {
   return {
     mode: env.mode ?? "development",
     entry: {
-      main: ["@babel/polyfill", path.resolve(__dirname, "./src/public/index/index-entry.ts")],
-      second: ["@babel/polyfill", path.resolve(__dirname, "./src/public/second/second-entry.ts")],
+      main: ["@babel/polyfill", path.resolve(__dirname, "./src/index.ts")],
     },
     plugins: [
       new HtmlWebpackPlugin({
         filename: 'index.html',
-        template: path.resolve(__dirname, "./src/public/index/index.html"),
+        template: path.resolve(__dirname, "./src/index.html"),
+        templateParameters: {
+          title: 'Notes',
+        },
         chunks: ['main'],
-      }),
-      new HtmlWebpackPlugin({
-        filename: 'second.html',
-        template: path.resolve(__dirname, "./src/public/second/second.html"),
-        chunks: ['second'],
       }),
       new MiniCssExtractPlugin({
         filename: isDev ? "[name].css" : "css/[name][contenthash].css",
@@ -102,7 +99,7 @@ export default (env) => {
     },
     devtool: isDev ? "inline-source-map" : undefined,
     devServer: {
-      static: "./build",
+      static: "./dist",
       port: 5000,
       hot: true,
     },
