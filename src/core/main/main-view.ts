@@ -1,14 +1,14 @@
 import { ElementParams } from "../utilities/types";
 import Creator from "../utilities/creator";
 
-export default class HeaderVie {
+export default class MainVie {
     component: HTMLElement;
     constructor() {
         const headerListParams = {
-            tagName: "header",
-            classList: ["header", "redHeader"],
-            textContent: "Header",
-            id: "header",
+            tagName: "main",
+            classList: ["main"],
+            textContent: "Main",
+            id: "main",
         };
         this.component = this.returnComponent(headerListParams);
     }
