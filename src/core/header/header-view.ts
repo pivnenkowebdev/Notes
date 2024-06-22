@@ -1,8 +1,6 @@
-import { ElementParams } from "../utilities/types";
-import Creator from "../utilities/creator";
+import View from "../utilities/view";
 
-export default class HeaderVie {
-    component: HTMLElement;
+export default class HeaderView extends View {
     constructor() {
         const headerListParams = {
             tagName: "header",
@@ -10,15 +8,6 @@ export default class HeaderVie {
             textContent: "Header",
             id: "header",
         };
-        this.component = this.returnComponent(headerListParams);
-    }
-
-    returnComponent(params: ElementParams) {
-        const newComponent = new Creator(params);
-        return newComponent.getElement();
-    }
-
-    getHtmlElement() {
-        return this.component;
+        super(headerListParams);
     }
 }
