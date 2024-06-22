@@ -1,0 +1,6 @@
+export interface ElementParams {
+    tagName: string;
+    classList: string[];
+    textContent?: string;
+    id?: string | number;
+}

@@ -1,20 +1,10 @@
-import Creator from "./utilities/creator";
+import HeaderVie from "./header/header-view";
 
 export default class App {
-    constructor() {
-        this.insertTemplate();
+    constructor() {}
+
+    insertTemplate() {
+        const header = new HeaderVie();
+        document.body.append(header.getHtmlElement());
     }
-
-    insertTemplate = () => {
-        const headerObj = {
-            tagName: "header",
-            classList: ["header", "redHeader"],
-            textContent: "Header",
-            id: 1,
-        };
-
-        const header = new Creator(headerObj);
-
-        document.body.append(header.getElement());
-    };
 }
