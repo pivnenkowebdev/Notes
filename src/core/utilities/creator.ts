@@ -1,9 +1,4 @@
-interface ElementParams {
-    tagName: string;
-    classList: string[];
-    textContent?: string;
-    id?: string | number;
-}
+import { ElementParams } from "./types";
 
 abstract class BaseClassCreator {
     element: HTMLElement;

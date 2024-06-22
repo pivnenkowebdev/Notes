@@ -17,7 +17,7 @@ export default [
       sourceType: "module"
     },
     rules: {
-      "no-unused-vars": "error",
+      // "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": "error"
     }
   }
