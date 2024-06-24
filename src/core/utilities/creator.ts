@@ -8,10 +8,9 @@ abstract class BaseClassCreator {
     }
 
     abstract createNewElement(params: ElementParams): HTMLElement;
-    abstract setClassName(newElement: HTMLElement, classList: string[]): void;
-    abstract setInnerText(newElement: HTMLElement, value?: string): void;
-    abstract setId(newElement: HTMLElement, value?: string | number): void;
-    // abstract addInnerElement(): HTMLElement;
+    abstract setClassName(classList: string[]): void;
+    abstract setInnerText(value?: string): void;
+    abstract setId(value?: string | number): void;
 }
 
 export default class Creator extends BaseClassCreator {
@@ -24,28 +23,28 @@ export default class Creator extends BaseClassCreator {
     }
 
     createNewElement(params: ElementParams): HTMLElement {
-        const newElement: HTMLElement = document.createElement(params.tagName);
-        this.setClassName(newElement, params.classList);
-        this.setInnerText(newElement, params.textContent);
-        this.setId(newElement, params.id);
-        return newElement;
+        this.element = document.createElement(params.tagName);
+        this.setClassName(params.classList);
+        this.setInnerText(params.textContent);
+        this.setId(params.id);
+        return this.element;
     }
 
-    setClassName(newElement: HTMLElement, classList: string[]): void {
+    setClassName(classList: string[]): void {
         if (classList.length > 0) {
-            newElement.classList.add(...classList);
+            this.element.classList.add(...classList);
         }
     }
 
-    setInnerText(newElement: HTMLElement, value?: string) {
+    setInnerText(value?: string) {
         if (value && value.trim().length > 0) {
-            newElement.innerText = value;
+            this.element.innerText = value;
         }
     }
 
-    setId(newElement: HTMLElement, id?: string | number) {
-        if (id !== undefined) {
-            newElement.id = String(id);
+    setId(id?: string | number) {
+        if (id !== undefined && id !== null) {
+            this.element.id = String(id);
         }
     }
 }

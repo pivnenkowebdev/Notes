@@ -5,10 +5,10 @@ abstract class BaseClassView {
     component: HTMLElement;
 
     constructor(params: ElementParams) {
-        this.component = this.returnComponent(params);
+        this.component = this.getComponent(params);
     }
 
-    abstract returnComponent(params: ElementParams): HTMLElement;
+    abstract getComponent(params: ElementParams): HTMLElement;
     abstract getHtmlElement(): HTMLElement;
 }
 
@@ -17,12 +17,20 @@ export default class View extends BaseClassView {
         super(params);
     }
 
-    returnComponent(params: ElementParams): HTMLElement {
+    getComponent(params: ElementParams): HTMLElement {
         const newComponent = new Creator(params);
         return newComponent.getElement();
     }
 
     getHtmlElement(): HTMLElement {
         return this.component;
+    }
+
+    addInnerElement(params: ElementParams, parent?: HTMLElement) {
+        const innerComponent = this.getComponent(params);
+        if (parent) {
+            parent.appendChild(innerComponent);
+        }
+        return innerComponent;
     }
 }
