@@ -1,5 +1,6 @@
 import { ElementParams } from "../utilities/types";
 import View from "../utilities/view";
+import nightModeBtnView from "./night-mode-btn/night-mode-btn";
 
 const headerListParams: ElementParams = {
     tagName: "header",
@@ -28,5 +29,8 @@ export default class HeaderView extends View {
 
         const headerContent = this.createElement(contentListParams);
         this.addInnerElement(container, headerContent);
+
+        const nightModeBtn = new nightModeBtnView();
+        this.addInnerElement(headerContent, nightModeBtn);
     }
 }

@@ -7,7 +7,7 @@ const btnNightModeListParams: ElementParams = {
     id: "nightModeBtn",
 };
 
-export default class extends View {
+export default class nightModeBtnView extends View {
     constructor() {
         super(btnNightModeListParams);
     }

@@ -25,7 +25,14 @@ export default class View extends BaseClassView {
         return newElement.getHtmlElement();
     }
 
-    addInnerElement(parent: HTMLElement, element: HTMLElement): void {
-        parent.appendChild(element);
+    addInnerElement(parent: HTMLElement, element: HTMLElement | View): void {
+        if (element instanceof View) {
+            parent.appendChild(element.getComponent());
+        } else {
+            parent.appendChild(element);
+        }
     }
 }
+
+// 2. избавиться от вызова getHtmlElement?
+// 3. метод для колбэка
