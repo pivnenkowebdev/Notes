@@ -33,6 +33,3 @@ export default class View extends BaseClassView {
         }
     }
 }
-
-// 2. избавиться от вызова getHtmlElement?
-// 3. метод для колбэка

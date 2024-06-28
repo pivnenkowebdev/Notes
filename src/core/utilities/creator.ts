@@ -28,6 +28,7 @@ export default class Creator extends BaseClassCreator {
         this.setClassName(params.classList);
         this.setInnerText(params.textContent);
         this.setId(params.id);
+        this.setCallback(params.eventMode, params.callback);
         return this.element;
     }
 
@@ -46,6 +47,12 @@ export default class Creator extends BaseClassCreator {
     setId(id?: string | number) {
         if (id !== undefined && id !== null) {
             this.element.id = String(id);
+        }
+    }
+
+    setCallback(eventMode?: string, callback?: (event: Event) => void) {
+        if (eventMode && callback) {
+            this.element.addEventListener(eventMode, callback);
         }
     }
 }
