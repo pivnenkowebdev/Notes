@@ -1,8 +1,11 @@
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import path from "path";
-import { fileURLToPath } from "url";
+import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import postcssPresetEnv from "postcss-preset-env";
+import { fileURLToPath } from "url";
+import tailwind from "tailwindcss";
+import autoprefixer from"autoprefixer";
+import path from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -55,7 +58,11 @@ export default (env) => {
               loader: "postcss-loader",
               options: {
                 postcssOptions: {
-                  plugins: [postcssPresetEnv()],
+                  plugins: [
+                    postcssPresetEnv(),
+                    autoprefixer(),
+                    tailwind(),
+                  ],
                 },
               },
             },
@@ -86,6 +93,14 @@ export default (env) => {
             },
           },
         },
+      ],
+    },
+    optimization: {
+      minimize: true,
+      minimizer: [
+        new CssMinimizerPlugin({
+          test: /\.css$/i,
+        }),
       ],
     },
     resolve: {

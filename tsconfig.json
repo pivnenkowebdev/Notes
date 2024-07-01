@@ -8,9 +8,16 @@
     "jsx": "react",
     "allowJs": true,
     "moduleResolution": "node",
-    "sourceMap": true,
+    "sourceMap": true
   },
+  "include": [
+    "src/**/*",
+    "custom.d.ts"
+  ],
   "exclude": [
-    "**/node_modules/", ".git/", "webpack.config.js", "custom.d.ts", "**/.eslintrc.js"
+    "node_modules",
+    ".git",
+    "webpack.config.js",
+    "**/.eslintrc.js"
   ]
 }

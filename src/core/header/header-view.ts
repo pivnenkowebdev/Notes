@@ -4,7 +4,7 @@ import NightModeBtnView from "./night-mode-btn/night-mode-btn";
 
 const headerParams: ElementParams = {
     tagName: "header",
-    classList: ["header"],
+    classList: [],
 };
 
 const containerParams: ElementParams = {
@@ -14,7 +14,7 @@ const containerParams: ElementParams = {
 
 const contentParams: ElementParams = {
     tagName: "div",
-    classList: ["header__content"],
+    classList: ["pt-4", "pb-4", "flex", "justify-end"],
 };
 
 export default class HeaderView extends View {
