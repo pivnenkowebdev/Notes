@@ -9128,18 +9128,36 @@ var night_mode_btn_extends = (undefined && undefined.__extends) || (function () 
 
 var btnNightModeListParams = {
     tagName: "button",
-    classList: ["bg-[url('../../img/sun-icon.svg')]", "w-7", "h-7", "pt-2", "bg-cover", "bg-cyan-600"],
+    classList: [
+        "w-10",
+        "h-10",
+        "flex",
+        "justify-center",
+        "items-center",
+        "bg-cyan-600",
+        "rounded-full",
+    ],
     id: "nightModeBtn",
     eventMode: "click",
     callback: function () {
-        console.log("Night mode button clicked!");
+        ["dark", "dark:bg-black"].forEach(function (cls) { return document.body.classList.toggle(cls); });
     },
+};
+var btnWrapperSpanParams = {
+    tagName: "span",
+    classList: ["w-7", "h-7", "bg-cover", "bg-[url('../../img/sun-icon.svg')]"],
 };
 var NightModeBtnView = /** @class */ (function (_super) {
     night_mode_btn_extends(NightModeBtnView, _super);
     function NightModeBtnView() {
-        return _super.call(this, btnNightModeListParams) || this;
+        var _this = _super.call(this, btnNightModeListParams) || this;
+        _this.configureView();
+        return _this;
     }
+    NightModeBtnView.prototype.configureView = function () {
+        var btnWrapperImg = this.createElement(btnWrapperSpanParams);
+        this.addInnerElement(this.component.getHtmlElement(), btnWrapperImg);
+    };
     return NightModeBtnView;
 }(view));
 /* harmony default export */ const night_mode_btn = (NightModeBtnView);
@@ -9172,7 +9190,26 @@ var containerParams = {
 };
 var contentParams = {
     tagName: "div",
-    classList: ["pt-4", "pb-4", "flex", "justify-end"],
+    classList: [
+        "pt-4",
+        "pb-4",
+        "flex",
+        "justify-between",
+        "items-center",
+        "border-b-2",
+        "border-cyan-700",
+        "dark:border-stone-50"
+    ],
+};
+var mainTitleParams = {
+    tagName: "h1",
+    textContent: "To-Do",
+    classList: [
+        "text-xl",
+        "font-semibold",
+        "text-cyan-700",
+        "font-['Roboto_Slab']",
+    ],
 };
 var HeaderView = /** @class */ (function (_super) {
     header_view_extends(HeaderView, _super);
@@ -9186,6 +9223,8 @@ var HeaderView = /** @class */ (function (_super) {
         this.addInnerElement(this.component.getHtmlElement(), container);
         var headerContent = this.createElement(contentParams);
         this.addInnerElement(container, headerContent);
+        var mainTitle = this.createElement(mainTitleParams);
+        this.addInnerElement(headerContent, mainTitle);
         var nightModeBtn = new night_mode_btn();
         this.addInnerElement(headerContent, nightModeBtn);
     };

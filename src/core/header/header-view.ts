@@ -22,6 +22,7 @@ const contentParams: ElementParams = {
         "items-center",
         "border-b-2",
         "border-cyan-700",
+        "dark:border-stone-50",
     ],
 };
 
@@ -32,6 +33,7 @@ const mainTitleParams: ElementParams = {
         "text-xl",
         "font-semibold",
         "text-cyan-700",
+        "dark:text-gray-50",
         "font-['Roboto_Slab']",
     ],
 };

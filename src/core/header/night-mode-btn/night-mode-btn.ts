@@ -11,17 +11,26 @@ const btnNightModeListParams: ElementParams = {
         "items-center",
         "bg-cyan-600",
         "rounded-full",
+        "dark:bg-gray-50",
     ],
     id: "nightModeBtn",
     eventMode: "click",
     callback: () => {
-        console.log("Night mode button clicked!");
+        ["dark", "dark:bg-gray-900"].forEach((cls) =>
+            document.body.classList.toggle(cls)
+        );
     },
 };
 
 const btnWrapperSpanParams: ElementParams = {
     tagName: "span",
-    classList: ["w-7", "h-7", "bg-cover", "bg-[url('../../img/sun-icon.svg')]"],
+    classList: [
+        "w-7",
+        "h-7",
+        "bg-cover",
+        "bg-[url('../../img/sun-icon.svg')]",
+        "dark:dark:bg-[url('../../img/moon-icon.svg')]",
+    ],
 };
 
 export default class NightModeBtnView extends View {

@@ -1,5 +1,5 @@
 export function checkTrust<T>(value: T): asserts value is NonNullable<T> {
-    if (value === undefined || value === null || !(value instanceof Element)) {
+    if (value === undefined || value === null) {
         throw new Error(`${value} is not defined`);
     }
 }

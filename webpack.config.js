@@ -110,7 +110,6 @@ export default (env) => {
       path: path.resolve(__dirname, "dist"),
       clean: true,
       filename: "[name].[contenthash].js",
-      publicPath: '/',
     },
     devtool: isDev ? "inline-source-map" : undefined,
     devServer: {
