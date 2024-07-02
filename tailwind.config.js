@@ -7,7 +7,11 @@ export default {
       center: true,
       padding: 15,
     },
-    extend: {},
+    extend: {
+      screens: {
+        'can-hover': {'raw': '(hover: hover)'},
+      }
+    },
   },
   plugins: [],
 }

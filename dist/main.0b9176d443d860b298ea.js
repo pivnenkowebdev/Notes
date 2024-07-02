@@ -9136,16 +9136,25 @@ var btnNightModeListParams = {
         "items-center",
         "bg-cyan-600",
         "rounded-full",
+        "dark:bg-gray-50",
     ],
     id: "nightModeBtn",
     eventMode: "click",
     callback: function () {
-        ["dark", "dark:bg-black"].forEach(function (cls) { return document.body.classList.toggle(cls); });
+        ["dark", "dark:bg-gray-900"].forEach(function (cls) {
+            return document.body.classList.toggle(cls);
+        });
     },
 };
 var btnWrapperSpanParams = {
     tagName: "span",
-    classList: ["w-7", "h-7", "bg-cover", "bg-[url('../../img/sun-icon.svg')]"],
+    classList: [
+        "w-7",
+        "h-7",
+        "bg-cover",
+        "bg-[url('../../img/sun-icon.svg')]",
+        "dark:dark:bg-[url('../../img/moon-icon.svg')]",
+    ],
 };
 var NightModeBtnView = /** @class */ (function (_super) {
     night_mode_btn_extends(NightModeBtnView, _super);
@@ -9198,7 +9207,7 @@ var contentParams = {
         "items-center",
         "border-b-2",
         "border-cyan-700",
-        "dark:border-stone-50"
+        "dark:border-stone-50",
     ],
 };
 var mainTitleParams = {
@@ -9208,6 +9217,7 @@ var mainTitleParams = {
         "text-xl",
         "font-semibold",
         "text-cyan-700",
+        "dark:text-gray-50",
         "font-['Roboto_Slab']",
     ],
 };
