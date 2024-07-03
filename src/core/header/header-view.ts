@@ -58,3 +58,6 @@ export default class HeaderView extends View {
         this.addInnerElement(headerContent, nightModeBtn);
     }
 }
+
+// TO DO
+// ИЗБАВИТЬСЯ ОТ КОНТЕЙНЕРА

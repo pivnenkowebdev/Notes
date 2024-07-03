@@ -9034,7 +9034,6 @@ var Creator = /** @class */ (function (_super) {
         this.setClassName(params.classList);
         this.setInnerText(params.textContent);
         this.setId(params.id);
-        this.setCallback(params.eventMode, params.callback);
         return this.element;
     };
     Creator.prototype.setClassName = function (classList) {
@@ -9053,10 +9052,8 @@ var Creator = /** @class */ (function (_super) {
             this.element.id = String(id);
         }
     };
-    Creator.prototype.setCallback = function (eventMode, callback) {
-        if (eventMode && callback) {
-            this.element.addEventListener(eventMode, callback);
-        }
+    Creator.prototype.setListener = function (eventType, callBack) {
+        this.element.addEventListener(eventType, callBack);
     };
     return Creator;
 }(BaseClassCreator));
@@ -9140,12 +9137,7 @@ var btnNightModeListParams = {
         "hover:opacity-80",
     ],
     id: "nightModeBtn",
-    eventMode: "click",
-    callback: function () {
-        ["dark", "dark:bg-gray-900"].forEach(function (cls) {
-            return document.body.classList.toggle(cls);
-        });
-    },
+    eventType: "click",
 };
 var btnWrapperSpanParams = {
     tagName: "span",
@@ -9157,16 +9149,28 @@ var btnWrapperSpanParams = {
         "dark:dark:bg-[url('../../img/moon-icon.svg')]",
     ],
 };
+var bodyClasslist = ["dark", "bg-gray-900"];
 var NightModeBtnView = /** @class */ (function (_super) {
     night_mode_btn_extends(NightModeBtnView, _super);
     function NightModeBtnView() {
         var _this = _super.call(this, btnNightModeListParams) || this;
+        _this.appContainer = document.body;
         _this.configureView();
         return _this;
     }
+    NightModeBtnView.prototype.toggleNightMode = function () {
+        var _this = this;
+        bodyClasslist.forEach(function (className) {
+            _this.appContainer.classList.toggle(className);
+        });
+    };
     NightModeBtnView.prototype.configureView = function () {
         var btnWrapperImg = this.createElement(btnWrapperSpanParams);
         this.addInnerElement(this.component.getHtmlElement(), btnWrapperImg);
+        var eventType = btnNightModeListParams.eventType;
+        if (eventType) {
+            this.component.setListener(eventType, this.toggleNightMode.bind(this));
+        }
     };
     return NightModeBtnView;
 }(view));
@@ -9247,10 +9251,11 @@ var HeaderView = /** @class */ (function (_super) {
 
 var App = /** @class */ (function () {
     function App() {
+        this.appContainer = document.body;
     }
     App.prototype.insertTemplate = function () {
         var header = new header_view();
-        document.body.append(header.getComponent());
+        this.appContainer.append(header.getComponent());
     };
     return App;
 }());
