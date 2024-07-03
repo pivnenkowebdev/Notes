@@ -11,6 +11,7 @@ abstract class BaseClassCreator {
     abstract setClassName(classList: string[]): void;
     abstract setInnerText(value?: string): void;
     abstract setId(value?: string | number): void;
+    abstract getHtmlElement(): HTMLElement;
 }
 
 export default class Creator extends BaseClassCreator {
@@ -18,7 +19,7 @@ export default class Creator extends BaseClassCreator {
         super(params);
     }
 
-    getElement(): HTMLElement {
+    getHtmlElement(): HTMLElement {
         return this.element;
     }
 
@@ -46,5 +47,9 @@ export default class Creator extends BaseClassCreator {
         if (id !== undefined && id !== null) {
             this.element.id = String(id);
         }
+    }
+
+    setListener(eventType: string, callBack: (event: Event) => void) {
+        this.element.addEventListener(eventType, callBack);
     }
 }

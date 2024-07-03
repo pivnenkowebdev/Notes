@@ -1,12 +1,11 @@
 import HeaderView from "./header/header-view";
-import MainView from "./main/main-view";
 
 export default class App {
+    appContainer: HTMLElement = document.body;
     constructor() {}
 
     insertTemplate() {
         const header = new HeaderView();
-        const main = new MainView();
-        document.body.append(header.getHtmlElement(), main.getHtmlElement());
+        this.appContainer.append(header.getComponent());
     }
 }
