@@ -15,12 +15,7 @@ const btnNightModeListParams: ElementParams = {
         "hover:opacity-80",
     ],
     id: "nightModeBtn",
-    eventMode: "click",
-    callback: () => {
-        ["dark", "dark:bg-gray-900"].forEach((cls) =>
-            document.body.classList.toggle(cls)
-        );
-    },
+    eventType: "click",
 };
 
 const btnWrapperSpanParams: ElementParams = {
@@ -35,13 +30,26 @@ const btnWrapperSpanParams: ElementParams = {
 };
 
 export default class NightModeBtnView extends View {
+    appContainer: HTMLElement = document.body;
     constructor() {
         super(btnNightModeListParams);
         this.configureView();
     }
 
+    toggleNightMode() {
+        this.appContainer.classList.toggle("dark");
+    }
+
     configureView() {
         const btnWrapperImg = this.createElement(btnWrapperSpanParams);
         this.addInnerElement(this.component.getHtmlElement(), btnWrapperImg);
+
+        const eventType = btnNightModeListParams.eventType;
+        if (eventType) {
+            this.component.setListener(
+                eventType,
+                this.toggleNightMode.bind(this)
+            );
+        }
     }
 }
