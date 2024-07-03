@@ -9196,15 +9196,8 @@ var header_view_extends = (undefined && undefined.__extends) || (function () {
 
 var headerParams = {
     tagName: "header",
-    classList: [],
-};
-var containerParams = {
-    tagName: "div",
-    classList: ["container"],
-};
-var contentParams = {
-    tagName: "div",
     classList: [
+        "container",
         "pt-4",
         "pb-4",
         "flex",
@@ -9234,20 +9227,148 @@ var HeaderView = /** @class */ (function (_super) {
         return _this;
     }
     HeaderView.prototype.configureView = function () {
-        var container = this.createElement(containerParams);
-        this.addInnerElement(this.component.getHtmlElement(), container);
-        var headerContent = this.createElement(contentParams);
-        this.addInnerElement(container, headerContent);
         var mainTitle = this.createElement(mainTitleParams);
-        this.addInnerElement(headerContent, mainTitle);
+        this.addInnerElement(this.component.getHtmlElement(), mainTitle);
         var nightModeBtn = new night_mode_btn();
-        this.addInnerElement(headerContent, nightModeBtn);
+        this.addInnerElement(this.component.getHtmlElement(), nightModeBtn);
     };
     return HeaderView;
 }(view));
 /* harmony default export */ const header_view = (HeaderView);
 
+;// CONCATENATED MODULE: ./src/core/main/nav/links-view.ts
+var links_view_extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+var linkParams = {
+    tagName: "a",
+    classList: [],
+};
+var Link = /** @class */ (function (_super) {
+    links_view_extends(Link, _super);
+    function Link(params) {
+        var _this = _super.call(this, linkParams) || this;
+        _this.configureView();
+        return _this;
+    }
+    Link.prototype.configureView = function () {
+    };
+    return Link;
+}(view));
+/* harmony default export */ const links_view = (Link);
+
+;// CONCATENATED MODULE: ./src/core/main/nav/nav.ts
+var nav_extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+var navParams = {
+    tagName: "nav",
+    classList: [],
+};
+var linksParams = [
+    {
+        tagName: "a",
+        classList: [],
+        textContent: "all notes",
+        id: "main",
+    },
+    {
+        tagName: "a",
+        classList: [],
+        textContent: "favorites",
+        id: "vaforites",
+    }
+];
+var Nav = /** @class */ (function (_super) {
+    nav_extends(Nav, _super);
+    function Nav() {
+        var _this = _super.call(this, navParams) || this;
+        _this.configureView();
+        return _this;
+    }
+    Nav.prototype.configureView = function () {
+        var _this = this;
+        linksParams.forEach(function (item) {
+            var link = new links_view(item);
+            _this.addInnerElement(_this.getComponent(), link);
+        });
+    };
+    return Nav;
+}(view));
+/* harmony default export */ const nav_nav = (Nav);
+
+;// CONCATENATED MODULE: ./src/core/main/main-view.ts
+var main_view_extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+var mainParams = {
+    tagName: "main",
+    classList: ["container"],
+};
+var sectionControllParams = {
+    tagName: "section",
+    classList: ["pt-8", "pb-8"],
+};
+var Main = /** @class */ (function (_super) {
+    main_view_extends(Main, _super);
+    function Main() {
+        var _this = _super.call(this, mainParams) || this;
+        _this.configureView();
+        return _this;
+    }
+    Main.prototype.configureView = function () {
+        var sectionControll = this.createElement(sectionControllParams);
+        this.addInnerElement(this.component.getHtmlElement(), sectionControll);
+        var nav = new nav_nav();
+        this.addInnerElement(sectionControll, nav);
+    };
+    return Main;
+}(view));
+/* harmony default export */ const main_view = (Main);
+
 ;// CONCATENATED MODULE: ./src/core/app.ts
+
 
 var App = /** @class */ (function () {
     function App() {
@@ -9255,7 +9376,8 @@ var App = /** @class */ (function () {
     }
     App.prototype.insertTemplate = function () {
         var header = new header_view();
-        this.appContainer.append(header.getComponent());
+        var main = new main_view();
+        this.appContainer.append(header.getComponent(), main.getComponent());
     };
     return App;
 }());

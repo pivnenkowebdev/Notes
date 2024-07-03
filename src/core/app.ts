@@ -1,5 +1,5 @@
 import HeaderView from "./header/header-view";
-import Main from "./main/main.ts/main";
+import Main from "./main/main-view";
 
 export default class App {
     appContainer: HTMLElement = document.body;
