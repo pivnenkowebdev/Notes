@@ -29,6 +29,8 @@ const btnWrapperSpanParams: ElementParams = {
     ],
 };
 
+const bodyClasslist: string[] = ["dark", "bg-gray-900"];
+
 export default class NightModeBtnView extends View {
     appContainer: HTMLElement = document.body;
     constructor() {
@@ -37,7 +39,9 @@ export default class NightModeBtnView extends View {
     }
 
     toggleNightMode() {
-        this.appContainer.classList.toggle("dark");
+        bodyClasslist.forEach((className) => {
+            this.appContainer.classList.toggle(className);
+        });
     }
 
     configureView() {
