@@ -1,14 +1,22 @@
 import HeaderView from "./header/header-view";
 import Main from "./main/main-view";
+import Router from "./main/nav/rout";
 
 export default class App {
     appContainer: HTMLElement = document.body;
-    constructor() {}
+    main = new Main();
+    header = new HeaderView();
+    routing = new Router((hash: string) => this.main.renderCurrentPage(hash));
+
+    constructor() {
+        this.main.renderCurrentPage(this.routing.getCurrentHash());
+        this.insertTemplate();
+    }
 
     insertTemplate() {
-        const header = new HeaderView();
-        const main = new Main();
-
-        this.appContainer.append(header.getComponent(), main.getComponent());
+        this.appContainer.append(
+            this.header.getComponent(),
+            this.main.getComponent()
+        );
     }
 }

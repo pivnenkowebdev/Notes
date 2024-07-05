@@ -4,4 +4,5 @@ export interface ElementParams {
     textContent?: string;
     id?: string | number;
     eventType?: string;
+    href?: string;
 }

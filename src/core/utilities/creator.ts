@@ -11,6 +11,7 @@ abstract class BaseClassCreator {
     abstract setClassName(classList: string[]): void;
     abstract setInnerText(value?: string): void;
     abstract setId(value?: string | number): void;
+    abstract setHref(value?: string): void;
     abstract getHtmlElement(): HTMLElement;
 }
 
@@ -28,6 +29,7 @@ export default class Creator extends BaseClassCreator {
         this.setClassName(params.classList);
         this.setInnerText(params.textContent);
         this.setId(params.id);
+        this.setHref(params.href);
         return this.element;
     }
 
@@ -51,5 +53,11 @@ export default class Creator extends BaseClassCreator {
 
     setListener(eventType: string, callBack: (event: Event) => void) {
         this.element.addEventListener(eventType, callBack);
+    }
+
+    setHref(value?: string) {
+        if (this.element instanceof HTMLAnchorElement) {
+            this.element.href = `#${value}`;
+        }
     }
 }

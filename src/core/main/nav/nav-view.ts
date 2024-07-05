@@ -1,6 +1,5 @@
 import { ElementParams } from "../../utilities/types";
 import View from "../../utilities/view";
-import Link from "./links-view";
 
 const navParams: ElementParams = {
     tagName: "nav",
@@ -26,7 +25,8 @@ const linksParams: ElementParams[] = [
             "hover:opacity-80",
         ],
         textContent: "all notes",
-        id: "main",
+        id: "home-page",
+        href: "home-page",
     },
     {
         tagName: "a",
@@ -46,7 +46,8 @@ const linksParams: ElementParams[] = [
             "hover:opacity-80",
         ],
         textContent: "favorites",
-        id: "vaforites",
+        id: "favoritesPage",
+        href: "favorites-page",
     },
 ];
 
@@ -58,7 +59,7 @@ export default class Nav extends View {
 
     configureView() {
         linksParams.forEach((item) => {
-            const link = new Link(item);
+            const link = this.createElement(item);
             this.addInnerElement(this.getComponent(), link);
         });
     }

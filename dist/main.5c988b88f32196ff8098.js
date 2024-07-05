@@ -9034,6 +9034,7 @@ var Creator = /** @class */ (function (_super) {
         this.setClassName(params.classList);
         this.setInnerText(params.textContent);
         this.setId(params.id);
+        this.setHref(params.href);
         return this.element;
     };
     Creator.prototype.setClassName = function (classList) {
@@ -9054,6 +9055,11 @@ var Creator = /** @class */ (function (_super) {
     };
     Creator.prototype.setListener = function (eventType, callBack) {
         this.element.addEventListener(eventType, callBack);
+    };
+    Creator.prototype.setHref = function (value) {
+        if (this.element instanceof HTMLAnchorElement) {
+            this.element.href = "#".concat(value);
+        }
     };
     return Creator;
 }(BaseClassCreator));
@@ -9236,8 +9242,8 @@ var HeaderView = /** @class */ (function (_super) {
 }(view));
 /* harmony default export */ const header_view = (HeaderView);
 
-;// CONCATENATED MODULE: ./src/core/main/nav/links-view.ts
-var links_view_extends = (undefined && undefined.__extends) || (function () {
+;// CONCATENATED MODULE: ./src/core/main/nav/nav-view.ts
+var nav_view_extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -9252,62 +9258,57 @@ var links_view_extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-
-var linkParams = {
-    tagName: "a",
-    classList: [],
-};
-var Link = /** @class */ (function (_super) {
-    links_view_extends(Link, _super);
-    function Link(params) {
-        var _this = _super.call(this, linkParams) || this;
-        _this.configureView();
-        return _this;
-    }
-    Link.prototype.configureView = function () {
-    };
-    return Link;
-}(view));
-/* harmony default export */ const links_view = (Link);
-
-;// CONCATENATED MODULE: ./src/core/main/nav/nav.ts
-var nav_extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-
 
 var navParams = {
     tagName: "nav",
-    classList: [],
+    classList: ["flex", "justify-center", "gap-x-6"],
 };
 var linksParams = [
     {
         tagName: "a",
-        classList: [],
+        classList: [
+            "bg-cyan-600",
+            "rounded-lg",
+            "pt-1",
+            "pb-1",
+            "pl-3",
+            "pr-3",
+            "text-gray-50",
+            "text-xl",
+            "capitalize",
+            "cursor-pointer",
+            "dark:text-cyan-700",
+            "dark:bg-gray-50",
+            "hover:opacity-80",
+        ],
         textContent: "all notes",
-        id: "main",
+        id: "home-page",
+        href: "home-page",
     },
     {
         tagName: "a",
-        classList: [],
+        classList: [
+            "bg-cyan-600",
+            "rounded-lg",
+            "pt-1",
+            "pb-1",
+            "pl-3",
+            "pr-3",
+            "text-gray-50",
+            "text-xl",
+            "capitalize",
+            "cursor-pointer",
+            "dark:text-cyan-700",
+            "dark:bg-gray-50",
+            "hover:opacity-80",
+        ],
         textContent: "favorites",
-        id: "vaforites",
-    }
+        id: "favoritesPage",
+        href: "favorites-page",
+    },
 ];
 var Nav = /** @class */ (function (_super) {
-    nav_extends(Nav, _super);
+    nav_view_extends(Nav, _super);
     function Nav() {
         var _this = _super.call(this, navParams) || this;
         _this.configureView();
@@ -9316,13 +9317,83 @@ var Nav = /** @class */ (function (_super) {
     Nav.prototype.configureView = function () {
         var _this = this;
         linksParams.forEach(function (item) {
-            var link = new links_view(item);
+            var link = _this.createElement(item);
             _this.addInnerElement(_this.getComponent(), link);
         });
     };
     return Nav;
 }(view));
-/* harmony default export */ const nav_nav = (Nav);
+/* harmony default export */ const nav_view = (Nav);
+
+;// CONCATENATED MODULE: ./src/core/main/home-page/home-page-view.ts
+var home_page_view_extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+var homePageParams = {
+    tagName: "ul",
+    classList: [],
+    textContent: "Main",
+};
+var HomePage = /** @class */ (function (_super) {
+    home_page_view_extends(HomePage, _super);
+    function HomePage() {
+        var _this = _super.call(this, homePageParams) || this;
+        _this.configureView();
+        return _this;
+    }
+    HomePage.prototype.configureView = function () {
+    };
+    return HomePage;
+}(view));
+/* harmony default export */ const home_page_view = (HomePage);
+
+;// CONCATENATED MODULE: ./src/core/main/favorites/favorites-page-view.ts
+var favorites_page_view_extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+var favoritesPageParams = {
+    tagName: "ul",
+    classList: [],
+    textContent: "Favorites",
+};
+var FavoritesPage = /** @class */ (function (_super) {
+    favorites_page_view_extends(FavoritesPage, _super);
+    function FavoritesPage() {
+        var _this = _super.call(this, favoritesPageParams) || this;
+        _this.configureView();
+        return _this;
+    }
+    FavoritesPage.prototype.configureView = function () {
+    };
+    return FavoritesPage;
+}(view));
+/* harmony default export */ const favorites_page_view = (FavoritesPage);
 
 ;// CONCATENATED MODULE: ./src/core/main/main-view.ts
 var main_view_extends = (undefined && undefined.__extends) || (function () {
@@ -9342,6 +9413,8 @@ var main_view_extends = (undefined && undefined.__extends) || (function () {
 })();
 
 
+
+
 var mainParams = {
     tagName: "main",
     classList: ["container"],
@@ -9350,34 +9423,86 @@ var sectionControllParams = {
     tagName: "section",
     classList: ["pt-8", "pb-8"],
 };
+var wrapperListNotesParams = {
+    tagName: "section",
+    classList: [],
+};
 var Main = /** @class */ (function (_super) {
     main_view_extends(Main, _super);
     function Main() {
         var _this = _super.call(this, mainParams) || this;
+        _this.wrapperListNotes = _this.createElement(wrapperListNotesParams);
         _this.configureView();
         return _this;
+        // this.renderCurrentPage(urlPage);
     }
     Main.prototype.configureView = function () {
         var sectionControll = this.createElement(sectionControllParams);
         this.addInnerElement(this.component.getHtmlElement(), sectionControll);
-        var nav = new nav_nav();
+        var nav = new nav_view();
         this.addInnerElement(sectionControll, nav);
+        this.addInnerElement(this.component.getHtmlElement(), this.wrapperListNotes);
+    };
+    Main.prototype.cleanWrapper = function () {
+        this.wrapperListNotes.innerHTML = '';
+    };
+    Main.prototype.renderCurrentPage = function (urlPage) {
+        this.cleanWrapper();
+        switch (urlPage) {
+            case "home-page":
+                var homePage = new home_page_view();
+                this.addInnerElement(this.wrapperListNotes, homePage);
+                break;
+            case "favorites-page":
+                var favoritesPage = new favorites_page_view();
+                this.addInnerElement(this.wrapperListNotes, favoritesPage);
+                break;
+        }
     };
     return Main;
 }(view));
 /* harmony default export */ const main_view = (Main);
 
+;// CONCATENATED MODULE: ./src/core/main/nav/rout.ts
+var Router = /** @class */ (function () {
+    function Router(onHashChange) {
+        this.initialPage = "home-page";
+        this.currentHash = this.initialPage;
+        this.onHashChange = onHashChange;
+        this.rout();
+    }
+    Router.prototype.rout = function () {
+        var _this = this;
+        location.replace("".concat(location.pathname, "#") + this.initialPage);
+        window.addEventListener("hashchange", function () {
+            _this.currentHash = window.location.hash.slice(1);
+            _this.onHashChange(_this.currentHash);
+        });
+    };
+    Router.prototype.getCurrentHash = function () {
+        return this.currentHash;
+    };
+    return Router;
+}());
+/* harmony default export */ const rout = (Router);
+
 ;// CONCATENATED MODULE: ./src/core/app.ts
+
 
 
 var App = /** @class */ (function () {
     function App() {
+        var _this = this;
         this.appContainer = document.body;
+        this.main = new main_view();
+        this.header = new header_view();
+        this.routing = new rout(function (hash) { return _this.main.renderCurrentPage(hash); });
+        this.main.renderCurrentPage(this.routing.getCurrentHash());
+        this.insertTemplate();
+        console.log(location);
     }
     App.prototype.insertTemplate = function () {
-        var header = new header_view();
-        var main = new main_view();
-        this.appContainer.append(header.getComponent(), main.getComponent());
+        this.appContainer.append(this.header.getComponent(), this.main.getComponent());
     };
     return App;
 }());
