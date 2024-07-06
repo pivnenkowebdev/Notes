@@ -12,6 +12,7 @@ abstract class BaseClassCreator {
     abstract setInnerText(value?: string): void;
     abstract setId(value?: string | number): void;
     abstract setHref(value?: string): void;
+    abstract setListener(value: string, callBack: (event: Event) => void): void;
     abstract getHtmlElement(): HTMLElement;
 }
 

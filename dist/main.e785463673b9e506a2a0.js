@@ -9354,8 +9354,7 @@ var HomePage = /** @class */ (function (_super) {
         _this.configureView();
         return _this;
     }
-    HomePage.prototype.configureView = function () {
-    };
+    HomePage.prototype.configureView = function () { };
     return HomePage;
 }(view));
 /* harmony default export */ const home_page_view = (HomePage);
@@ -9389,8 +9388,7 @@ var FavoritesPage = /** @class */ (function (_super) {
         _this.configureView();
         return _this;
     }
-    FavoritesPage.prototype.configureView = function () {
-    };
+    FavoritesPage.prototype.configureView = function () { };
     return FavoritesPage;
 }(view));
 /* harmony default export */ const favorites_page_view = (FavoritesPage);
@@ -9434,7 +9432,6 @@ var Main = /** @class */ (function (_super) {
         _this.wrapperListNotes = _this.createElement(wrapperListNotesParams);
         _this.configureView();
         return _this;
-        // this.renderCurrentPage(urlPage);
     }
     Main.prototype.configureView = function () {
         var sectionControll = this.createElement(sectionControllParams);
@@ -9444,19 +9441,21 @@ var Main = /** @class */ (function (_super) {
         this.addInnerElement(this.component.getHtmlElement(), this.wrapperListNotes);
     };
     Main.prototype.cleanWrapper = function () {
-        this.wrapperListNotes.innerHTML = '';
+        this.wrapperListNotes.innerHTML = "";
     };
     Main.prototype.renderCurrentPage = function (urlPage) {
         this.cleanWrapper();
         switch (urlPage) {
-            case "home-page":
+            case "home-page": {
                 var homePage = new home_page_view();
                 this.addInnerElement(this.wrapperListNotes, homePage);
                 break;
-            case "favorites-page":
+            }
+            case "favorites-page": {
                 var favoritesPage = new favorites_page_view();
                 this.addInnerElement(this.wrapperListNotes, favoritesPage);
                 break;
+            }
         }
     };
     return Main;
@@ -9477,7 +9476,20 @@ var Router = /** @class */ (function () {
         window.addEventListener("hashchange", function () {
             _this.currentHash = window.location.hash.slice(1);
             _this.onHashChange(_this.currentHash);
+            _this.updateTitle(_this.currentHash);
         });
+    };
+    Router.prototype.updateTitle = function (hash) {
+        switch (hash) {
+            case "home-page": {
+                document.title = "Notes | Home";
+                break;
+            }
+            case "favorites-page": {
+                document.title = "Notes | Favorites";
+                break;
+            }
+        }
     };
     Router.prototype.getCurrentHash = function () {
         return this.currentHash;
@@ -9499,7 +9511,6 @@ var App = /** @class */ (function () {
         this.routing = new rout(function (hash) { return _this.main.renderCurrentPage(hash); });
         this.main.renderCurrentPage(this.routing.getCurrentHash());
         this.insertTemplate();
-        console.log(location);
     }
     App.prototype.insertTemplate = function () {
         this.appContainer.append(this.header.getComponent(), this.main.getComponent());
