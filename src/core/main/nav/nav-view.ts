@@ -1,11 +1,6 @@
 import { ElementParams } from "../../utilities/types";
 import View from "../../utilities/view";
 
-const navParams: ElementParams = {
-    tagName: "nav",
-    classList: ["flex", "justify-center", "gap-x-6"],
-};
-
 const linksParams: ElementParams[] = [
     {
         tagName: "a",
@@ -53,6 +48,11 @@ const linksParams: ElementParams[] = [
 
 export default class Nav extends View {
     constructor() {
+        const navParams: ElementParams = {
+            tagName: "nav",
+            classList: ["flex", "justify-center", "gap-x-6"],
+        };
+
         super(navParams);
         this.configureView();
     }

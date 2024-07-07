@@ -3,6 +3,7 @@ export interface ElementParams {
     classList: string[];
     textContent?: string;
     id?: string | number;
-    eventType?: string;
     href?: string;
+    eventType?: string;
+    callback?: (event: Event) => void;
 }

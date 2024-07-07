@@ -1,19 +1,22 @@
 import { ElementParams } from "./types";
 
 abstract class BaseClassCreator {
-    element: HTMLElement;
+    protected element: HTMLElement;
 
     constructor(params: ElementParams) {
         this.element = this.createNewElement(params);
     }
 
-    abstract createNewElement(params: ElementParams): HTMLElement;
-    abstract setClassName(classList: string[]): void;
-    abstract setInnerText(value?: string): void;
-    abstract setId(value?: string | number): void;
-    abstract setHref(value?: string): void;
-    abstract setListener(value: string, callBack: (event: Event) => void): void;
-    abstract getHtmlElement(): HTMLElement;
+    protected abstract createNewElement(params: ElementParams): HTMLElement;
+    protected abstract setClassName(classList: string[]): void;
+    protected abstract setInnerText(value?: string): void;
+    protected abstract setId(value?: string | number): void;
+    protected abstract setHref(value?: string): void;
+    protected abstract setCallback(
+        eventType: string,
+        callBack?: (event?: Event) => void
+    ): void;
+    protected abstract getHtmlElement(): HTMLElement;
 }
 
 export default class Creator extends BaseClassCreator {
@@ -21,44 +24,50 @@ export default class Creator extends BaseClassCreator {
         super(params);
     }
 
-    getHtmlElement(): HTMLElement {
-        return this.element;
-    }
-
-    createNewElement(params: ElementParams): HTMLElement {
+    protected createNewElement(params: ElementParams): HTMLElement {
         this.element = document.createElement(params.tagName);
         this.setClassName(params.classList);
         this.setInnerText(params.textContent);
         this.setId(params.id);
         this.setHref(params.href);
+        this.setCallback(params.eventType, params.callback);
         return this.element;
     }
 
-    setClassName(classList: string[]): void {
+    getHtmlElement(): HTMLElement {
+        return this.element;
+    }
+
+    protected setClassName(classList: string[]): void {
         if (classList.length > 0) {
             this.element.classList.add(...classList);
         }
     }
 
-    setInnerText(value?: string) {
+    protected setInnerText(value?: string) {
         if (value && value.trim().length > 0) {
             this.element.innerText = value;
         }
     }
 
-    setId(id?: string | number) {
+    protected setId(id?: string | number) {
         if (id !== undefined && id !== null) {
             this.element.id = String(id);
         }
     }
 
-    setListener(eventType: string, callBack: (event: Event) => void) {
-        this.element.addEventListener(eventType, callBack);
-    }
-
-    setHref(value?: string) {
+    protected setHref(value?: string) {
         if (this.element instanceof HTMLAnchorElement) {
             this.element.href = `#${value}`;
+        }
+    }
+
+    protected setCallback(
+        eventType?: string,
+        callBack?: (event?: Event) => void
+    ) {
+        if (callBack !== undefined && eventType !== undefined) {
+            this.element.addEventListener("click", () => callBack());
         }
     }
 }

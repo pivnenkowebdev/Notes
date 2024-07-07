@@ -9026,15 +9026,16 @@ var Creator = /** @class */ (function (_super) {
     function Creator(params) {
         return _super.call(this, params) || this;
     }
-    Creator.prototype.getHtmlElement = function () {
-        return this.element;
-    };
     Creator.prototype.createNewElement = function (params) {
         this.element = document.createElement(params.tagName);
         this.setClassName(params.classList);
         this.setInnerText(params.textContent);
         this.setId(params.id);
         this.setHref(params.href);
+        this.setCallback(params.callback);
+        return this.element;
+    };
+    Creator.prototype.getHtmlElement = function () {
         return this.element;
     };
     Creator.prototype.setClassName = function (classList) {
@@ -9053,12 +9054,14 @@ var Creator = /** @class */ (function (_super) {
             this.element.id = String(id);
         }
     };
-    Creator.prototype.setListener = function (eventType, callBack) {
-        this.element.addEventListener(eventType, callBack);
-    };
     Creator.prototype.setHref = function (value) {
         if (this.element instanceof HTMLAnchorElement) {
             this.element.href = "#".concat(value);
+        }
+    };
+    Creator.prototype.setCallback = function (callBack) {
+        if (callBack !== undefined) {
+            this.element.addEventListener("click", function (e) { return callBack(e); });
         }
     };
     return Creator;
@@ -9129,22 +9132,6 @@ var night_mode_btn_extends = (undefined && undefined.__extends) || (function () 
     };
 })();
 
-var btnNightModeListParams = {
-    tagName: "button",
-    classList: [
-        "w-10",
-        "h-10",
-        "flex",
-        "justify-center",
-        "items-center",
-        "rounded-full",
-        "bg-cyan-600",
-        "dark:bg-gray-50",
-        "hover:opacity-80",
-    ],
-    id: "nightModeBtn",
-    eventType: "click",
-};
 var btnWrapperSpanParams = {
     tagName: "span",
     classList: [
@@ -9159,12 +9146,29 @@ var bodyClasslist = ["dark", "bg-gray-900"];
 var NightModeBtnView = /** @class */ (function (_super) {
     night_mode_btn_extends(NightModeBtnView, _super);
     function NightModeBtnView() {
-        var _this = _super.call(this, btnNightModeListParams) || this;
+        var _this = this;
+        var btnNightModeListParams = {
+            tagName: "button",
+            classList: [
+                "w-10",
+                "h-10",
+                "flex",
+                "justify-center",
+                "items-center",
+                "rounded-full",
+                "bg-cyan-600",
+                "dark:bg-gray-50",
+                "hover:opacity-80",
+            ],
+            id: "nightModeBtn",
+            callback: function (e) { return _this.toggleNightMode(e); },
+        };
+        _this = _super.call(this, btnNightModeListParams) || this;
         _this.appContainer = document.body;
         _this.configureView();
         return _this;
     }
-    NightModeBtnView.prototype.toggleNightMode = function () {
+    NightModeBtnView.prototype.toggleNightMode = function (e) {
         var _this = this;
         bodyClasslist.forEach(function (className) {
             _this.appContainer.classList.toggle(className);
@@ -9173,10 +9177,6 @@ var NightModeBtnView = /** @class */ (function (_super) {
     NightModeBtnView.prototype.configureView = function () {
         var btnWrapperImg = this.createElement(btnWrapperSpanParams);
         this.addInnerElement(this.component.getHtmlElement(), btnWrapperImg);
-        var eventType = btnNightModeListParams.eventType;
-        if (eventType) {
-            this.component.setListener(eventType, this.toggleNightMode.bind(this));
-        }
     };
     return NightModeBtnView;
 }(view));
@@ -9200,20 +9200,6 @@ var header_view_extends = (undefined && undefined.__extends) || (function () {
 })();
 
 
-var headerParams = {
-    tagName: "header",
-    classList: [
-        "container",
-        "pt-4",
-        "pb-4",
-        "flex",
-        "justify-between",
-        "items-center",
-        "border-b-2",
-        "border-cyan-700",
-        "dark:border-stone-50",
-    ],
-};
 var mainTitleParams = {
     tagName: "h1",
     textContent: "To-Do",
@@ -9228,7 +9214,22 @@ var mainTitleParams = {
 var HeaderView = /** @class */ (function (_super) {
     header_view_extends(HeaderView, _super);
     function HeaderView() {
-        var _this = _super.call(this, headerParams) || this;
+        var _this = this;
+        var headerParams = {
+            tagName: "header",
+            classList: [
+                "container",
+                "pt-4",
+                "pb-4",
+                "flex",
+                "justify-between",
+                "items-center",
+                "border-b-2",
+                "border-cyan-700",
+                "dark:border-stone-50",
+            ],
+        };
+        _this = _super.call(this, headerParams) || this;
         _this.configureView();
         return _this;
     }
@@ -9259,10 +9260,6 @@ var nav_view_extends = (undefined && undefined.__extends) || (function () {
     };
 })();
 
-var navParams = {
-    tagName: "nav",
-    classList: ["flex", "justify-center", "gap-x-6"],
-};
 var linksParams = [
     {
         tagName: "a",
@@ -9310,7 +9307,12 @@ var linksParams = [
 var Nav = /** @class */ (function (_super) {
     nav_view_extends(Nav, _super);
     function Nav() {
-        var _this = _super.call(this, navParams) || this;
+        var _this = this;
+        var navParams = {
+            tagName: "nav",
+            classList: ["flex", "justify-center", "gap-x-6"],
+        };
+        _this = _super.call(this, navParams) || this;
         _this.configureView();
         return _this;
     }
@@ -9413,10 +9415,6 @@ var main_view_extends = (undefined && undefined.__extends) || (function () {
 
 
 
-var mainParams = {
-    tagName: "main",
-    classList: ["container"],
-};
 var sectionControllParams = {
     tagName: "section",
     classList: ["pt-8", "pb-8"],
@@ -9428,7 +9426,12 @@ var wrapperListNotesParams = {
 var Main = /** @class */ (function (_super) {
     main_view_extends(Main, _super);
     function Main() {
-        var _this = _super.call(this, mainParams) || this;
+        var _this = this;
+        var mainParams = {
+            tagName: "main",
+            classList: ["container"],
+        };
+        _this = _super.call(this, mainParams) || this;
         _this.wrapperListNotes = _this.createElement(wrapperListNotesParams);
         _this.configureView();
         return _this;

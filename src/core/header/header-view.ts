@@ -2,21 +2,6 @@ import { ElementParams } from "../utilities/types";
 import View from "../utilities/view";
 import NightModeBtnView from "./night-mode-btn/night-mode-btn";
 
-const headerParams: ElementParams = {
-    tagName: "header",
-    classList: [
-        "container",
-        "pt-4",
-        "pb-4",
-        "flex",
-        "justify-between",
-        "items-center",
-        "border-b-2",
-        "border-cyan-700",
-        "dark:border-stone-50",
-    ],
-};
-
 const mainTitleParams: ElementParams = {
     tagName: "h1",
     textContent: "To-Do",
@@ -31,6 +16,21 @@ const mainTitleParams: ElementParams = {
 
 export default class HeaderView extends View {
     constructor() {
+        const headerParams: ElementParams = {
+            tagName: "header",
+            classList: [
+                "container",
+                "pt-4",
+                "pb-4",
+                "flex",
+                "justify-between",
+                "items-center",
+                "border-b-2",
+                "border-cyan-700",
+                "dark:border-stone-50",
+            ],
+        };
+
         super(headerParams);
         this.configureView();
     }

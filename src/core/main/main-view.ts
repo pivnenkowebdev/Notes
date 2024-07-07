@@ -4,11 +4,6 @@ import Nav from "./nav/nav-view";
 import HomePage from "./home-page/home-page-view";
 import FavoritesPage from "./favorites/favorites-page-view";
 
-const mainParams: ElementParams = {
-    tagName: "main",
-    classList: ["container"],
-};
-
 const sectionControllParams: ElementParams = {
     tagName: "section",
     classList: ["pt-8", "pb-8"],
@@ -22,6 +17,11 @@ const wrapperListNotesParams: ElementParams = {
 export default class Main extends View {
     wrapperListNotes: HTMLElement;
     constructor() {
+        const mainParams: ElementParams = {
+            tagName: "main",
+            classList: ["container"],
+        };
+
         super(mainParams);
         this.wrapperListNotes = this.createElement(wrapperListNotesParams);
         this.configureView();
