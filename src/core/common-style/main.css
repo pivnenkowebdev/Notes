@@ -2,3 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@500&display=swap");
+
+:root {
+    --btn-current-bg-light: #0b708a;
+    --btn-current-bg-dark: #aaafb1;
+}
+
+@layer utilities {
+    .active {
+        @apply bg-[var(--btn-current-bg-light)];
+    }
+    .dark .active {
+        @apply bg-[var(--btn-current-bg-dark)];
+    }
+}

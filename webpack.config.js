@@ -1,11 +1,11 @@
+import path from "path";
+import { fileURLToPath } from "url";
+import postcssPresetEnv from "postcss-preset-env";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
-import postcssPresetEnv from "postcss-preset-env";
-import { fileURLToPath } from "url";
 import tailwind from "tailwindcss";
 import autoprefixer from"autoprefixer";
-import path from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

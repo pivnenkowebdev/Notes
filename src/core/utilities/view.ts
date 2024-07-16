@@ -2,13 +2,13 @@ import { ElementParams } from "./types";
 import Creator from "./creator";
 
 abstract class BaseClassView {
-    component: Creator;
+    protected component: Creator;
 
     constructor(params: ElementParams) {
         this.component = new Creator(params);
     }
-    abstract getComponent(): HTMLElement;
-    abstract createElement(params: ElementParams): HTMLElement;
+    protected abstract getComponent(): HTMLElement;
+    protected abstract createElement(params: ElementParams): HTMLElement;
 }
 
 export default class View extends BaseClassView {
@@ -20,12 +20,15 @@ export default class View extends BaseClassView {
         return this.component.getHtmlElement();
     }
 
-    createElement(params: ElementParams) {
+    protected createElement(params: ElementParams) {
         const newElement = new Creator(params);
         return newElement.getHtmlElement();
     }
 
-    addInnerElement(parent: HTMLElement, element: HTMLElement | View): void {
+    protected addInnerElement(
+        parent: HTMLElement,
+        element: HTMLElement | View
+    ): void {
         if (element instanceof View) {
             parent.appendChild(element.getComponent());
         } else {

@@ -7,10 +7,8 @@ const linksParams: ElementParams[] = [
         classList: [
             "bg-cyan-600",
             "rounded-lg",
-            "pt-1",
-            "pb-1",
-            "pl-3",
-            "pr-3",
+            "py-1",
+            "px-3",
             "text-gray-50",
             "text-xl",
             "capitalize",
@@ -18,6 +16,7 @@ const linksParams: ElementParams[] = [
             "dark:text-cyan-700",
             "dark:bg-gray-50",
             "hover:opacity-80",
+            "active",
         ],
         textContent: "all notes",
         id: "home-page",
@@ -28,10 +27,8 @@ const linksParams: ElementParams[] = [
         classList: [
             "bg-cyan-600",
             "rounded-lg",
-            "pt-1",
-            "pb-1",
-            "pl-3",
-            "pr-3",
+            "py-1",
+            "px-3",
             "text-gray-50",
             "text-xl",
             "capitalize",
@@ -51,6 +48,8 @@ export default class Nav extends View {
         const navParams: ElementParams = {
             tagName: "nav",
             classList: ["flex", "justify-center", "gap-x-6"],
+            eventType: "click",
+            callback: (event) => this.setCurrentLink(event),
         };
 
         super(navParams);
@@ -63,4 +62,23 @@ export default class Nav extends View {
             this.addInnerElement(this.getComponent(), link);
         });
     }
+
+    setCurrentLink(event: Event) {
+        const currentLink = event.target;
+        if (
+            currentLink instanceof HTMLAnchorElement &&
+            !currentLink.classList.contains("active")
+        ) {
+            const activeLink = this.component
+                .getHtmlElement()
+                .querySelector("a.active");
+            activeLink?.classList.remove("active");
+            currentLink.classList.add("active");
+        }
+    }
 }
+
+// 1. Проверять клик внутри nav
+// 2. Если клик является ссылкой и на ней нет класса активности
+// 2.1. Нпходить активную кунопку и удалять с неё класс
+// 2.2. На текущую кнопку вешать класс активности

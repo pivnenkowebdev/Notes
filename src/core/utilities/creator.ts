@@ -12,11 +12,12 @@ abstract class BaseClassCreator {
     protected abstract setInnerText(value?: string): void;
     protected abstract setId(value?: string | number): void;
     protected abstract setHref(value?: string): void;
+    protected abstract setDataAttr(nameAttr?: string, valueAttr?: string): void;
     protected abstract setCallback(
         eventType: string,
         callBack?: (event?: Event) => void
     ): void;
-    protected abstract getHtmlElement(): HTMLElement;
+    abstract getHtmlElement(): HTMLElement;
 }
 
 export default class Creator extends BaseClassCreator {
@@ -30,6 +31,7 @@ export default class Creator extends BaseClassCreator {
         this.setInnerText(params.textContent);
         this.setId(params.id);
         this.setHref(params.href);
+        this.setDataAttr(params.nameAttr, params.valueAttr);
         this.setCallback(params.eventType, params.callback);
         return this.element;
     }
@@ -62,12 +64,20 @@ export default class Creator extends BaseClassCreator {
         }
     }
 
+    protected setDataAttr(nameAttr?: string, valueAttr?: string) {
+        if (nameAttr !== undefined && valueAttr !== undefined) {
+            this.element.setAttribute(nameAttr, valueAttr);
+        }
+    }
+
     protected setCallback(
         eventType?: string,
         callBack?: (event?: Event) => void
     ) {
-        if (callBack !== undefined && eventType !== undefined) {
-            this.element.addEventListener("click", () => callBack());
+        if (eventType !== undefined && callBack !== undefined) {
+            this.element.addEventListener(eventType, (event) =>
+                callBack(event)
+            );
         }
     }
 }

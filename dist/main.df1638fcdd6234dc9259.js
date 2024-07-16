@@ -9032,7 +9032,8 @@ var Creator = /** @class */ (function (_super) {
         this.setInnerText(params.textContent);
         this.setId(params.id);
         this.setHref(params.href);
-        this.setCallback(params.callback);
+        this.setDataAttr(params.nameAttr, params.valueAttr);
+        this.setCallback(params.eventType, params.callback);
         return this.element;
     };
     Creator.prototype.getHtmlElement = function () {
@@ -9059,9 +9060,14 @@ var Creator = /** @class */ (function (_super) {
             this.element.href = "#".concat(value);
         }
     };
-    Creator.prototype.setCallback = function (callBack) {
-        if (callBack !== undefined) {
-            this.element.addEventListener("click", function (e) { return callBack(e); });
+    Creator.prototype.setDataAttr = function (nameAttr, valueAttr) {
+        if (nameAttr !== undefined && valueAttr !== undefined) {
+            this.element.setAttribute(nameAttr, valueAttr);
+        }
+    };
+    Creator.prototype.setCallback = function (eventType, callBack) {
+        if (eventType !== undefined && callBack !== undefined) {
+            this.element.addEventListener(eventType, function (event) { return callBack(event); });
         }
     };
     return Creator;
@@ -9161,22 +9167,23 @@ var NightModeBtnView = /** @class */ (function (_super) {
                 "hover:opacity-80",
             ],
             id: "nightModeBtn",
-            callback: function (e) { return _this.toggleNightMode(e); },
+            eventType: "click",
+            callback: function () { return _this.toggleNightMode(); },
         };
         _this = _super.call(this, btnNightModeListParams) || this;
         _this.appContainer = document.body;
         _this.configureView();
         return _this;
     }
-    NightModeBtnView.prototype.toggleNightMode = function (e) {
+    NightModeBtnView.prototype.configureView = function () {
+        var btnWrapperImg = this.createElement(btnWrapperSpanParams);
+        this.addInnerElement(this.component.getHtmlElement(), btnWrapperImg);
+    };
+    NightModeBtnView.prototype.toggleNightMode = function () {
         var _this = this;
         bodyClasslist.forEach(function (className) {
             _this.appContainer.classList.toggle(className);
         });
-    };
-    NightModeBtnView.prototype.configureView = function () {
-        var btnWrapperImg = this.createElement(btnWrapperSpanParams);
-        this.addInnerElement(this.component.getHtmlElement(), btnWrapperImg);
     };
     return NightModeBtnView;
 }(view));
@@ -9266,10 +9273,8 @@ var linksParams = [
         classList: [
             "bg-cyan-600",
             "rounded-lg",
-            "pt-1",
-            "pb-1",
-            "pl-3",
-            "pr-3",
+            "py-1",
+            "px-3",
             "text-gray-50",
             "text-xl",
             "capitalize",
@@ -9277,20 +9282,21 @@ var linksParams = [
             "dark:text-cyan-700",
             "dark:bg-gray-50",
             "hover:opacity-80",
+            "currentBtn",
         ],
         textContent: "all notes",
         id: "home-page",
         href: "home-page",
+        nameAttr: "data-link",
+        valueAttr: "",
     },
     {
         tagName: "a",
         classList: [
             "bg-cyan-600",
             "rounded-lg",
-            "pt-1",
-            "pb-1",
-            "pl-3",
-            "pr-3",
+            "py-1",
+            "px-3",
             "text-gray-50",
             "text-xl",
             "capitalize",
@@ -9302,6 +9308,8 @@ var linksParams = [
         textContent: "favorites",
         id: "favoritesPage",
         href: "favorites-page",
+        nameAttr: "data-link",
+        valueAttr: "",
     },
 ];
 var Nav = /** @class */ (function (_super) {
@@ -9311,6 +9319,8 @@ var Nav = /** @class */ (function (_super) {
         var navParams = {
             tagName: "nav",
             classList: ["flex", "justify-center", "gap-x-6"],
+            eventType: "click",
+            callback: function (event) { return _this.setCurrentLink(event); },
         };
         _this = _super.call(this, navParams) || this;
         _this.configureView();
@@ -9322,6 +9332,10 @@ var Nav = /** @class */ (function (_super) {
             var link = _this.createElement(item);
             _this.addInnerElement(_this.getComponent(), link);
         });
+    };
+    Nav.prototype.setCurrentLink = function (event) {
+        var isLink = event.target;
+        console.log(isLink);
     };
     return Nav;
 }(view));

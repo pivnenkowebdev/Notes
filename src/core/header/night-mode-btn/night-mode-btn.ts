@@ -39,14 +39,14 @@ export default class NightModeBtnView extends View {
         this.configureView();
     }
 
+    configureView() {
+        const btnWrapperImg = this.createElement(btnWrapperSpanParams);
+        this.addInnerElement(this.component.getHtmlElement(), btnWrapperImg);
+    }
+
     toggleNightMode() {
         bodyClasslist.forEach((className) => {
             this.appContainer.classList.toggle(className);
         });
-    }
-
-    configureView() {
-        const btnWrapperImg = this.createElement(btnWrapperSpanParams);
-        this.addInnerElement(this.component.getHtmlElement(), btnWrapperImg);
     }
 }
