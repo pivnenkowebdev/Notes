@@ -1,9 +1,9 @@
 import HeaderView from "./header/header-view";
 import Main from "./main/main-view";
 import Router from "./main/nav/rout";
+export const appContainer: HTMLElement = document.body;
 
 export default class App {
-    appContainer: HTMLElement = document.body;
     main = new Main();
     header = new HeaderView();
     routing = new Router((hash: string) => this.main.renderCurrentPage(hash));
@@ -14,7 +14,7 @@ export default class App {
     }
 
     insertTemplate() {
-        this.appContainer.append(
+        appContainer.append(
             this.header.getComponent(),
             this.main.getComponent()
         );

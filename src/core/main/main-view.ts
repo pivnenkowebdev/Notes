@@ -1,12 +1,13 @@
 import { ElementParams } from "../utilities/types";
 import View from "../utilities/view";
 import Nav from "./nav/nav-view";
+import NewNoteBtn from "./note/new-note-btn";
 import HomePage from "./home-page/home-page-view";
 import FavoritesPage from "./favorites/favorites-page-view";
 
 const sectionControllParams: ElementParams = {
     tagName: "section",
-    classList: ["pt-8", "pb-8"],
+    classList: ["pt-8", "pb-12", "flex", "flex-col", "gap-4", "items-center"],
 };
 
 const wrapperListNotesParams: ElementParams = {
@@ -33,6 +34,9 @@ export default class Main extends View {
 
         const nav = new Nav();
         this.addInnerElement(sectionControll, nav);
+
+        const newNoteBtn = new NewNoteBtn();
+        this.addInnerElement(sectionControll, newNoteBtn);
 
         this.addInnerElement(
             this.component.getHtmlElement(),

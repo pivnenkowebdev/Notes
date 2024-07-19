@@ -9067,7 +9067,9 @@ var Creator = /** @class */ (function (_super) {
     };
     Creator.prototype.setCallback = function (eventType, callBack) {
         if (eventType !== undefined && callBack !== undefined) {
-            this.element.addEventListener(eventType, function (event) { return callBack(event); });
+            this.element.addEventListener(eventType, function (event) {
+                return callBack(event);
+            });
         }
     };
     return Creator;
@@ -9138,6 +9140,7 @@ var night_mode_btn_extends = (undefined && undefined.__extends) || (function () 
     };
 })();
 
+
 var btnWrapperSpanParams = {
     tagName: "span",
     classList: [
@@ -9171,7 +9174,6 @@ var NightModeBtnView = /** @class */ (function (_super) {
             callback: function () { return _this.toggleNightMode(); },
         };
         _this = _super.call(this, btnNightModeListParams) || this;
-        _this.appContainer = document.body;
         _this.configureView();
         return _this;
     }
@@ -9180,9 +9182,8 @@ var NightModeBtnView = /** @class */ (function (_super) {
         this.addInnerElement(this.component.getHtmlElement(), btnWrapperImg);
     };
     NightModeBtnView.prototype.toggleNightMode = function () {
-        var _this = this;
         bodyClasslist.forEach(function (className) {
-            _this.appContainer.classList.toggle(className);
+            appContainer.classList.toggle(className);
         });
     };
     return NightModeBtnView;
@@ -9282,13 +9283,11 @@ var linksParams = [
             "dark:text-cyan-700",
             "dark:bg-gray-50",
             "hover:opacity-80",
-            "currentBtn",
+            "active",
         ],
         textContent: "all notes",
         id: "home-page",
         href: "home-page",
-        nameAttr: "data-link",
-        valueAttr: "",
     },
     {
         tagName: "a",
@@ -9308,8 +9307,6 @@ var linksParams = [
         textContent: "favorites",
         id: "favoritesPage",
         href: "favorites-page",
-        nameAttr: "data-link",
-        valueAttr: "",
     },
 ];
 var Nav = /** @class */ (function (_super) {
@@ -9334,12 +9331,68 @@ var Nav = /** @class */ (function (_super) {
         });
     };
     Nav.prototype.setCurrentLink = function (event) {
-        var isLink = event.target;
-        console.log(isLink);
+        var currentLink = event.target;
+        if (currentLink instanceof HTMLAnchorElement &&
+            !currentLink.classList.contains("active")) {
+            var activeLink = this.component
+                .getHtmlElement()
+                .querySelector("a.active");
+            activeLink === null || activeLink === void 0 ? void 0 : activeLink.classList.remove("active");
+            currentLink.classList.add("active");
+        }
     };
     return Nav;
 }(view));
 /* harmony default export */ const nav_view = (Nav);
+
+;// CONCATENATED MODULE: ./src/core/main/note/new-note-btn.ts
+var new_note_btn_extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+var imgParams = {
+    tagName: "span",
+    classList: [
+        "w-7",
+        "h-7",
+        "block",
+        "bg-cover",
+        "bg-[url('../../img/btn-add-note.svg')]",
+    ],
+};
+var NewNoteBtn = /** @class */ (function (_super) {
+    new_note_btn_extends(NewNoteBtn, _super);
+    function NewNoteBtn() {
+        var _this = this;
+        var btnNewNote = {
+            tagName: "button",
+            classList: [
+                "display-flex",
+            ],
+        };
+        _this = _super.call(this, btnNewNote) || this;
+        _this.configureView();
+        return _this;
+    }
+    NewNoteBtn.prototype.configureView = function () {
+        var buttonImg = this.createElement(imgParams);
+        this.addInnerElement(this.component.getHtmlElement(), buttonImg);
+    };
+    return NewNoteBtn;
+}(view));
+/* harmony default export */ const new_note_btn = (NewNoteBtn);
 
 ;// CONCATENATED MODULE: ./src/core/main/home-page/home-page-view.ts
 var home_page_view_extends = (undefined && undefined.__extends) || (function () {
@@ -9429,6 +9482,7 @@ var main_view_extends = (undefined && undefined.__extends) || (function () {
 
 
 
+
 var sectionControllParams = {
     tagName: "section",
     classList: ["pt-8", "pb-8"],
@@ -9455,6 +9509,8 @@ var Main = /** @class */ (function (_super) {
         this.addInnerElement(this.component.getHtmlElement(), sectionControll);
         var nav = new nav_view();
         this.addInnerElement(sectionControll, nav);
+        var newNoteBtn = new new_note_btn();
+        this.addInnerElement(sectionControll, newNoteBtn);
         this.addInnerElement(this.component.getHtmlElement(), this.wrapperListNotes);
     };
     Main.prototype.cleanWrapper = function () {
@@ -9519,10 +9575,10 @@ var Router = /** @class */ (function () {
 
 
 
+var appContainer = document.body;
 var App = /** @class */ (function () {
     function App() {
         var _this = this;
-        this.appContainer = document.body;
         this.main = new main_view();
         this.header = new header_view();
         this.routing = new rout(function (hash) { return _this.main.renderCurrentPage(hash); });
@@ -9530,7 +9586,7 @@ var App = /** @class */ (function () {
         this.insertTemplate();
     }
     App.prototype.insertTemplate = function () {
-        this.appContainer.append(this.header.getComponent(), this.main.getComponent());
+        appContainer.append(this.header.getComponent(), this.main.getComponent());
     };
     return App;
 }());
