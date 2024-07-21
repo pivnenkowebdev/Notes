@@ -1,5 +1,6 @@
 import View from "../../utilities/view";
 import { ElementParams } from "../../utilities/types";
+// import ModalNoteView from "./modal-note-view";
 
 const imgParams: ElementParams = {
     tagName: "span",
@@ -29,6 +30,8 @@ export default class NewNoteBtn extends View {
         const btnNewNote: ElementParams = {
             tagName: "button",
             classList: ["flex", "align-center", "gap-2", "hover:opacity-80"],
+            eventType: "click",
+            callback: () => this.showModal(),
         };
 
         super(btnNewNote);
@@ -41,5 +44,10 @@ export default class NewNoteBtn extends View {
 
         const imgBtn = this.createElement(imgParams);
         this.addInnerElement(this.component.getHtmlElement(), imgBtn);
+    }
+
+    showModal() {
+        // расскоментить
+        // const modal = new ModalNoteView();
     }
 }

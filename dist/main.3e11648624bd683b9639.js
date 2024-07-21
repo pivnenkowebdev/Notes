@@ -9148,7 +9148,7 @@ var btnWrapperSpanParams = {
         "h-7",
         "bg-cover",
         "bg-[url('../../img/sun-icon.svg')]",
-        "dark:dark:bg-[url('../../img/moon-icon.svg')]",
+        "dark:bg-[url('../../img/moon-icon.svg')]",
     ],
 };
 var bodyClasslist = ["dark", "bg-gray-900"];
@@ -9370,7 +9370,18 @@ var imgParams = {
         "block",
         "bg-cover",
         "bg-[url('../../img/btn-add-note.svg')]",
+        "dark:bg-[url('../../img/btn-add-note-light.svg')]",
     ],
+};
+var titleParams = {
+    tagName: "span",
+    classList: [
+        "text-xl",
+        "font-semibold",
+        "text-cyan-700",
+        "dark:text-gray-50",
+    ],
+    textContent: "Add Note",
 };
 var NewNoteBtn = /** @class */ (function (_super) {
     new_note_btn_extends(NewNoteBtn, _super);
@@ -9378,17 +9389,21 @@ var NewNoteBtn = /** @class */ (function (_super) {
         var _this = this;
         var btnNewNote = {
             tagName: "button",
-            classList: [
-                "display-flex",
-            ],
+            classList: ["flex", "align-center", "gap-2", "hover:opacity-80"],
+            callback: function () { return _this.showModal(); }
         };
         _this = _super.call(this, btnNewNote) || this;
         _this.configureView();
         return _this;
     }
     NewNoteBtn.prototype.configureView = function () {
-        var buttonImg = this.createElement(imgParams);
-        this.addInnerElement(this.component.getHtmlElement(), buttonImg);
+        var titleBtn = this.createElement(titleParams);
+        this.addInnerElement(this.getComponent(), titleBtn);
+        var imgBtn = this.createElement(imgParams);
+        this.addInnerElement(this.component.getHtmlElement(), imgBtn);
+    };
+    NewNoteBtn.prototype.showModal = function () {
+        console.log('rr');
     };
     return NewNoteBtn;
 }(view));
@@ -9485,7 +9500,7 @@ var main_view_extends = (undefined && undefined.__extends) || (function () {
 
 var sectionControllParams = {
     tagName: "section",
-    classList: ["pt-8", "pb-8"],
+    classList: ["pt-8", "pb-12", "flex", "flex-col", "gap-4", "items-center"],
 };
 var wrapperListNotesParams = {
     tagName: "section",
