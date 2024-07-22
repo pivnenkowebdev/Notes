@@ -47,7 +47,6 @@ export default class NewNoteBtn extends View {
     }
 
     showModal() {
-        // расскоментить
         // const modal = new ModalNoteView();
     }
 }

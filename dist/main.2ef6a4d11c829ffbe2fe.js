@@ -9345,6 +9345,98 @@ var Nav = /** @class */ (function (_super) {
 }(view));
 /* harmony default export */ const nav_view = (Nav);
 
+;// CONCATENATED MODULE: ./src/core/main/note/modal-note-view.ts
+var modal_note_view_extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+var formParams = {
+    tagName: "form",
+    classList: [
+        "max-w-[915px]",
+        "w-full",
+        "py-9",
+        "px-[36px]",
+        "mx-3",
+        "bg-white",
+    ],
+};
+var titleWrapperParams = {
+    tagName: "div",
+    classList: ["max-w-[362px]", "flex", "align-center", "justify-between", "border-b-2", "border-cyan-600"],
+};
+var inputTitleWrapperParams = {
+    tagName: "input",
+    classList: ["block", "max-w-[330px]", "w-full", "outline-none"],
+};
+var wrapperFakeCheckboxParams = {
+    tagName: "label",
+    classList: [],
+};
+var realCheckboxParams = {
+    tagName: "input",
+    classList: ["w-0", "h-0", "opacity-0", "absolute", "top-0", "left-0", "z-[-1]"],
+    nameAttr: "type",
+    valueAttr: "checkbox",
+};
+var fakeCheckboxParams = {
+    tagName: "span",
+    classList: ["block", "w-6", "h-6", "relative", "before:content-['']", "before:block", "before:absolute", "before:top-2/4", "before:left-2/4", "before:w-5", "before:h-5", "before:translate-y-[-50%]", "before:translate-x-[-50%]"],
+};
+var ModalNoteView = /** @class */ (function (_super) {
+    modal_note_view_extends(ModalNoteView, _super);
+    function ModalNoteView() {
+        var _this = this;
+        var fadeBlockParams = {
+            tagName: "div",
+            classList: [
+                "h-screen",
+                "w-screen",
+                "bg-neutral-200/90",
+                "fixed",
+                "top-0",
+                "left-0",
+                "flex",
+                "items-center",
+                "justify-center",
+            ],
+        };
+        _this = _super.call(this, fadeBlockParams) || this;
+        _this.configureView();
+        return _this;
+    }
+    ModalNoteView.prototype.configureView = function () {
+        this.addInnerElement(appContainer, this.getComponent());
+        var form = this.createElement(formParams);
+        this.addInnerElement(this.component.getHtmlElement(), form);
+        var titleWrapper = this.createElement(titleWrapperParams);
+        this.addInnerElement(form, titleWrapper);
+        var inputTitle = this.createElement(inputTitleWrapperParams);
+        this.addInnerElement(titleWrapper, inputTitle);
+        var wrapperFakeCheckbox = this.createElement(wrapperFakeCheckboxParams);
+        this.addInnerElement(titleWrapper, wrapperFakeCheckbox);
+        var realCheckbox = this.createElement(realCheckboxParams);
+        this.addInnerElement(wrapperFakeCheckbox, realCheckbox);
+        var fakeCheckbox = this.createElement(fakeCheckboxParams);
+        this.addInnerElement(wrapperFakeCheckbox, fakeCheckbox);
+    };
+    return ModalNoteView;
+}(view));
+/* harmony default export */ const modal_note_view = (ModalNoteView);
+
 ;// CONCATENATED MODULE: ./src/core/main/note/new-note-btn.ts
 var new_note_btn_extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -9361,6 +9453,7 @@ var new_note_btn_extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+
 
 var imgParams = {
     tagName: "span",
@@ -9390,7 +9483,8 @@ var NewNoteBtn = /** @class */ (function (_super) {
         var btnNewNote = {
             tagName: "button",
             classList: ["flex", "align-center", "gap-2", "hover:opacity-80"],
-            callback: function () { return _this.showModal(); }
+            eventType: "click",
+            callback: function () { return _this.showModal(); },
         };
         _this = _super.call(this, btnNewNote) || this;
         _this.configureView();
@@ -9403,7 +9497,7 @@ var NewNoteBtn = /** @class */ (function (_super) {
         this.addInnerElement(this.component.getHtmlElement(), imgBtn);
     };
     NewNoteBtn.prototype.showModal = function () {
-        console.log('rr');
+        var modal = new modal_note_view();
     };
     return NewNoteBtn;
 }(view));

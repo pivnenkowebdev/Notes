@@ -16,12 +16,62 @@ const formParams: ElementParams = {
 
 const titleWrapperParams: ElementParams = {
     tagName: "div",
-    classList: ["flex", "align-center"],
+    classList: [
+        "max-w-[362px]",
+        "flex",
+        "items-center",
+        "justify-between",
+        "border-b-2",
+        "border-cyan-600",
+        "py-1",
+    ],
 };
 
 const inputTitleWrapperParams: ElementParams = {
     tagName: "input",
-    classList: ["block", "max-w-[330px]", "w-full", "bg-black"],
+    classList: ["block", "max-w-[330px]", "w-full", "outline-none", "text-2xl"],
+};
+
+const wrapperFakeCheckboxParams: ElementParams = {
+    tagName: "label",
+    classList: [],
+};
+
+const realCheckboxParams: ElementParams = {
+    tagName: "input",
+    classList: [
+        "w-0",
+        "h-0",
+        "opacity-0",
+        "absolute",
+        "top-0",
+        "left-0",
+        "z-[-1]",
+    ],
+    nameAttr: "type",
+    valueAttr: "checkbox",
+};
+
+const fakeCheckboxParams: ElementParams = {
+    tagName: "span",
+    classList: [
+        "block",
+        "w-6",
+        "h-6",
+        "relative",
+        "cursor-pointer",
+        "before:content-['']",
+        "before:block",
+        "before:absolute",
+        "before:top-2/4",
+        "before:left-2/4",
+        "before:w-5",
+        "before:h-5",
+        "before:translate-y-[-50%]",
+        "before:translate-x-[-50%]",
+        "before:bg-[url('../../img/star-btn.svg')]",
+        "before:bg-cover",
+    ],
 };
 
 export default class ModalNoteView extends View {
@@ -55,9 +105,16 @@ export default class ModalNoteView extends View {
 
         const inputTitle = this.createElement(inputTitleWrapperParams);
         this.addInnerElement(titleWrapper, inputTitle);
+
+        const wrapperFakeCheckbox = this.createElement(
+            wrapperFakeCheckboxParams
+        );
+        this.addInnerElement(titleWrapper, wrapperFakeCheckbox);
+
+        const realCheckbox = this.createElement(realCheckboxParams);
+        this.addInnerElement(wrapperFakeCheckbox, realCheckbox);
+
+        const fakeCheckbox = this.createElement(fakeCheckboxParams);
+        this.addInnerElement(wrapperFakeCheckbox, fakeCheckbox);
     }
 }
-
-// 1. Достилизовать форму
-// 2. Создать model и controller
-// 3.
