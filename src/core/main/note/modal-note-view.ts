@@ -18,6 +18,7 @@ const titleWrapperParams: ElementParams = {
     tagName: "div",
     classList: [
         "max-w-[362px]",
+        "mb-3",
         "flex",
         "items-center",
         "justify-between",
@@ -30,6 +31,8 @@ const titleWrapperParams: ElementParams = {
 const inputTitleWrapperParams: ElementParams = {
     tagName: "input",
     classList: ["block", "max-w-[330px]", "w-full", "outline-none", "text-2xl"],
+    nameAttr: "placeholder",
+    valueAttr: "Title",
 };
 
 const wrapperFakeCheckboxParams: ElementParams = {
@@ -74,6 +77,22 @@ const fakeCheckboxParams: ElementParams = {
     ],
 };
 
+const textareaParams: ElementParams = {
+    tagName: "textarea",
+    classList: [
+        "w-full",
+        "min-h-[150px]",
+        "max-h-[360px]",
+        "resize-y",
+        "outline-none",
+        "text-xl",
+        "scrollbar",
+        "pr-1",
+    ],
+    nameAttr: "placeholder",
+    valueAttr: "Your note",
+};
+
 export default class ModalNoteView extends View {
     constructor() {
         const fadeBlockParams: ElementParams = {
@@ -116,5 +135,8 @@ export default class ModalNoteView extends View {
 
         const fakeCheckbox = this.createElement(fakeCheckboxParams);
         this.addInnerElement(wrapperFakeCheckbox, fakeCheckbox);
+
+        const textarea = this.createElement(textareaParams);
+        this.addInnerElement(form, textarea);
     }
 }
