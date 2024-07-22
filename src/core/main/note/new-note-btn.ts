@@ -29,7 +29,13 @@ export default class NewNoteBtn extends View {
     constructor() {
         const btnNewNote: ElementParams = {
             tagName: "button",
-            classList: ["flex", "align-center", "gap-2", "hover:opacity-80"],
+            classList: [
+                "flex",
+                "align-center",
+                "gap-2",
+                "hover:opacity-80",
+                "outline-none",
+            ],
             eventType: "click",
             callback: () => this.showModal(),
         };
@@ -47,6 +53,8 @@ export default class NewNoteBtn extends View {
     }
 
     showModal() {
-        // const modal = new ModalNoteView();
+        // const isNewNote = "new";
+        // вызвать метод рендера из окна
+        // const modal = new ModalNoteView(isNewNote);
     }
 }

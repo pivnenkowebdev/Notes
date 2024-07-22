@@ -9168,6 +9168,7 @@ var NightModeBtnView = /** @class */ (function (_super) {
                 "bg-cyan-600",
                 "dark:bg-gray-50",
                 "hover:opacity-80",
+                "outline-none"
             ],
             id: "nightModeBtn",
             eventType: "click",
@@ -9284,6 +9285,7 @@ var linksParams = [
             "dark:bg-gray-50",
             "hover:opacity-80",
             "active",
+            "outline-none"
         ],
         textContent: "all notes",
         id: "home-page",
@@ -9303,6 +9305,7 @@ var linksParams = [
             "dark:text-cyan-700",
             "dark:bg-gray-50",
             "hover:opacity-80",
+            "outline-none"
         ],
         textContent: "favorites",
         id: "favoritesPage",
@@ -9376,11 +9379,22 @@ var formParams = {
 };
 var titleWrapperParams = {
     tagName: "div",
-    classList: ["max-w-[362px]", "flex", "align-center", "justify-between", "border-b-2", "border-cyan-600"],
+    classList: [
+        "max-w-[362px]",
+        "mb-3",
+        "flex",
+        "items-center",
+        "justify-between",
+        "border-b-2",
+        "border-cyan-600",
+        "py-1",
+    ],
 };
 var inputTitleWrapperParams = {
     tagName: "input",
-    classList: ["block", "max-w-[330px]", "w-full", "outline-none"],
+    classList: ["block", "max-w-[330px]", "w-full", "outline-none", "text-2xl"],
+    nameAttr: "placeholder",
+    valueAttr: "Title",
 };
 var wrapperFakeCheckboxParams = {
     tagName: "label",
@@ -9388,17 +9402,80 @@ var wrapperFakeCheckboxParams = {
 };
 var realCheckboxParams = {
     tagName: "input",
-    classList: ["w-0", "h-0", "opacity-0", "absolute", "top-0", "left-0", "z-[-1]"],
+    classList: [
+        "w-0",
+        "h-0",
+        "opacity-0",
+        "absolute",
+        "top-0",
+        "left-0",
+        "z-[-1]",
+    ],
     nameAttr: "type",
     valueAttr: "checkbox",
 };
 var fakeCheckboxParams = {
     tagName: "span",
-    classList: ["block", "w-6", "h-6", "relative", "before:content-['']", "before:block", "before:absolute", "before:top-2/4", "before:left-2/4", "before:w-5", "before:h-5", "before:translate-y-[-50%]", "before:translate-x-[-50%]"],
+    classList: [
+        "block",
+        "w-6",
+        "h-6",
+        "relative",
+        "cursor-pointer",
+        "before:content-['']",
+        "before:block",
+        "before:absolute",
+        "before:top-2/4",
+        "before:left-2/4",
+        "before:w-5",
+        "before:h-5",
+        "before:translate-y-[-50%]",
+        "before:translate-x-[-50%]",
+        "before:bg-[url('../../img/star-btn.svg')]",
+        "before:bg-cover",
+    ],
+};
+var textareaParams = {
+    tagName: "textarea",
+    classList: [
+        "w-full",
+        "min-h-[150px]",
+        "max-h-[360px]",
+        "resize-y",
+        "outline-none",
+        "text-xl",
+        "scrollbar",
+        "pr-1",
+    ],
+    nameAttr: "placeholder",
+    valueAttr: "Your note",
+};
+var wrapperButtonsControlParams = {
+    tagName: "div",
+    classList: ["flex", "gap-4", "justify-end"],
+};
+var buttonCancellParams = {
+    tagName: "button",
+    classList: [
+        "bg-red-700",
+        "rounded-lg",
+        "py-1",
+        "px-3",
+        "text-gray-50",
+        "text-xl",
+        "capitalize",
+        "cursor-pointer",
+        // "dark:text-cyan-700",
+        // "dark:bg-gray-50",
+        "hover:opacity-80",
+        "active",
+        "outline-none"
+    ],
+    textContent: "cancel",
 };
 var ModalNoteView = /** @class */ (function (_super) {
     modal_note_view_extends(ModalNoteView, _super);
-    function ModalNoteView() {
+    function ModalNoteView(status) {
         var _this = this;
         var fadeBlockParams = {
             tagName: "div",
@@ -9432,6 +9509,12 @@ var ModalNoteView = /** @class */ (function (_super) {
         this.addInnerElement(wrapperFakeCheckbox, realCheckbox);
         var fakeCheckbox = this.createElement(fakeCheckboxParams);
         this.addInnerElement(wrapperFakeCheckbox, fakeCheckbox);
+        var textarea = this.createElement(textareaParams);
+        this.addInnerElement(form, textarea);
+        var buttonsList = this.createElement(wrapperButtonsControlParams);
+        this.addInnerElement(form, buttonsList);
+        var buttonCancel = this.createElement(buttonCancellParams);
+        this.addInnerElement(buttonsList, buttonCancel);
     };
     return ModalNoteView;
 }(view));
@@ -9482,7 +9565,7 @@ var NewNoteBtn = /** @class */ (function (_super) {
         var _this = this;
         var btnNewNote = {
             tagName: "button",
-            classList: ["flex", "align-center", "gap-2", "hover:opacity-80"],
+            classList: ["flex", "align-center", "gap-2", "hover:opacity-80", "outline-none"],
             eventType: "click",
             callback: function () { return _this.showModal(); },
         };
@@ -9497,7 +9580,8 @@ var NewNoteBtn = /** @class */ (function (_super) {
         this.addInnerElement(this.component.getHtmlElement(), imgBtn);
     };
     NewNoteBtn.prototype.showModal = function () {
-        var modal = new modal_note_view();
+        var flag = "new";
+        var modal = new modal_note_view(flag);
     };
     return NewNoteBtn;
 }(view));

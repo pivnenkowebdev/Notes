@@ -29,6 +29,7 @@ export default class NightModeBtnView extends View {
                 "bg-cyan-600",
                 "dark:bg-gray-50",
                 "hover:opacity-80",
+                "outline-none",
             ],
             id: "nightModeBtn",
             eventType: "click",

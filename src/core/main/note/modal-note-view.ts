@@ -11,6 +11,8 @@ const formParams: ElementParams = {
         "px-[36px]",
         "mx-3",
         "bg-white",
+        "rounded-md",
+        "shadow-lg",
     ],
 };
 
@@ -88,13 +90,79 @@ const textareaParams: ElementParams = {
         "text-xl",
         "scrollbar",
         "pr-1",
+        "mb-6",
     ],
     nameAttr: "placeholder",
     valueAttr: "Your note",
 };
 
+const wrapperButtonsControlParams: ElementParams = {
+    tagName: "div",
+    classList: ["flex", "gap-4", "justify-end"],
+};
+
+const buttonCancellParams: ElementParams = {
+    tagName: "button",
+    classList: [
+        "bg-red-700",
+        "rounded-lg",
+        "py-1",
+        "px-3",
+        "text-gray-50",
+        "text-xl",
+        "capitalize",
+        "cursor-pointer",
+        "hover:opacity-80",
+        "outline-none",
+        "min-w-[107px]",
+    ],
+    textContent: "cancel",
+    nameAttr: "data-controll",
+    valueAttr: "cancel",
+};
+
+const buttonAddParams: ElementParams = {
+    tagName: "button",
+    classList: [
+        "bg-cyan-600",
+        "rounded-lg",
+        "py-1",
+        "px-3",
+        "text-gray-50",
+        "text-xl",
+        "capitalize",
+        "cursor-pointer",
+        "hover:opacity-80",
+        "outline-none",
+        "min-w-[107px]",
+    ],
+    textContent: "add",
+    nameAttr: "data-controll",
+    valueAttr: "add",
+};
+
+const buttonEditParams: ElementParams = {
+    tagName: "button",
+    classList: [
+        "bg-cyan-600",
+        "rounded-lg",
+        "py-1",
+        "px-3",
+        "text-gray-50",
+        "text-xl",
+        "capitalize",
+        "cursor-pointer",
+        "hover:opacity-80",
+        "outline-none",
+        "min-w-[107px]",
+    ],
+    textContent: "edit",
+    nameAttr: "data-controll",
+    valueAttr: "edit",
+};
+
 export default class ModalNoteView extends View {
-    constructor() {
+    constructor(status: string) {
         const fadeBlockParams: ElementParams = {
             tagName: "div",
             classList: [
@@ -110,10 +178,10 @@ export default class ModalNoteView extends View {
             ],
         };
         super(fadeBlockParams);
-        this.configureView();
+        this.configureView(status);
     }
 
-    configureView() {
+    configureView(status: string) {
         this.addInnerElement(appContainer, this.getComponent());
 
         const form = this.createElement(formParams);
@@ -138,5 +206,19 @@ export default class ModalNoteView extends View {
 
         const textarea = this.createElement(textareaParams);
         this.addInnerElement(form, textarea);
+
+        const buttonsList = this.createElement(wrapperButtonsControlParams);
+        this.addInnerElement(form, buttonsList);
+
+        const buttonCancel = this.createElement(buttonCancellParams);
+        this.addInnerElement(buttonsList, buttonCancel);
+
+        if (status === "new") {
+            const buttonAdd = this.createElement(buttonAddParams);
+            this.addInnerElement(buttonsList, buttonAdd);
+        } else if (status === "edit") {
+            const buttonEdit = this.createElement(buttonEditParams);
+            this.addInnerElement(buttonsList, buttonEdit);
+        }
     }
 }
