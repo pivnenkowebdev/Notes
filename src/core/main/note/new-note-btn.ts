@@ -1,6 +1,6 @@
 import View from "../../utilities/view";
 import { ElementParams } from "../../utilities/types";
-// import ModalNoteView from "./modal-note-view";
+import ModalNoteController from "./modal-note-controller";
 
 const imgParams: ElementParams = {
     tagName: "span",
@@ -37,7 +37,7 @@ export default class NewNoteBtn extends View {
                 "outline-none",
             ],
             eventType: "click",
-            callback: () => this.showModal(),
+            callback: () => this.visibleModal(),
         };
 
         super(btnNewNote);
@@ -52,9 +52,9 @@ export default class NewNoteBtn extends View {
         this.addInnerElement(this.component.getHtmlElement(), imgBtn);
     }
 
-    showModal() {
-        // const isNewNote = "new";
-        // вызвать метод рендера из окна
-        // const modal = new ModalNoteView(isNewNote);
+    visibleModal() {
+        const isNewNote = "new";
+        const modalController = new ModalNoteController(isNewNote);
+        modalController.initialModal();
     }
 }

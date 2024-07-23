@@ -9168,7 +9168,7 @@ var NightModeBtnView = /** @class */ (function (_super) {
                 "bg-cyan-600",
                 "dark:bg-gray-50",
                 "hover:opacity-80",
-                "outline-none"
+                "outline-none",
             ],
             id: "nightModeBtn",
             eventType: "click",
@@ -9285,7 +9285,7 @@ var linksParams = [
             "dark:bg-gray-50",
             "hover:opacity-80",
             "active",
-            "outline-none"
+            "outline-none",
         ],
         textContent: "all notes",
         id: "home-page",
@@ -9305,7 +9305,7 @@ var linksParams = [
             "dark:text-cyan-700",
             "dark:bg-gray-50",
             "hover:opacity-80",
-            "outline-none"
+            "outline-none",
         ],
         textContent: "favorites",
         id: "favoritesPage",
@@ -9375,6 +9375,8 @@ var formParams = {
         "px-[36px]",
         "mx-3",
         "bg-white",
+        "rounded-md",
+        "shadow-lg",
     ],
 };
 var titleWrapperParams = {
@@ -9446,6 +9448,7 @@ var textareaParams = {
         "text-xl",
         "scrollbar",
         "pr-1",
+        "mb-6",
     ],
     nameAttr: "placeholder",
     valueAttr: "Your note",
@@ -9465,13 +9468,51 @@ var buttonCancellParams = {
         "text-xl",
         "capitalize",
         "cursor-pointer",
-        // "dark:text-cyan-700",
-        // "dark:bg-gray-50",
         "hover:opacity-80",
-        "active",
-        "outline-none"
+        "outline-none",
+        "min-w-[107px]",
     ],
     textContent: "cancel",
+    nameAttr: "data-controll",
+    valueAttr: "cancel",
+};
+var buttonAddParams = {
+    tagName: "button",
+    classList: [
+        "bg-cyan-600",
+        "rounded-lg",
+        "py-1",
+        "px-3",
+        "text-gray-50",
+        "text-xl",
+        "capitalize",
+        "cursor-pointer",
+        "hover:opacity-80",
+        "outline-none",
+        "min-w-[107px]",
+    ],
+    textContent: "add",
+    nameAttr: "data-controll",
+    valueAttr: "add",
+};
+var buttonEditParams = {
+    tagName: "button",
+    classList: [
+        "bg-cyan-600",
+        "rounded-lg",
+        "py-1",
+        "px-3",
+        "text-gray-50",
+        "text-xl",
+        "capitalize",
+        "cursor-pointer",
+        "hover:opacity-80",
+        "outline-none",
+        "min-w-[107px]",
+    ],
+    textContent: "edit",
+    nameAttr: "data-controll",
+    valueAttr: "edit",
 };
 var ModalNoteView = /** @class */ (function (_super) {
     modal_note_view_extends(ModalNoteView, _super);
@@ -9490,13 +9531,14 @@ var ModalNoteView = /** @class */ (function (_super) {
                 "items-center",
                 "justify-center",
             ],
+            eventType: "click",
+            callback: function (event) { return _this.handlerAction(event); },
         };
         _this = _super.call(this, fadeBlockParams) || this;
-        _this.configureView();
+        _this.configureView(status);
         return _this;
     }
-    ModalNoteView.prototype.configureView = function () {
-        this.addInnerElement(appContainer, this.getComponent());
+    ModalNoteView.prototype.configureView = function (status) {
         var form = this.createElement(formParams);
         this.addInnerElement(this.component.getHtmlElement(), form);
         var titleWrapper = this.createElement(titleWrapperParams);
@@ -9515,6 +9557,32 @@ var ModalNoteView = /** @class */ (function (_super) {
         this.addInnerElement(form, buttonsList);
         var buttonCancel = this.createElement(buttonCancellParams);
         this.addInnerElement(buttonsList, buttonCancel);
+        if (status === "new") {
+            var buttonAdd = this.createElement(buttonAddParams);
+            this.addInnerElement(buttonsList, buttonAdd);
+        }
+        else if (status === "edit") {
+            var buttonEdit = this.createElement(buttonEditParams);
+            this.addInnerElement(buttonsList, buttonEdit);
+        }
+    };
+    ModalNoteView.prototype.showModal = function () {
+        this.addInnerElement(appContainer, this.getComponent());
+    };
+    ModalNoteView.prototype.removeModal = function () {
+        this.component.getHtmlElement().remove();
+    };
+    // вынести в контроллер 
+    ModalNoteView.prototype.handlerAction = function (event) {
+        event.preventDefault();
+        if (event.target !== null && event.target instanceof HTMLElement) {
+            var isCancelButton = event.target.closest("[data-controll='cancel']");
+            var isAddButton = event.target.closest("[data-controll='add']");
+            var isEditButton = event.target.closest("[data-controll='edit']");
+            if (isCancelButton) {
+                this.removeModal();
+            }
+        }
     };
     return ModalNoteView;
 }(view));
@@ -9565,7 +9633,13 @@ var NewNoteBtn = /** @class */ (function (_super) {
         var _this = this;
         var btnNewNote = {
             tagName: "button",
-            classList: ["flex", "align-center", "gap-2", "hover:opacity-80", "outline-none"],
+            classList: [
+                "flex",
+                "align-center",
+                "gap-2",
+                "hover:opacity-80",
+                "outline-none",
+            ],
             eventType: "click",
             callback: function () { return _this.showModal(); },
         };
@@ -9580,8 +9654,9 @@ var NewNoteBtn = /** @class */ (function (_super) {
         this.addInnerElement(this.component.getHtmlElement(), imgBtn);
     };
     NewNoteBtn.prototype.showModal = function () {
-        var flag = "new";
-        var modal = new modal_note_view(flag);
+        var isNewNote = "new";
+        var modal = new modal_note_view(isNewNote);
+        modal.showModal();
     };
     return NewNoteBtn;
 }(view));

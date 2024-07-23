@@ -182,8 +182,6 @@ export default class ModalNoteView extends View {
     }
 
     configureView(status: string) {
-        this.addInnerElement(appContainer, this.getComponent());
-
         const form = this.createElement(formParams);
         this.addInnerElement(this.component.getHtmlElement(), form);
 
@@ -220,5 +218,13 @@ export default class ModalNoteView extends View {
             const buttonEdit = this.createElement(buttonEditParams);
             this.addInnerElement(buttonsList, buttonEdit);
         }
+    }
+
+    renderModal() {
+        this.addInnerElement(appContainer, this.getComponent());
+    }
+
+    removeModal() {
+        this.component.getHtmlElement().remove();
     }
 }
