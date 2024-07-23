@@ -9335,6 +9335,7 @@ var Nav = /** @class */ (function (_super) {
     };
     Nav.prototype.setCurrentLink = function (event) {
         var currentLink = event.target;
+        // избавиться от queryselector
         if (currentLink instanceof HTMLAnchorElement &&
             !currentLink.classList.contains("active")) {
             var activeLink = this.component
@@ -9401,6 +9402,7 @@ var inputTitleWrapperParams = {
 var wrapperFakeCheckboxParams = {
     tagName: "label",
     classList: [],
+    id: "favoriteCheck",
 };
 var realCheckboxParams = {
     tagName: "input",
@@ -9531,8 +9533,8 @@ var ModalNoteView = /** @class */ (function (_super) {
                 "items-center",
                 "justify-center",
             ],
-            eventType: "click",
-            callback: function (event) { return _this.handlerAction(event); },
+            nameAttr: "data-fade",
+            valueAttr: "",
         };
         _this = _super.call(this, fadeBlockParams) || this;
         _this.configureView(status);
@@ -9547,10 +9549,10 @@ var ModalNoteView = /** @class */ (function (_super) {
         this.addInnerElement(titleWrapper, inputTitle);
         var wrapperFakeCheckbox = this.createElement(wrapperFakeCheckboxParams);
         this.addInnerElement(titleWrapper, wrapperFakeCheckbox);
-        var realCheckbox = this.createElement(realCheckboxParams);
-        this.addInnerElement(wrapperFakeCheckbox, realCheckbox);
-        var fakeCheckbox = this.createElement(fakeCheckboxParams);
-        this.addInnerElement(wrapperFakeCheckbox, fakeCheckbox);
+        this.realCheckbox = this.createElement(realCheckboxParams);
+        this.addInnerElement(wrapperFakeCheckbox, this.realCheckbox);
+        this.fakeCheckbox = this.createElement(fakeCheckboxParams);
+        this.addInnerElement(wrapperFakeCheckbox, this.fakeCheckbox);
         var textarea = this.createElement(textareaParams);
         this.addInnerElement(form, textarea);
         var buttonsList = this.createElement(wrapperButtonsControlParams);
@@ -9566,27 +9568,60 @@ var ModalNoteView = /** @class */ (function (_super) {
             this.addInnerElement(buttonsList, buttonEdit);
         }
     };
-    ModalNoteView.prototype.showModal = function () {
+    ModalNoteView.prototype.renderModal = function () {
         this.addInnerElement(appContainer, this.getComponent());
     };
     ModalNoteView.prototype.removeModal = function () {
         this.component.getHtmlElement().remove();
     };
-    // вынести в контроллер 
-    ModalNoteView.prototype.handlerAction = function (event) {
-        event.preventDefault();
-        if (event.target !== null && event.target instanceof HTMLElement) {
-            var isCancelButton = event.target.closest("[data-controll='cancel']");
-            var isAddButton = event.target.closest("[data-controll='add']");
-            var isEditButton = event.target.closest("[data-controll='edit']");
-            if (isCancelButton) {
-                this.removeModal();
-            }
-        }
+    ModalNoteView.prototype.changeStatus = function () {
     };
     return ModalNoteView;
 }(view));
 /* harmony default export */ const modal_note_view = (ModalNoteView);
+
+;// CONCATENATED MODULE: ./src/core/main/note/modal-note-controller.ts
+
+var ModalNoteController = /** @class */ (function () {
+    function ModalNoteController(status) {
+        this.modalView = new modal_note_view(status);
+        this.setListener();
+    }
+    ModalNoteController.prototype.setListener = function () {
+        var _this = this;
+        this.modalView
+            .getComponent()
+            .addEventListener("click", function (event) {
+            return _this.handlerAction(event);
+        });
+    };
+    ModalNoteController.prototype.showModal = function () {
+        this.modalView.renderModal();
+    };
+    ModalNoteController.prototype.handlerAction = function (event) {
+        event.preventDefault();
+        if (event.target !== null && event.target instanceof HTMLElement) {
+            var isFade = event.target.hasAttribute('data-fade');
+            var isCancelButton = event.target.closest("[data-controll='cancel']");
+            // const isFavoriteCheck = // сюда получить label
+            if (isCancelButton || isFade) {
+                this.modalView.removeModal();
+            }
+            // if (isFavoriteCheck) {
+            //     // вызов getStatusNote()
+            // }
+        }
+    };
+    ModalNoteController.prototype.getStatusNote = function () {
+        // проверка настоящего чекбокса
+        // вызов метода из view чтобы перекрасить fake 
+    };
+    ModalNoteController.prototype.initialModal = function () {
+        this.showModal();
+    };
+    return ModalNoteController;
+}());
+/* harmony default export */ const modal_note_controller = (ModalNoteController);
 
 ;// CONCATENATED MODULE: ./src/core/main/note/new-note-btn.ts
 var new_note_btn_extends = (undefined && undefined.__extends) || (function () {
@@ -9641,7 +9676,7 @@ var NewNoteBtn = /** @class */ (function (_super) {
                 "outline-none",
             ],
             eventType: "click",
-            callback: function () { return _this.showModal(); },
+            callback: function () { return _this.visibleModal(); },
         };
         _this = _super.call(this, btnNewNote) || this;
         _this.configureView();
@@ -9653,10 +9688,10 @@ var NewNoteBtn = /** @class */ (function (_super) {
         var imgBtn = this.createElement(imgParams);
         this.addInnerElement(this.component.getHtmlElement(), imgBtn);
     };
-    NewNoteBtn.prototype.showModal = function () {
+    NewNoteBtn.prototype.visibleModal = function () {
         var isNewNote = "new";
-        var modal = new modal_note_view(isNewNote);
-        modal.showModal();
+        var modalController = new modal_note_controller(isNewNote);
+        modalController.initialModal();
     };
     return NewNoteBtn;
 }(view));

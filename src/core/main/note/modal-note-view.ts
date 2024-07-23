@@ -42,7 +42,7 @@ const wrapperFakeCheckboxParams: ElementParams = {
     classList: [],
 };
 
-const realCheckboxParams: ElementParams = {
+const realCheckboxParams = {
     tagName: "input",
     classList: [
         "w-0",
@@ -57,7 +57,7 @@ const realCheckboxParams: ElementParams = {
     valueAttr: "checkbox",
 };
 
-const fakeCheckboxParams: ElementParams = {
+const fakeCheckboxParams = {
     tagName: "span",
     classList: [
         "block",
@@ -74,9 +74,10 @@ const fakeCheckboxParams: ElementParams = {
         "before:h-5",
         "before:translate-y-[-50%]",
         "before:translate-x-[-50%]",
-        "before:bg-[url('../../img/star-btn.svg')]",
         "before:bg-cover",
+        "favoriteBtn",
     ],
+    id: "favoriteCheck",
 };
 
 const textareaParams: ElementParams = {
@@ -162,6 +163,8 @@ const buttonEditParams: ElementParams = {
 };
 
 export default class ModalNoteView extends View {
+    realCheckbox: HTMLElement;
+    fakeCheckbox: HTMLSpanElement;
     constructor(status: string) {
         const fadeBlockParams: ElementParams = {
             tagName: "div",
@@ -176,6 +179,8 @@ export default class ModalNoteView extends View {
                 "items-center",
                 "justify-center",
             ],
+            nameAttr: "data-fade",
+            valueAttr: "",
         };
         super(fadeBlockParams);
         this.configureView(status);
@@ -196,11 +201,11 @@ export default class ModalNoteView extends View {
         );
         this.addInnerElement(titleWrapper, wrapperFakeCheckbox);
 
-        const realCheckbox = this.createElement(realCheckboxParams);
-        this.addInnerElement(wrapperFakeCheckbox, realCheckbox);
+        this.realCheckbox = this.createElement(realCheckboxParams);
+        this.addInnerElement(wrapperFakeCheckbox, this.realCheckbox);
 
-        const fakeCheckbox = this.createElement(fakeCheckboxParams);
-        this.addInnerElement(wrapperFakeCheckbox, fakeCheckbox);
+        this.fakeCheckbox = this.createElement(fakeCheckboxParams);
+        this.addInnerElement(wrapperFakeCheckbox, this.fakeCheckbox);
 
         const textarea = this.createElement(textareaParams);
         this.addInnerElement(form, textarea);
@@ -226,5 +231,9 @@ export default class ModalNoteView extends View {
 
     removeModal() {
         this.component.getHtmlElement().remove();
+    }
+
+    changeStatus() {
+        this.fakeCheckbox.classList.toggle("checked");
     }
 }

@@ -12,8 +12,17 @@
     .active {
         @apply bg-[var(--btn-current-bg-light)];
     }
+
     .dark .active {
         @apply bg-[var(--btn-current-bg-dark)];
+    }
+
+    .favoriteBtn::before {
+        @apply bg-[url('../../img/star-btn.svg')];
+    }
+
+    .favoriteBtn.checked::before {
+        @apply bg-[url('../../img/star-btn-favorite.svg')];
     }
 
     .scrollbar::-webkit-scrollbar {

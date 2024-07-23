@@ -1,14 +1,14 @@
 import ModalNoteView from "./modal-note-view";
 
 export default class ModalNoteController {
-    modal: ModalNoteView;
+    modalView: ModalNoteView;
     constructor(status: string) {
-        this.modal = new ModalNoteView(status);
+        this.modalView = new ModalNoteView(status);
         this.setListener();
     }
 
     private setListener() {
-        this.modal
+        this.modalView
             .getComponent()
             .addEventListener("click", (event: Event) =>
                 this.handlerAction(event)
@@ -16,22 +16,30 @@ export default class ModalNoteController {
     }
 
     private showModal() {
-        this.modal.renderModal();
+        this.modalView.renderModal();
     }
 
     private handlerAction(event: Event) {
         event.preventDefault();
         if (event.target !== null && event.target instanceof HTMLElement) {
+            const isFade = event.target.hasAttribute("data-fade");
             const isCancelButton = event.target.closest(
                 "[data-controll='cancel']"
             );
-            // const isAddButton = event.target.closest("[data-controll='add']");
-            // const isEditButton = event.target.closest("[data-controll='edit']");
+            const isFavoriteCheck = event.target.closest("#favoriteCheck");
 
-            if (isCancelButton) {
-                this.modal.removeModal();
+            if (isCancelButton || isFade) {
+                this.modalView.removeModal();
+            }
+
+            if (isFavoriteCheck) {
+                this.getStatusNote();
             }
         }
+    }
+
+    private getStatusNote() {
+        this.modalView.changeStatus();
     }
 
     initialModal() {
