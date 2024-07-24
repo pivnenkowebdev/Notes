@@ -23,6 +23,7 @@ export default class ModalNoteController {
                 this.removeRender();
             });
 
+        // слушать клик на окне и проверять что это кнопка или fade
         this.modalView.fade.addEventListener("click", () => {
             this.removeRender();
         });
@@ -31,14 +32,15 @@ export default class ModalNoteController {
             this.removeRender();
         });
 
-        this.modalView.fakeCheckbox.addEventListener("click", () => {
-            this.getStatusNote();
-        });
+        // // переделать на использование только css
+        // this.modalView.fakeCheckbox.addEventListener("click", () => {
+        //     this.getStatusNote();
+        // });
     }
 
-    private getStatusNote() {
-        this.modalView.changeStatus();
-    }
+    // private getStatusNote() {
+    //     this.modalView.changeStatus();
+    // }
 
     initialModal() {
         this.modalView.renderModal();

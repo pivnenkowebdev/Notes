@@ -21,7 +21,7 @@
         @apply bg-[url('../../img/star-btn.svg')];
     }
 
-    .favoriteBtn.checked::before {
+    input:checked + .favoriteBtn::before {
         @apply bg-[url('../../img/star-btn-favorite.svg')];
     }
 

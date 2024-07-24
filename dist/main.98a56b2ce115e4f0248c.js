@@ -9032,7 +9032,7 @@ var Creator = /** @class */ (function (_super) {
         this.setInnerText(params.textContent);
         this.setId(params.id);
         this.setHref(params.href);
-        this.setDataAttr(params.nameAttr, params.valueAttr);
+        this.setDataAttr(params.attrParams);
         this.setCallback(params.eventType, params.callback);
         return this.element;
     };
@@ -9060,9 +9060,11 @@ var Creator = /** @class */ (function (_super) {
             this.element.href = "#".concat(value);
         }
     };
-    Creator.prototype.setDataAttr = function (nameAttr, valueAttr) {
-        if (nameAttr !== undefined && valueAttr !== undefined) {
-            this.element.setAttribute(nameAttr, valueAttr);
+    Creator.prototype.setDataAttr = function (attrParams) {
+        if (attrParams !== undefined) {
+            for (var key in attrParams) {
+                this.element.setAttribute(key, attrParams[key]);
+            }
         }
     };
     Creator.prototype.setCallback = function (eventType, callBack) {
@@ -9367,18 +9369,18 @@ var modal_note_view_extends = (undefined && undefined.__extends) || (function ()
 })();
 
 
-var formParams = {
-    tagName: "form",
+var fadeBlockParams = {
+    tagName: "div",
     classList: [
-        "max-w-[915px]",
-        "w-full",
-        "py-9",
-        "px-[36px]",
-        "mx-3",
-        "bg-white",
-        "rounded-md",
-        "shadow-lg",
+        "h-screen",
+        "w-screen",
+        "bg-neutral-200/90",
+        "fixed",
+        "top-0",
+        "left-0",
+        "z-1",
     ],
+    id: "fade",
 };
 var titleWrapperParams = {
     tagName: "div",
@@ -9395,9 +9397,15 @@ var titleWrapperParams = {
 };
 var inputTitleWrapperParams = {
     tagName: "input",
-    classList: ["block", "max-w-[330px]", "w-full", "outline-none", "text-2xl"],
-    nameAttr: "placeholder",
-    valueAttr: "Title",
+    classList: [
+        "block",
+        "max-w-[330px]",
+        "w-full",
+        "outline-none",
+        "text-2xl",
+        "focus:shadow-lg",
+    ],
+    attrParams: { placeholder: "Title" },
 };
 var wrapperFakeCheckboxParams = {
     tagName: "label",
@@ -9414,8 +9422,9 @@ var realCheckboxParams = {
         "left-0",
         "z-[-1]",
     ],
-    nameAttr: "type",
-    valueAttr: "checkbox",
+    attrParams: {
+        type: "checkbox",
+    },
 };
 var fakeCheckboxParams = {
     tagName: "span",
@@ -9437,7 +9446,9 @@ var fakeCheckboxParams = {
         "before:bg-cover",
         "favoriteBtn",
     ],
-    id: "favoriteCheck",
+    attrParams: {
+        "data-controll": "check",
+    },
 };
 var textareaParams = {
     tagName: "textarea",
@@ -9451,9 +9462,9 @@ var textareaParams = {
         "scrollbar",
         "pr-1",
         "mb-6",
+        "focus:shadow-lg",
     ],
-    nameAttr: "placeholder",
-    valueAttr: "Your note",
+    attrParams: { placeholder: "Your note" },
 };
 var wrapperButtonsControlParams = {
     tagName: "div",
@@ -9475,9 +9486,10 @@ var buttonCancellParams = {
         "min-w-[107px]",
     ],
     textContent: "cancel",
-    nameAttr: "type",
-    valueAttr: "button",
-    id: "cancelBtn",
+    attrParams: {
+        type: "button",
+        "data-controll": "cancel",
+    },
 };
 var buttonAddParams = {
     tagName: "button",
@@ -9495,8 +9507,10 @@ var buttonAddParams = {
         "min-w-[107px]",
     ],
     textContent: "add",
-    nameAttr: "type",
-    valueAttr: "submit",
+    attrParams: {
+        type: "submit",
+        "data-controll": "add",
+    },
 };
 var buttonEditParams = {
     tagName: "button",
@@ -9514,38 +9528,43 @@ var buttonEditParams = {
         "min-w-[107px]",
     ],
     textContent: "edit",
-    nameAttr: "data-controll",
-    valueAttr: "edit",
+    attrParams: {
+        type: "submit",
+        "data-controll": "edit",
+    },
 };
 var ModalNoteView = /** @class */ (function (_super) {
     modal_note_view_extends(ModalNoteView, _super);
     function ModalNoteView(status) {
         var _this = this;
-        var fadeBlockParams = {
-            tagName: "div",
+        var formParams = {
+            tagName: "form",
             classList: [
-                "h-screen",
-                "w-screen",
-                "bg-neutral-200/90",
-                "fixed",
-                "top-0",
-                "left-0",
-                "flex",
-                "items-center",
-                "justify-center",
+                "max-w-[915px]",
+                "w-full",
+                "py-9",
+                "px-[36px]",
+                "bg-white",
+                "rounded-md",
+                "shadow-lg",
+                "absolute",
+                "bottom-1/2",
+                "right-1/2",
+                "translate-x-1/2",
+                "translate-y-1/2",
+                "z-2",
             ],
-            nameAttr: "data-fade",
-            valueAttr: "",
         };
-        _this = _super.call(this, fadeBlockParams) || this;
+        _this = _super.call(this, formParams) || this;
         _this.configureView(status);
         return _this;
     }
     ModalNoteView.prototype.configureView = function (status) {
-        this.form = this.createElement(formParams);
-        this.addInnerElement(this.component.getHtmlElement(), this.form);
+        this.fade = this.createElement(fadeBlockParams);
+        this.addInnerElement(appContainer, this.fade);
+        this.addInnerElement(appContainer, this.component.getHtmlElement());
         var titleWrapper = this.createElement(titleWrapperParams);
-        this.addInnerElement(this.form, titleWrapper);
+        this.addInnerElement(this.component.getHtmlElement(), titleWrapper);
         var inputTitle = this.createElement(inputTitleWrapperParams);
         this.addInnerElement(titleWrapper, inputTitle);
         var wrapperFakeCheckbox = this.createElement(wrapperFakeCheckboxParams);
@@ -9555,11 +9574,11 @@ var ModalNoteView = /** @class */ (function (_super) {
         this.fakeCheckbox = this.createElement(fakeCheckboxParams);
         this.addInnerElement(wrapperFakeCheckbox, this.fakeCheckbox);
         var textarea = this.createElement(textareaParams);
-        this.addInnerElement(this.form, textarea);
+        this.addInnerElement(this.component.getHtmlElement(), textarea);
         var buttonsList = this.createElement(wrapperButtonsControlParams);
-        this.addInnerElement(this.form, buttonsList);
-        var buttonCancel = this.createElement(buttonCancellParams);
-        this.addInnerElement(buttonsList, buttonCancel);
+        this.addInnerElement(this.component.getHtmlElement(), buttonsList);
+        this.cancelBtn = this.createElement(buttonCancellParams);
+        this.addInnerElement(buttonsList, this.cancelBtn);
         if (status === "new") {
             var buttonAdd = this.createElement(buttonAddParams);
             this.addInnerElement(buttonsList, buttonAdd);
@@ -9574,7 +9593,9 @@ var ModalNoteView = /** @class */ (function (_super) {
     };
     ModalNoteView.prototype.removeModal = function () {
         this.component.getHtmlElement().remove();
+        this.fade.remove();
     };
+    // переделать на использование только css
     ModalNoteView.prototype.changeStatus = function () {
         this.fakeCheckbox.classList.toggle("checked");
     };
@@ -9600,42 +9621,31 @@ var ModalNoteController = /** @class */ (function () {
     function ModalNoteController(status) {
         this.modalView = new modal_note_view(status);
         this.modalModel = new modal_note_model();
-        this.setListener();
+        this.handlerAction();
     }
     ModalNoteController.prototype.removeRender = function () {
         this.modalView.removeModal();
     };
-    ModalNoteController.prototype.setListener = function () {
+    ModalNoteController.prototype.handlerAction = function () {
         var _this = this;
-        this.modalView.form.addEventListener("submit", function (event) {
-            _this.handlerAction(event);
-        });
         this.modalView
             .getComponent()
-            .addEventListener("click", function (event) {
-            return _this.handlerAction(event);
+            .addEventListener("submit", function (event) {
+            event.preventDefault();
+            _this.modalModel.test();
+            _this.removeRender();
         });
-    };
-    ModalNoteController.prototype.handlerAction = function (event) {
-        event.preventDefault();
-        if (event.type === "submit") {
-            this.modalModel.test();
-            this.modalView.removeModal();
-        }
-        else if (event.type === "click") {
-            console.log('c');
-            if (event.target !== null && event.target instanceof HTMLElement) {
-                var isFade = event.target.hasAttribute("data-fade");
-                var isCancelButton = event.target.closest("#cancelBtn");
-                var isFavoriteCheck = event.target.closest("#favoriteCheck");
-                if (isCancelButton || isFade) {
-                    this.removeRender();
-                }
-                if (isFavoriteCheck) {
-                    this.getStatusNote();
-                }
-            }
-        }
+        // слушать клик на окне и проверять что это кнопка или fade
+        this.modalView.fade.addEventListener("click", function () {
+            _this.removeRender();
+        });
+        this.modalView.cancelBtn.addEventListener("click", function () {
+            _this.removeRender();
+        });
+        // переделать на использование только css
+        this.modalView.fakeCheckbox.addEventListener("click", function () {
+            _this.getStatusNote();
+        });
     };
     ModalNoteController.prototype.getStatusNote = function () {
         this.modalView.changeStatus();
@@ -9646,9 +9656,6 @@ var ModalNoteController = /** @class */ (function () {
     return ModalNoteController;
 }());
 /* harmony default export */ const modal_note_controller = (ModalNoteController);
-// 1. клик и сабмит пересекаются
-// возможные решения: изменить вёрстку, переписать условие (адекватное лаконичное условие), изменить подход к обработке событий...
-// 2. инпуты отдельно искать не нужно, можно все собрать через метод формы
 
 ;// CONCATENATED MODULE: ./src/core/main/note/new-note-btn.ts
 var new_note_btn_extends = (undefined && undefined.__extends) || (function () {

@@ -255,7 +255,8 @@ export default class ModalNoteView extends View {
         this.fade.remove();
     }
 
-    changeStatus() {
-        this.fakeCheckbox.classList.toggle("checked");
-    }
+    // // переделать на использование только css
+    // changeStatus() {
+    //     this.fakeCheckbox.classList.toggle("checked");
+    // }
 }
