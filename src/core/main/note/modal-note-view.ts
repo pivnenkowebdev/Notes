@@ -13,7 +13,10 @@ const fadeBlockParams: ElementParams = {
         "left-0",
         "z-1",
     ],
-    id: "fade",
+    attrParams: {
+        type: "submit",
+        "data-controll": "fade",
+    },
 };
 
 const titleWrapperParams: ElementParams = {

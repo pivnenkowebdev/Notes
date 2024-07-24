@@ -7,31 +7,39 @@ export default class ModalNoteController {
     constructor(status: string) {
         this.modalView = new ModalNoteView(status);
         this.modalModel = new ModalNoteModel();
-        this.handlerAction();
+        this.setListener();
     }
 
     private removeRender() {
         this.modalView.removeModal();
     }
 
-    private handlerAction() {
+    private setListener() {
         this.modalView
             .getComponent()
-            .addEventListener("submit", (event: Event) => {
-                event.preventDefault();
-                this.modalModel.test();
-                this.removeRender();
-            });
+            .addEventListener("submit", this.submitter);
 
-        // слушать клик на окне и проверять что это кнопка или fade
-        this.modalView.fade.addEventListener("click", () => {
-            this.removeRender();
-        });
-
-        this.modalView.cancelBtn.addEventListener("click", () => {
-            this.removeRender();
-        });
+        window.addEventListener("click", this.handlerAcrtion);
     }
+
+    private handlerAcrtion = (event: Event) => {
+        if (event.target instanceof HTMLElement) {
+            const isCancelBtn = event.target.closest(
+                "[data-controll='cancel']"
+            );
+            const isFade = event.target.closest("[data-controll='fade']");
+
+            if (isCancelBtn || isFade) {
+                this.removeRender();
+            }
+        }
+    };
+
+    private submitter = (event: Event) => {
+        event.preventDefault();
+        this.modalModel.test();
+        this.removeRender();
+    };
 
     initialModal() {
         this.modalView.renderModal();
