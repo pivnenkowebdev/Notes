@@ -44,7 +44,7 @@ export default class NewNoteBtn extends View {
         this.configureView();
     }
 
-    configureView() {
+    private configureView() {
         const titleBtn = this.createElement(titleParams);
         this.addInnerElement(this.getComponent(), titleBtn);
 
@@ -52,9 +52,12 @@ export default class NewNoteBtn extends View {
         this.addInnerElement(this.component.getHtmlElement(), imgBtn);
     }
 
-    visibleModal() {
-        const isNewNote = "new";
-        const modalController = new ModalNoteController(isNewNote);
-        modalController.initialModal();
-    }
+    private visibleModal = () => {
+        const isModal = document.querySelector("#form");
+        if (!isModal) {
+            const isNewNote = "new";
+            const modalController = new ModalNoteController(isNewNote);
+            modalController.initialModal();
+        }
+    };
 }

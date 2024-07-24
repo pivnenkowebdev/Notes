@@ -43,7 +43,9 @@ const inputTitleWrapperParams: ElementParams = {
         "text-2xl",
         "focus:shadow-lg",
     ],
-    attrParams: { placeholder: "Title" },
+    attrParams: {
+        placeholder: "Title",
+    },
 };
 
 const wrapperFakeCheckboxParams: ElementParams = {
@@ -204,12 +206,13 @@ export default class ModalNoteView extends View {
                 "translate-y-1/2",
                 "z-2",
             ],
+            id: "form",
         };
         super(formParams);
         this.configureView(status);
     }
 
-    configureView(status: string) {
+    private configureView(status: string) {
         this.fade = this.createElement(fadeBlockParams);
         this.addInnerElement(appContainer, this.fade);
         this.addInnerElement(appContainer, this.component.getHtmlElement());
@@ -251,15 +254,16 @@ export default class ModalNoteView extends View {
 
     renderModal() {
         this.addInnerElement(appContainer, this.getComponent());
+        const isFirstInput: HTMLInputElement | null = this.component
+            .getHtmlElement()
+            .querySelector("input");
+        if (isFirstInput) {
+            isFirstInput.focus();
+        }
     }
 
     removeModal() {
         this.component.getHtmlElement().remove();
         this.fade.remove();
     }
-
-    // // переделать на использование только css
-    // changeStatus() {
-    //     this.fakeCheckbox.classList.toggle("checked");
-    // }
 }

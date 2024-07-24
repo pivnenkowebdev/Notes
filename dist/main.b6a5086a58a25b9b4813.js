@@ -9380,7 +9380,10 @@ var fadeBlockParams = {
         "left-0",
         "z-1",
     ],
-    id: "fade",
+    attrParams: {
+        type: "submit",
+        "data-controll": "fade",
+    },
 };
 var titleWrapperParams = {
     tagName: "div",
@@ -9405,7 +9408,10 @@ var inputTitleWrapperParams = {
         "text-2xl",
         "focus:shadow-lg",
     ],
-    attrParams: { placeholder: "Title" },
+    attrParams: {
+        "placeholder": "Title",
+        "autofocus": "",
+    },
 };
 var wrapperFakeCheckboxParams = {
     tagName: "label",
@@ -9508,7 +9514,7 @@ var buttonAddParams = {
     ],
     textContent: "add",
     attrParams: {
-        type: "submit",
+        "type": "submit",
         "data-controll": "add",
     },
 };
@@ -9529,7 +9535,7 @@ var buttonEditParams = {
     ],
     textContent: "edit",
     attrParams: {
-        type: "submit",
+        "type": "submit",
         "data-controll": "edit",
     },
 };
@@ -9554,6 +9560,7 @@ var ModalNoteView = /** @class */ (function (_super) {
                 "translate-y-1/2",
                 "z-2",
             ],
+            id: "form",
         };
         _this = _super.call(this, formParams) || this;
         _this.configureView(status);
@@ -9595,10 +9602,6 @@ var ModalNoteView = /** @class */ (function (_super) {
         this.component.getHtmlElement().remove();
         this.fade.remove();
     };
-    // переделать на использование только css
-    ModalNoteView.prototype.changeStatus = function () {
-        this.fakeCheckbox.classList.toggle("checked");
-    };
     return ModalNoteView;
 }(view));
 /* harmony default export */ const modal_note_view = (ModalNoteView);
@@ -9619,36 +9622,33 @@ var ModalNoteModel = /** @class */ (function () {
 
 var ModalNoteController = /** @class */ (function () {
     function ModalNoteController(status) {
+        var _this = this;
+        this.handlerAcrtion = function (event) {
+            if (event.target instanceof HTMLElement) {
+                var isCancelBtn = event.target.closest("[data-controll='cancel']");
+                var isFade = event.target.closest("[data-controll='fade']");
+                if (isCancelBtn || isFade) {
+                    _this.removeRender();
+                }
+            }
+        };
+        this.submitter = function (event) {
+            event.preventDefault();
+            _this.modalModel.test();
+            _this.removeRender();
+        };
         this.modalView = new modal_note_view(status);
         this.modalModel = new modal_note_model();
-        this.handlerAction();
+        this.setListener();
     }
     ModalNoteController.prototype.removeRender = function () {
         this.modalView.removeModal();
     };
-    ModalNoteController.prototype.handlerAction = function () {
-        var _this = this;
+    ModalNoteController.prototype.setListener = function () {
         this.modalView
             .getComponent()
-            .addEventListener("submit", function (event) {
-            event.preventDefault();
-            _this.modalModel.test();
-            _this.removeRender();
-        });
-        // слушать клик на окне и проверять что это кнопка или fade
-        this.modalView.fade.addEventListener("click", function () {
-            _this.removeRender();
-        });
-        this.modalView.cancelBtn.addEventListener("click", function () {
-            _this.removeRender();
-        });
-        // переделать на использование только css
-        this.modalView.fakeCheckbox.addEventListener("click", function () {
-            _this.getStatusNote();
-        });
-    };
-    ModalNoteController.prototype.getStatusNote = function () {
-        this.modalView.changeStatus();
+            .addEventListener("submit", this.submitter);
+        window.addEventListener("click", this.handlerAcrtion);
     };
     ModalNoteController.prototype.initialModal = function () {
         this.modalView.renderModal();
@@ -9713,6 +9713,14 @@ var NewNoteBtn = /** @class */ (function (_super) {
             callback: function () { return _this.visibleModal(); },
         };
         _this = _super.call(this, btnNewNote) || this;
+        _this.visibleModal = function () {
+            var isModal = document.querySelector("#form");
+            if (!isModal) {
+                var isNewNote = "new";
+                var modalController = new modal_note_controller(isNewNote);
+                modalController.initialModal();
+            }
+        };
         _this.configureView();
         return _this;
     }
@@ -9721,11 +9729,6 @@ var NewNoteBtn = /** @class */ (function (_super) {
         this.addInnerElement(this.getComponent(), titleBtn);
         var imgBtn = this.createElement(imgParams);
         this.addInnerElement(this.component.getHtmlElement(), imgBtn);
-    };
-    NewNoteBtn.prototype.visibleModal = function () {
-        var isNewNote = "new";
-        var modalController = new modal_note_controller(isNewNote);
-        modalController.initialModal();
     };
     return NewNoteBtn;
 }(view));
