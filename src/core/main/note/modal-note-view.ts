@@ -2,18 +2,18 @@ import View from "../../utilities/view";
 import { ElementParams } from "../../utilities/types";
 import { appContainer } from "../../app";
 
-const formParams: ElementParams = {
-    tagName: "form",
+const fadeBlockParams: ElementParams = {
+    tagName: "div",
     classList: [
-        "max-w-[915px]",
-        "w-full",
-        "py-9",
-        "px-[36px]",
-        "mx-3",
-        "bg-white",
-        "rounded-md",
-        "shadow-lg",
+        "h-screen",
+        "w-screen",
+        "bg-neutral-200/90",
+        "fixed",
+        "top-0",
+        "left-0",
+        "z-1",
     ],
+    id: "fade",
 };
 
 const titleWrapperParams: ElementParams = {
@@ -178,35 +178,41 @@ const buttonEditParams: ElementParams = {
 };
 
 export default class ModalNoteView extends View {
+    fade: HTMLElement;
     form: HTMLElement;
     realCheckbox: HTMLElement;
     fakeCheckbox: HTMLSpanElement;
+    cancelBtn: HTMLElement;
     constructor(status: string) {
-        const fadeBlockParams: ElementParams = {
-            tagName: "div",
+        const formParams: ElementParams = {
+            tagName: "form",
             classList: [
-                "h-screen",
-                "w-screen",
-                "bg-neutral-200/90",
-                "fixed",
-                "top-0",
-                "left-0",
-                "flex",
-                "items-center",
-                "justify-center",
+                "max-w-[915px]",
+                "w-full",
+                "py-9",
+                "px-[36px]",
+                "bg-white",
+                "rounded-md",
+                "shadow-lg",
+                "absolute",
+                "bottom-1/2",
+                "right-1/2",
+                "translate-x-1/2",
+                "translate-y-1/2",
+                "z-2",
             ],
-            id: "fade",
         };
-        super(fadeBlockParams);
+        super(formParams);
         this.configureView(status);
     }
 
     configureView(status: string) {
-        this.form = this.createElement(formParams);
-        this.addInnerElement(this.component.getHtmlElement(), this.form);
+        this.fade = this.createElement(fadeBlockParams);
+        this.addInnerElement(appContainer, this.fade);
+        this.addInnerElement(appContainer, this.component.getHtmlElement());
 
         const titleWrapper = this.createElement(titleWrapperParams);
-        this.addInnerElement(this.form, titleWrapper);
+        this.addInnerElement(this.component.getHtmlElement(), titleWrapper);
 
         const inputTitle = this.createElement(inputTitleWrapperParams);
         this.addInnerElement(titleWrapper, inputTitle);
@@ -223,13 +229,13 @@ export default class ModalNoteView extends View {
         this.addInnerElement(wrapperFakeCheckbox, this.fakeCheckbox);
 
         const textarea = this.createElement(textareaParams);
-        this.addInnerElement(this.form, textarea);
+        this.addInnerElement(this.component.getHtmlElement(), textarea);
 
         const buttonsList = this.createElement(wrapperButtonsControlParams);
-        this.addInnerElement(this.form, buttonsList);
+        this.addInnerElement(this.component.getHtmlElement(), buttonsList);
 
-        const buttonCancel = this.createElement(buttonCancellParams);
-        this.addInnerElement(buttonsList, buttonCancel);
+        this.cancelBtn = this.createElement(buttonCancellParams);
+        this.addInnerElement(buttonsList, this.cancelBtn);
 
         if (status === "new") {
             const buttonAdd = this.createElement(buttonAddParams);
@@ -246,6 +252,7 @@ export default class ModalNoteView extends View {
 
     removeModal() {
         this.component.getHtmlElement().remove();
+        this.fade.remove();
     }
 
     changeStatus() {
