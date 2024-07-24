@@ -8,6 +8,7 @@ const fadeBlockParams: ElementParams = {
         "h-screen",
         "w-screen",
         "bg-neutral-200/90",
+        "dark:bg-gray-900/90",
         "fixed",
         "top-0",
         "left-0",
