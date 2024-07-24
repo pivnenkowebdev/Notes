@@ -31,16 +31,7 @@ export default class ModalNoteController {
         this.modalView.cancelBtn.addEventListener("click", () => {
             this.removeRender();
         });
-
-        // // переделать на использование только css
-        // this.modalView.fakeCheckbox.addEventListener("click", () => {
-        //     this.getStatusNote();
-        // });
     }
-
-    // private getStatusNote() {
-    //     this.modalView.changeStatus();
-    // }
 
     initialModal() {
         this.modalView.renderModal();
