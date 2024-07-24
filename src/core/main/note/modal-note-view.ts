@@ -32,9 +32,15 @@ const titleWrapperParams: ElementParams = {
 
 const inputTitleWrapperParams: ElementParams = {
     tagName: "input",
-    classList: ["block", "max-w-[330px]", "w-full", "outline-none", "text-2xl"],
-    nameAttr: "placeholder",
-    valueAttr: "Title",
+    classList: [
+        "block",
+        "max-w-[330px]",
+        "w-full",
+        "outline-none",
+        "text-2xl",
+        "focus:shadow-lg",
+    ],
+    attrParams: { placeholder: "Title" },
 };
 
 const wrapperFakeCheckboxParams: ElementParams = {
@@ -53,8 +59,9 @@ const realCheckboxParams = {
         "left-0",
         "z-[-1]",
     ],
-    nameAttr: "type",
-    valueAttr: "checkbox",
+    attrParams: {
+        type: "checkbox",
+    },
 };
 
 const fakeCheckboxParams = {
@@ -77,7 +84,9 @@ const fakeCheckboxParams = {
         "before:bg-cover",
         "favoriteBtn",
     ],
-    id: "favoriteCheck",
+    attrParams: {
+        "data-controll": "check",
+    },
 };
 
 const textareaParams: ElementParams = {
@@ -92,9 +101,9 @@ const textareaParams: ElementParams = {
         "scrollbar",
         "pr-1",
         "mb-6",
+        "focus:shadow-lg",
     ],
-    nameAttr: "placeholder",
-    valueAttr: "Your note",
+    attrParams: { placeholder: "Your note" },
 };
 
 const wrapperButtonsControlParams: ElementParams = {
@@ -118,8 +127,10 @@ const buttonCancellParams: ElementParams = {
         "min-w-[107px]",
     ],
     textContent: "cancel",
-    nameAttr: "data-controll",
-    valueAttr: "cancel",
+    attrParams: {
+        type: "button",
+        "data-controll": "cancel",
+    },
 };
 
 const buttonAddParams: ElementParams = {
@@ -138,8 +149,10 @@ const buttonAddParams: ElementParams = {
         "min-w-[107px]",
     ],
     textContent: "add",
-    nameAttr: "data-controll",
-    valueAttr: "add",
+    attrParams: {
+        type: "submit",
+        "data-controll": "add",
+    },
 };
 
 const buttonEditParams: ElementParams = {
@@ -158,11 +171,14 @@ const buttonEditParams: ElementParams = {
         "min-w-[107px]",
     ],
     textContent: "edit",
-    nameAttr: "data-controll",
-    valueAttr: "edit",
+    attrParams: {
+        type: "submit",
+        "data-controll": "edit",
+    },
 };
 
 export default class ModalNoteView extends View {
+    form: HTMLElement;
     realCheckbox: HTMLElement;
     fakeCheckbox: HTMLSpanElement;
     constructor(status: string) {
@@ -179,19 +195,18 @@ export default class ModalNoteView extends View {
                 "items-center",
                 "justify-center",
             ],
-            nameAttr: "data-fade",
-            valueAttr: "",
+            id: "fade",
         };
         super(fadeBlockParams);
         this.configureView(status);
     }
 
     configureView(status: string) {
-        const form = this.createElement(formParams);
-        this.addInnerElement(this.component.getHtmlElement(), form);
+        this.form = this.createElement(formParams);
+        this.addInnerElement(this.component.getHtmlElement(), this.form);
 
         const titleWrapper = this.createElement(titleWrapperParams);
-        this.addInnerElement(form, titleWrapper);
+        this.addInnerElement(this.form, titleWrapper);
 
         const inputTitle = this.createElement(inputTitleWrapperParams);
         this.addInnerElement(titleWrapper, inputTitle);
@@ -208,10 +223,10 @@ export default class ModalNoteView extends View {
         this.addInnerElement(wrapperFakeCheckbox, this.fakeCheckbox);
 
         const textarea = this.createElement(textareaParams);
-        this.addInnerElement(form, textarea);
+        this.addInnerElement(this.form, textarea);
 
         const buttonsList = this.createElement(wrapperButtonsControlParams);
-        this.addInnerElement(form, buttonsList);
+        this.addInnerElement(this.form, buttonsList);
 
         const buttonCancel = this.createElement(buttonCancellParams);
         this.addInnerElement(buttonsList, buttonCancel);

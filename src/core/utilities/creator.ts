@@ -1,4 +1,4 @@
-import { ElementParams } from "./types";
+import { ElementParams, AttributeParams } from "./types";
 
 abstract class BaseClassCreator {
     protected element: HTMLElement;
@@ -12,7 +12,7 @@ abstract class BaseClassCreator {
     protected abstract setInnerText(value?: string): void;
     protected abstract setId(value?: string | number): void;
     protected abstract setHref(value?: string): void;
-    protected abstract setDataAttr(nameAttr?: string, valueAttr?: string): void;
+    protected abstract setDataAttr(value?: AttributeParams): void;
     protected abstract setCallback(
         eventType: string,
         callBack?: (event?: Event) => void
@@ -31,7 +31,7 @@ export default class Creator extends BaseClassCreator {
         this.setInnerText(params.textContent);
         this.setId(params.id);
         this.setHref(params.href);
-        this.setDataAttr(params.nameAttr, params.valueAttr);
+        this.setDataAttr(params.attrParams);
         this.setCallback(params.eventType, params.callback);
         return this.element;
     }
@@ -64,9 +64,11 @@ export default class Creator extends BaseClassCreator {
         }
     }
 
-    protected setDataAttr(nameAttr?: string, valueAttr?: string) {
-        if (nameAttr !== undefined && valueAttr !== undefined) {
-            this.element.setAttribute(nameAttr, valueAttr);
+    protected setDataAttr(attrParams?: AttributeParams) {
+        if (attrParams !== undefined) {
+            for (const key in attrParams) {
+                this.element.setAttribute(key, attrParams[key]);
+            }
         }
     }
 

@@ -1,3 +1,7 @@
+export interface AttributeParams {
+    [key: string]: string;
+}
+
 export interface ElementParams {
     tagName: string;
     classList: string[];
@@ -5,7 +9,6 @@ export interface ElementParams {
     id?: string | number;
     href?: string;
     eventType?: string;
-    nameAttr?: string;
-    valueAttr?: string;
+    attrParams?: AttributeParams;
     callback?: (event: Event) => void;
 }

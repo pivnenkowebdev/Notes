@@ -1,13 +1,24 @@
 import ModalNoteView from "./modal-note-view";
+import ModalNoteModel from "./modal-note-model";
 
 export default class ModalNoteController {
     modalView: ModalNoteView;
+    modalModel: ModalNoteModel;
     constructor(status: string) {
         this.modalView = new ModalNoteView(status);
+        this.modalModel = new ModalNoteModel();
         this.setListener();
     }
 
+    private removeRender() {
+        this.modalView.removeModal();
+    }
+
     private setListener() {
+        this.modalView.form.addEventListener("submit", (event: Event) => {
+            this.handlerAction(event);
+        });
+
         this.modalView
             .getComponent()
             .addEventListener("click", (event: Event) =>
@@ -15,25 +26,30 @@ export default class ModalNoteController {
             );
     }
 
-    private showModal() {
-        this.modalView.renderModal();
-    }
-
     private handlerAction(event: Event) {
         event.preventDefault();
-        if (event.target !== null && event.target instanceof HTMLElement) {
-            const isFade = event.target.hasAttribute("data-fade");
-            const isCancelButton = event.target.closest(
-                "[data-controll='cancel']"
-            );
-            const isFavoriteCheck = event.target.closest("#favoriteCheck");
 
-            if (isCancelButton || isFade) {
-                this.modalView.removeModal();
-            }
+        if (event.type === "submit") {
+            this.modalModel.test();
+            this.modalView.removeModal();
+        } else if (event.type === "click") {
+            console.log("c");
+            if (event.target !== null && event.target instanceof HTMLElement) {
+                const isFade = event.target.closest("#fade");
+                const isCancelButton = event.target.closest(
+                    "[data-controll = 'cancel']"
+                );
+                const isFavoriteCheck = event.target.closest(
+                    "[data-controll = 'check']"
+                );
 
-            if (isFavoriteCheck) {
-                this.getStatusNote();
+                if (isCancelButton || isFade) {
+                    this.removeRender();
+                }
+
+                if (isFavoriteCheck) {
+                    this.getStatusNote();
+                }
             }
         }
     }
@@ -43,6 +59,10 @@ export default class ModalNoteController {
     }
 
     initialModal() {
-        this.showModal();
+        this.modalView.renderModal();
     }
 }
+
+// 1. клик и сабмит пересекаются
+// возможные решения: изменить вёрстку, переписать условие (адекватное лаконичное условие), изменить подход к обработке событий...
+// 2. инпуты отдельно искать не нужно, можно все собрать через метод формы

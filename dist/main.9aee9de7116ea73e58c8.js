@@ -9402,7 +9402,6 @@ var inputTitleWrapperParams = {
 var wrapperFakeCheckboxParams = {
     tagName: "label",
     classList: [],
-    id: "favoriteCheck",
 };
 var realCheckboxParams = {
     tagName: "input",
@@ -9435,9 +9434,10 @@ var fakeCheckboxParams = {
         "before:h-5",
         "before:translate-y-[-50%]",
         "before:translate-x-[-50%]",
-        "before:bg-[url('../../img/star-btn.svg')]",
         "before:bg-cover",
+        "favoriteBtn",
     ],
+    id: "favoriteCheck",
 };
 var textareaParams = {
     tagName: "textarea",
@@ -9475,8 +9475,9 @@ var buttonCancellParams = {
         "min-w-[107px]",
     ],
     textContent: "cancel",
-    nameAttr: "data-controll",
-    valueAttr: "cancel",
+    nameAttr: "type",
+    valueAttr: "button",
+    id: "cancelBtn",
 };
 var buttonAddParams = {
     tagName: "button",
@@ -9494,8 +9495,8 @@ var buttonAddParams = {
         "min-w-[107px]",
     ],
     textContent: "add",
-    nameAttr: "data-controll",
-    valueAttr: "add",
+    nameAttr: "type",
+    valueAttr: "submit",
 };
 var buttonEditParams = {
     tagName: "button",
@@ -9541,10 +9542,10 @@ var ModalNoteView = /** @class */ (function (_super) {
         return _this;
     }
     ModalNoteView.prototype.configureView = function (status) {
-        var form = this.createElement(formParams);
-        this.addInnerElement(this.component.getHtmlElement(), form);
+        this.form = this.createElement(formParams);
+        this.addInnerElement(this.component.getHtmlElement(), this.form);
         var titleWrapper = this.createElement(titleWrapperParams);
-        this.addInnerElement(form, titleWrapper);
+        this.addInnerElement(this.form, titleWrapper);
         var inputTitle = this.createElement(inputTitleWrapperParams);
         this.addInnerElement(titleWrapper, inputTitle);
         var wrapperFakeCheckbox = this.createElement(wrapperFakeCheckboxParams);
@@ -9554,9 +9555,9 @@ var ModalNoteView = /** @class */ (function (_super) {
         this.fakeCheckbox = this.createElement(fakeCheckboxParams);
         this.addInnerElement(wrapperFakeCheckbox, this.fakeCheckbox);
         var textarea = this.createElement(textareaParams);
-        this.addInnerElement(form, textarea);
+        this.addInnerElement(this.form, textarea);
         var buttonsList = this.createElement(wrapperButtonsControlParams);
-        this.addInnerElement(form, buttonsList);
+        this.addInnerElement(this.form, buttonsList);
         var buttonCancel = this.createElement(buttonCancellParams);
         this.addInnerElement(buttonsList, buttonCancel);
         if (status === "new") {
@@ -9575,53 +9576,79 @@ var ModalNoteView = /** @class */ (function (_super) {
         this.component.getHtmlElement().remove();
     };
     ModalNoteView.prototype.changeStatus = function () {
+        this.fakeCheckbox.classList.toggle("checked");
     };
     return ModalNoteView;
 }(view));
 /* harmony default export */ const modal_note_view = (ModalNoteView);
 
+;// CONCATENATED MODULE: ./src/core/main/note/modal-note-model.ts
+var ModalNoteModel = /** @class */ (function () {
+    function ModalNoteModel() {
+    }
+    ModalNoteModel.prototype.test = function () {
+        console.log(1);
+    };
+    return ModalNoteModel;
+}());
+/* harmony default export */ const modal_note_model = (ModalNoteModel);
+
 ;// CONCATENATED MODULE: ./src/core/main/note/modal-note-controller.ts
+
 
 var ModalNoteController = /** @class */ (function () {
     function ModalNoteController(status) {
         this.modalView = new modal_note_view(status);
+        this.modalModel = new modal_note_model();
         this.setListener();
     }
+    ModalNoteController.prototype.removeRender = function () {
+        this.modalView.removeModal();
+    };
     ModalNoteController.prototype.setListener = function () {
         var _this = this;
+        this.modalView.form.addEventListener("submit", function (event) {
+            _this.handlerAction(event);
+        });
         this.modalView
             .getComponent()
             .addEventListener("click", function (event) {
             return _this.handlerAction(event);
         });
     };
-    ModalNoteController.prototype.showModal = function () {
-        this.modalView.renderModal();
-    };
     ModalNoteController.prototype.handlerAction = function (event) {
         event.preventDefault();
-        if (event.target !== null && event.target instanceof HTMLElement) {
-            var isFade = event.target.hasAttribute('data-fade');
-            var isCancelButton = event.target.closest("[data-controll='cancel']");
-            // const isFavoriteCheck = // сюда получить label
-            if (isCancelButton || isFade) {
-                this.modalView.removeModal();
+        if (event.type === "submit") {
+            this.modalModel.test();
+            this.modalView.removeModal();
+        }
+        else if (event.type === "click") {
+            console.log('c');
+            if (event.target !== null && event.target instanceof HTMLElement) {
+                var isFade = event.target.hasAttribute("data-fade");
+                var isCancelButton = event.target.closest("#cancelBtn");
+                var isFavoriteCheck = event.target.closest("#favoriteCheck");
+                if (isCancelButton || isFade) {
+                    this.removeRender();
+                }
+                if (isFavoriteCheck) {
+                    this.getStatusNote();
+                }
             }
-            // if (isFavoriteCheck) {
-            //     // вызов getStatusNote()
-            // }
         }
     };
     ModalNoteController.prototype.getStatusNote = function () {
-        // проверка настоящего чекбокса
-        // вызов метода из view чтобы перекрасить fake 
+        this.modalView.changeStatus();
     };
     ModalNoteController.prototype.initialModal = function () {
-        this.showModal();
+        this.modalView.renderModal();
     };
     return ModalNoteController;
 }());
 /* harmony default export */ const modal_note_controller = (ModalNoteController);
+// 1. клик и сабмит пересекаются
+// возможные решения: изменить вёрстку, переписать условие (адекватное лаконичное условие), изменить подход к обработке событий...
+// 2. инпуты отдельно искать не нужно, можно все собрать через метод формы
 
 ;// CONCATENATED MODULE: ./src/core/main/note/new-note-btn.ts
 var new_note_btn_extends = (undefined && undefined.__extends) || (function () {
