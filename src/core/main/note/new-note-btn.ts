@@ -2,6 +2,8 @@ import View from "../../utilities/view";
 import { ElementParams } from "../../utilities/types";
 import ModalNoteController from "./modal-note-controller";
 
+const status: string = "new";
+
 const imgParams: ElementParams = {
     tagName: "span",
     classList: [
@@ -55,7 +57,7 @@ export default class NewNoteBtn extends View {
     private visibleModal = () => {
         const isModal = document.querySelector("#form");
         if (!isModal) {
-            const isNewNote = "new";
+            const isNewNote = status;
             const modalController = new ModalNoteController(isNewNote);
             modalController.initialModal();
         }

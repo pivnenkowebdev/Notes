@@ -9375,6 +9375,7 @@ var fadeBlockParams = {
         "h-screen",
         "w-screen",
         "bg-neutral-200/90",
+        "dark:bg-gray-900/90",
         "fixed",
         "top-0",
         "left-0",
@@ -9406,11 +9407,10 @@ var inputTitleWrapperParams = {
         "w-full",
         "outline-none",
         "text-2xl",
-        "focus:shadow-lg",
     ],
     attrParams: {
-        "placeholder": "Title",
-        "autofocus": "",
+        placeholder: "Title",
+        name: "title",
     },
 };
 var wrapperFakeCheckboxParams = {
@@ -9430,6 +9430,7 @@ var realCheckboxParams = {
     ],
     attrParams: {
         type: "checkbox",
+        name: "favorite",
     },
 };
 var fakeCheckboxParams = {
@@ -9470,7 +9471,10 @@ var textareaParams = {
         "mb-6",
         "focus:shadow-lg",
     ],
-    attrParams: { placeholder: "Your note" },
+    attrParams: {
+        placeholder: "Your note",
+        name: "text",
+    },
 };
 var wrapperButtonsControlParams = {
     tagName: "div",
@@ -9514,7 +9518,7 @@ var buttonAddParams = {
     ],
     textContent: "add",
     attrParams: {
-        "type": "submit",
+        type: "submit",
         "data-controll": "add",
     },
 };
@@ -9535,7 +9539,7 @@ var buttonEditParams = {
     ],
     textContent: "edit",
     attrParams: {
-        "type": "submit",
+        type: "submit",
         "data-controll": "edit",
     },
 };
@@ -9597,6 +9601,12 @@ var ModalNoteView = /** @class */ (function (_super) {
     };
     ModalNoteView.prototype.renderModal = function () {
         this.addInnerElement(appContainer, this.getComponent());
+        var isFirstInput = this.component
+            .getHtmlElement()
+            .querySelector("input");
+        if (isFirstInput) {
+            isFirstInput.focus();
+        }
     };
     ModalNoteView.prototype.removeModal = function () {
         this.component.getHtmlElement().remove();
@@ -9607,11 +9617,57 @@ var ModalNoteView = /** @class */ (function (_super) {
 /* harmony default export */ const modal_note_view = (ModalNoteView);
 
 ;// CONCATENATED MODULE: ./src/core/main/note/modal-note-model.ts
+var inputsName = {
+    titleInput: "title",
+    favoriteCheckbox: "favorite",
+    textInput: "text"
+};
 var ModalNoteModel = /** @class */ (function () {
-    function ModalNoteModel() {
+    function ModalNoteModel(status) {
+        this.regularNotes = [];
+        this.favoriteNotes = [];
     }
-    ModalNoteModel.prototype.test = function () {
-        console.log(1);
+    ModalNoteModel.prototype.pushNewNoteObj = function (obj) {
+        this.regularNotes.push(obj);
+        console.log(this.regularNotes);
+    };
+    ModalNoteModel.prototype.toJson = function (arrNotes) {
+        var notesArrString = JSON.stringify(arrNotes);
+    };
+    ModalNoteModel.prototype.parse = function () {
+    };
+    ModalNoteModel.prototype.setNotesToLocalStorage = function () {
+    };
+    ModalNoteModel.prototype.getNotesFromLocalStorage = function () {
+    };
+    ModalNoteModel.getInstance = function (status) {
+        if (!ModalNoteModel.instance) {
+            ModalNoteModel.instance = new ModalNoteModel(status);
+        }
+        return ModalNoteModel.instance;
+    };
+    ModalNoteModel.prototype.dataNoteCreator = function (data) {
+        var newObj = {
+            title: "",
+            isFavorite: "",
+            text: "",
+            id: 0,
+            date: "",
+            changed: false,
+        };
+        var title = data.get(inputsName.titleInput);
+        var statusFavorite = data.get(inputsName.favoriteCheckbox);
+        var text = data.get(inputsName.textInput);
+        if (typeof title === "string") {
+            newObj.title = title;
+        }
+        if (typeof text === "string") {
+            newObj.text = text;
+        }
+        if (typeof statusFavorite === "string") {
+            newObj.isFavorite = statusFavorite;
+        }
+        this.pushNewNoteObj(newObj);
     };
     return ModalNoteModel;
 }());
@@ -9632,13 +9688,18 @@ var ModalNoteController = /** @class */ (function () {
                 }
             }
         };
-        this.submitter = function (event) {
+        this.dataCollector = function (event) {
             event.preventDefault();
-            _this.modalModel.test();
-            _this.removeRender();
+            var form = _this.modalView.getComponent();
+            if (form instanceof HTMLFormElement) {
+                var data = new FormData(form);
+                _this.modalModel.dataNoteCreator(data);
+                _this.removeRender();
+            }
         };
         this.modalView = new modal_note_view(status);
-        this.modalModel = new modal_note_model();
+        this.modalModel = modal_note_model.getInstance(status);
+        ;
         this.setListener();
     }
     ModalNoteController.prototype.removeRender = function () {
@@ -9647,7 +9708,7 @@ var ModalNoteController = /** @class */ (function () {
     ModalNoteController.prototype.setListener = function () {
         this.modalView
             .getComponent()
-            .addEventListener("submit", this.submitter);
+            .addEventListener("submit", this.dataCollector);
         window.addEventListener("click", this.handlerAcrtion);
     };
     ModalNoteController.prototype.initialModal = function () {
@@ -9675,6 +9736,7 @@ var new_note_btn_extends = (undefined && undefined.__extends) || (function () {
 })();
 
 
+var new_note_btn_status = "new";
 var imgParams = {
     tagName: "span",
     classList: [
@@ -9716,7 +9778,7 @@ var NewNoteBtn = /** @class */ (function (_super) {
         _this.visibleModal = function () {
             var isModal = document.querySelector("#form");
             if (!isModal) {
-                var isNewNote = "new";
+                var isNewNote = new_note_btn_status;
                 var modalController = new modal_note_controller(isNewNote);
                 modalController.initialModal();
             }

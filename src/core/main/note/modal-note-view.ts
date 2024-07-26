@@ -36,16 +36,10 @@ const titleWrapperParams: ElementParams = {
 
 const inputTitleWrapperParams: ElementParams = {
     tagName: "input",
-    classList: [
-        "block",
-        "max-w-[330px]",
-        "w-full",
-        "outline-none",
-        "text-2xl",
-        "focus:shadow-lg",
-    ],
+    classList: ["block", "max-w-[330px]", "w-full", "outline-none", "text-2xl"],
     attrParams: {
         placeholder: "Title",
+        name: "title",
     },
 };
 
@@ -67,6 +61,7 @@ const realCheckboxParams = {
     ],
     attrParams: {
         type: "checkbox",
+        name: "favorite",
     },
 };
 
@@ -109,7 +104,10 @@ const textareaParams: ElementParams = {
         "mb-6",
         "focus:shadow-lg",
     ],
-    attrParams: { placeholder: "Your note" },
+    attrParams: {
+        placeholder: "Your note",
+        name: "text",
+    },
 };
 
 const wrapperButtonsControlParams: ElementParams = {

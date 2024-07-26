@@ -6,7 +6,7 @@ export default class ModalNoteController {
     modalModel: ModalNoteModel;
     constructor(status: string) {
         this.modalView = new ModalNoteView(status);
-        this.modalModel = new ModalNoteModel();
+        this.modalModel = ModalNoteModel.getInstance(status);
         this.setListener();
     }
 
@@ -17,12 +17,12 @@ export default class ModalNoteController {
     private setListener() {
         this.modalView
             .getComponent()
-            .addEventListener("submit", this.submitter);
+            .addEventListener("submit", this.dataCollector);
 
-        window.addEventListener("click", this.handlerAcrtion);
+        window.addEventListener("click", this.handlerAction);
     }
 
-    private handlerAcrtion = (event: Event) => {
+    private handlerAction = (event: Event) => {
         if (event.target instanceof HTMLElement) {
             const isCancelBtn = event.target.closest(
                 "[data-controll='cancel']"
@@ -35,10 +35,14 @@ export default class ModalNoteController {
         }
     };
 
-    private submitter = (event: Event) => {
+    private dataCollector = (event: Event) => {
         event.preventDefault();
-        this.modalModel.test();
-        this.removeRender();
+        const form = this.modalView.getComponent();
+        if (form instanceof HTMLFormElement) {
+            const data = new FormData(form);
+            this.modalModel.dataNoteCreator(data);
+            this.removeRender();
+        }
     };
 
     initialModal() {
