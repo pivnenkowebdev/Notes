@@ -1,12 +1,12 @@
 import ModalNoteView from "./modal-note-view";
-import ModalNoteModel from "./modal-note-model";
+import DataHandler from "../dataHandler/data-handler";
 
 export default class ModalNoteController {
     modalView: ModalNoteView;
-    modalModel: ModalNoteModel;
+
     constructor(status: string) {
         this.modalView = new ModalNoteView(status);
-        this.modalModel = ModalNoteModel.getInstance(status);
+        DataHandler.initialize();
         this.setListener();
     }
 
@@ -40,7 +40,7 @@ export default class ModalNoteController {
         const form = this.modalView.getComponent();
         if (form instanceof HTMLFormElement) {
             const data = new FormData(form);
-            this.modalModel.dataNoteCreator(data);
+            DataHandler.dataNoteCreator(data);
             this.removeRender();
         }
     };

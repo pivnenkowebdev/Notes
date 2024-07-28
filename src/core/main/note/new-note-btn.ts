@@ -54,6 +54,7 @@ export default class NewNoteBtn extends View {
         this.addInnerElement(this.component.getHtmlElement(), imgBtn);
     }
 
+    // singleTon или что-то придумать
     private visibleModal = () => {
         const isModal = document.querySelector("#form");
         if (!isModal) {

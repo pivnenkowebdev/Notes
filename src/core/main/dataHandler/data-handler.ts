@@ -1,3 +1,4 @@
+// DataHandler.ts
 interface DataNote {
     title: string;
     isFavorite: string;
@@ -18,52 +19,50 @@ const inputsName = {
     textInput: "text",
 };
 
-export default class ModalNoteModel {
-    private static instance: ModalNoteModel;
-    private allNotes: allNotesParams;
-    private key: string;
+export default class DataHandler {
+    private static allNotes: allNotesParams;
+    private static key: string = "notes";
 
-    private constructor() {
-        this.key = "notes";
-        this.initialStorage();
-    }
+    private constructor() {}
 
-    private initialStorage() {
-        const initialNotes = this.getNotesFromLocalStorage(this.key);
+    private static initialStorage() {
+        const initialNotes = DataHandler.getNotesFromLocalStorage(
+            DataHandler.key
+        );
         if (initialNotes) {
-            this.allNotes = initialNotes;
+            DataHandler.allNotes = initialNotes;
         } else {
-            this.allNotes = {
+            DataHandler.allNotes = {
                 regularNotes: [],
                 favoriteNotes: [],
             };
         }
     }
 
-    private pushNewNoteObj(obj: DataNote) {
+    private static pushNewNoteObj(obj: DataNote) {
         if (obj.isFavorite) {
-            this.allNotes.favoriteNotes.push(obj);
-        } else if (!obj.isFavorite) {
-            this.allNotes.regularNotes.push(obj);
+            DataHandler.allNotes.favoriteNotes.push(obj);
+        } else {
+            DataHandler.allNotes.regularNotes.push(obj);
         }
     }
 
-    private setNotesToLocalStorage(key: string, data: allNotesParams) {
+    private static setNotesToLocalStorage(key: string, data: allNotesParams) {
         const dataString = JSON.stringify(data);
         localStorage.setItem(key, dataString);
     }
 
-    private getNotesFromLocalStorage(key: string) {
+    private static getNotesFromLocalStorage(key: string) {
         const stringFromLocal = localStorage.getItem(key);
         if (stringFromLocal) {
-            const parseDate = JSON.parse(stringFromLocal);
-            return parseDate;
+            return JSON.parse(stringFromLocal) as allNotesParams;
         }
+        return null;
     }
 
-    private setDate() {
+    private static setDate() {
         const currentDate = new Date();
-        const dateString = currentDate.toLocaleString("ru-RU", {
+        return currentDate.toLocaleString("ru-RU", {
             year: "numeric",
             month: "numeric",
             day: "numeric",
@@ -71,18 +70,9 @@ export default class ModalNoteModel {
             hour: "2-digit",
             minute: "2-digit",
         });
-
-        return dateString;
     }
 
-    public static getInstance(): ModalNoteModel {
-        if (!ModalNoteModel.instance) {
-            ModalNoteModel.instance = new ModalNoteModel();
-        }
-        return ModalNoteModel.instance;
-    }
-
-    dataNoteCreator(data: FormData) {
+    static dataNoteCreator(data: FormData) {
         const newObj: DataNote = {
             title: "",
             isFavorite: "",
@@ -106,14 +96,21 @@ export default class ModalNoteModel {
 
         if (statusFavorite === "on") {
             newObj.isFavorite = statusFavorite;
-            newObj.id = this.allNotes.favoriteNotes.length + 1;
+            newObj.id = DataHandler.allNotes.favoriteNotes.length + 1;
         } else {
-            newObj.id = this.allNotes.regularNotes.length + 1;
+            newObj.id = DataHandler.allNotes.regularNotes.length + 1;
         }
 
-        newObj.date = this.setDate();
+        newObj.date = DataHandler.setDate();
 
-        this.pushNewNoteObj(newObj);
-        this.setNotesToLocalStorage(this.key, this.allNotes);
+        DataHandler.pushNewNoteObj(newObj);
+        DataHandler.setNotesToLocalStorage(
+            DataHandler.key,
+            DataHandler.allNotes
+        );
+    }
+
+    static initialize() {
+        DataHandler.initialStorage();
     }
 }
