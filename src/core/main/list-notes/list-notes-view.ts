@@ -1,16 +1,9 @@
-import { ElementParams } from "../../utilities/types";
+import { ElementParams, allNotesParams } from "../../utilities/types";
 import View from "../../utilities/view";
 
-const mainTestParams: ElementParams = {
-    tagName: "div",
-    textContent: "main",
-    classList: [],
-};
-
-const favoriteTestParams: ElementParams = {
-    tagName: "div",
-    textContent: "favorite",
-    classList: [],
+const stagesListParams = {
+    main: "home-page",
+    favorites: "favorites-page",
 };
 
 export default class ListNotesView extends View {
@@ -22,27 +15,16 @@ export default class ListNotesView extends View {
         super(listNotesParams);
     }
 
-    cleanWrapper() {
+    private cleanWrapper() {
         this.getComponent().innerHTML = "";
     }
 
-    renderCurrentPage(urlPage: string) {
+    createCurrentList(params: allNotesParams, stage: string) {
         this.cleanWrapper();
-        switch (urlPage) {
-            case "home-page": {
-                this.addInnerElement(
-                    this.getComponent(),
-                    this.createElement(mainTestParams)
-                );
-                break;
-            }
-            case "favorites-page": {
-                this.addInnerElement(
-                    this.getComponent(),
-                    this.createElement(favoriteTestParams)
-                );
-                break;
-            }
+        if (stage === stagesListParams.main) {
+            console.log("all notes");
+        } else if (stage === stagesListParams.favorites) {
+            console.log("favorites notes");
         }
     }
 }

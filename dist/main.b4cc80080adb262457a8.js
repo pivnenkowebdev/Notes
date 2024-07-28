@@ -9111,6 +9111,7 @@ var DataHandler = /** @class */ (function () {
         DataHandler.initialStorage();
     };
     DataHandler.getNotesFromLocalStorage = function (key) {
+        if (key === void 0) { key = this.key; }
         var stringFromLocal = localStorage.getItem(key);
         if (stringFromLocal) {
             return JSON.parse(stringFromLocal);
@@ -9738,7 +9739,83 @@ var ModalNoteView = /** @class */ (function (_super) {
 }(view));
 /* harmony default export */ const modal_note_view = (ModalNoteView);
 
+;// CONCATENATED MODULE: ./src/core/main/list-notes/list-notes-view.ts
+var list_notes_view_extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+var stagesListParams = {
+    main: "home-page",
+    favorites: "favorites-page",
+};
+var ListNotesView = /** @class */ (function (_super) {
+    list_notes_view_extends(ListNotesView, _super);
+    function ListNotesView() {
+        var listNotesParams = {
+            tagName: "ul",
+            classList: [],
+        };
+        return _super.call(this, listNotesParams) || this;
+    }
+    ListNotesView.prototype.cleanWrapper = function () {
+        this.getComponent().innerHTML = "";
+    };
+    ListNotesView.prototype.createCurrentList = function (params, stage) {
+        if (stage === stagesListParams.main) {
+            console.log("all notes");
+        }
+        else if (stage === stagesListParams.favorites) {
+            console.log("favorites notes");
+        }
+    };
+    return ListNotesView;
+}(view));
+/* harmony default export */ const list_notes_view = (ListNotesView);
+
+;// CONCATENATED MODULE: ./src/core/utilities/helper.ts
+function checkTrust(value) {
+    if (value === undefined || value === null) {
+        throw new Error("".concat(value, " is not defined"));
+    }
+}
+
+;// CONCATENATED MODULE: ./src/core/main/list-notes/list-notes-controller.ts
+
+
+
+var ListNotesController = /** @class */ (function () {
+    function ListNotesController() {
+        this.listNotesView = new list_notes_view();
+    }
+    ListNotesController.getCurrentData = function () {
+        var actuallyData = data_handler.getNotesFromLocalStorage();
+        checkTrust(actuallyData);
+        return actuallyData;
+    };
+    ListNotesController.prototype.setCurrentPage = function (urlPage) {
+        this.listNotesView.createCurrentList(ListNotesController.getCurrentData(), urlPage);
+    };
+    ListNotesController.prototype.getRender = function () {
+        return this.listNotesView.getComponent();
+    };
+    return ListNotesController;
+}());
+/* harmony default export */ const list_notes_controller = (ListNotesController);
+
 ;// CONCATENATED MODULE: ./src/core/main/note-modal/modal-note-controller.ts
+
 
 
 var ModalNoteController = /** @class */ (function () {
@@ -9759,6 +9836,7 @@ var ModalNoteController = /** @class */ (function () {
             if (form instanceof HTMLFormElement) {
                 var data = new FormData(form);
                 data_handler.submitter(data);
+                list_notes_controller.getCurrentData();
                 _this.removeRender();
             }
         };
@@ -9781,7 +9859,7 @@ var ModalNoteController = /** @class */ (function () {
 }());
 /* harmony default export */ const modal_note_controller = (ModalNoteController);
 
-;// CONCATENATED MODULE: ./src/core/main/note-modal/new-note-btn.ts
+;// CONCATENATED MODULE: ./src/core/main/controls/new-note-btn.ts
 var new_note_btn_extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -9906,62 +9984,6 @@ var ControlElementsView = /** @class */ (function (_super) {
 }(view));
 /* harmony default export */ const control_elements_view = (ControlElementsView);
 
-;// CONCATENATED MODULE: ./src/core/main/list-notes/list-notes-view.ts
-var list_notes_view_extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-
-var mainTestParams = {
-    tagName: "div",
-    textContent: "main",
-    classList: [],
-};
-var favoriteTestParams = {
-    tagName: "div",
-    textContent: "favorite",
-    classList: [],
-};
-var ListNotesView = /** @class */ (function (_super) {
-    list_notes_view_extends(ListNotesView, _super);
-    function ListNotesView() {
-        var listNotesParams = {
-            tagName: "ul",
-            classList: [],
-        };
-        return _super.call(this, listNotesParams) || this;
-    }
-    ListNotesView.prototype.cleanWrapper = function () {
-        this.getComponent().innerHTML = "";
-    };
-    ListNotesView.prototype.renderCurrentPage = function (urlPage) {
-        this.cleanWrapper();
-        switch (urlPage) {
-            case "home-page": {
-                this.addInnerElement(this.getComponent(), this.createElement(mainTestParams));
-                break;
-            }
-            case "favorites-page": {
-                this.addInnerElement(this.getComponent(), this.createElement(favoriteTestParams));
-                break;
-            }
-        }
-    };
-    return ListNotesView;
-}(view));
-/* harmony default export */ const list_notes_view = (ListNotesView);
-
 ;// CONCATENATED MODULE: ./src/core/app.ts
 var appContainer = document.body;
 
@@ -9974,17 +9996,17 @@ var App = /** @class */ (function () {
         var _this = this;
         this.header = new header_view();
         this.main = new control_elements_view();
-        this.listNotes = new list_notes_view();
+        this.listNotes = new list_notes_controller();
         this.routing = new rout(function (hash) {
-            return _this.listNotes.renderCurrentPage(hash);
+            return _this.listNotes.setCurrentPage(hash);
         });
         data_handler.initialize();
         this.routing.updateTitle("home-page");
-        this.listNotes.renderCurrentPage(this.routing.getCurrentHash());
+        this.listNotes.setCurrentPage(this.routing.getCurrentHash());
         this.insertTemplate();
     }
     App.prototype.insertTemplate = function () {
-        appContainer.append(this.header.getComponent(), this.main.getComponent(), this.listNotes.getComponent());
+        appContainer.append(this.header.getComponent(), this.main.getComponent(), this.listNotes.getRender());
     };
     return App;
 }());

@@ -12,3 +12,17 @@ export interface ElementParams {
     attrParams?: AttributeParams;
     callback?: (event: Event) => void;
 }
+
+export interface DataNote {
+    title: string;
+    isFavorite: string;
+    text: string;
+    id: number | undefined;
+    date: string;
+    changed: boolean;
+}
+
+export interface allNotesParams {
+    regularNotes: DataNote[];
+    favoriteNotes: DataNote[];
+}

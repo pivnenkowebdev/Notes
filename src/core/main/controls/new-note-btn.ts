@@ -1,6 +1,6 @@
 import View from "../../utilities/view";
 import { ElementParams } from "../../utilities/types";
-import ModalNoteController from "./modal-note-controller";
+import ModalNoteController from "../note-modal/modal-note-controller";
 
 const status: string = "new";
 

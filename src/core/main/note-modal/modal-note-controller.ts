@@ -1,5 +1,6 @@
 import ModalNoteView from "./modal-note-view";
 import DataHandler from "../../utilities/data-handler";
+import ListNotesController from "../list-notes/list-notes-controller";
 
 export default class ModalNoteController {
     modalView: ModalNoteView;
@@ -40,6 +41,7 @@ export default class ModalNoteController {
         if (form instanceof HTMLFormElement) {
             const data = new FormData(form);
             DataHandler.submitter(data);
+            ListNotesController.getCurrentData();
             this.removeRender();
         }
     };

@@ -1,7 +1,7 @@
 import { ElementParams } from "../../utilities/types";
 import View from "../../utilities/view";
 import Nav from "./nav-view";
-import NewNoteBtn from "../note-modal/new-note-btn";
+import NewNoteBtn from "./new-note-btn";
 
 const sectionControllParams: ElementParams = {
     tagName: "section",

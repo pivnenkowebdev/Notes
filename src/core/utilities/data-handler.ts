@@ -1,16 +1,4 @@
-interface DataNote {
-    title: string;
-    isFavorite: string;
-    text: string;
-    id: number | undefined;
-    date: string;
-    changed: boolean;
-}
-
-interface allNotesParams {
-    regularNotes: DataNote[];
-    favoriteNotes: DataNote[];
-}
+import { DataNote, allNotesParams } from "../utilities/types";
 
 const inputsName = {
     titleInput: "title",
@@ -19,8 +7,8 @@ const inputsName = {
 };
 
 export default class DataHandler {
-    private static allNotes: allNotesParams;
-    private static key: string = "notes";
+    static allNotes: allNotesParams;
+    static key: string = "notes";
 
     private constructor() {}
 
@@ -101,7 +89,7 @@ export default class DataHandler {
         DataHandler.initialStorage();
     }
 
-    static getNotesFromLocalStorage(key: string) {
+    static getNotesFromLocalStorage(key = this.key) {
         const stringFromLocal = localStorage.getItem(key);
         if (stringFromLocal) {
             return JSON.parse(stringFromLocal) as allNotesParams;

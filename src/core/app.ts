@@ -3,20 +3,18 @@ import Router from "./utilities/rout";
 import DataHandler from "./utilities/data-handler";
 import HeaderView from "./header/header-view";
 import ControlElementsView from "./main/controls/control-elements-view";
-import ListNotesView from "./main/list-notes/list-notes-view";
+import ListNotesController from "./main/list-notes/list-notes-controller";
 
 export default class App {
     header = new HeaderView();
     main = new ControlElementsView();
-    listNotes = new ListNotesView();
-    routing = new Router((hash: string) =>
-        this.listNotes.renderCurrentPage(hash)
-    );
+    listNotes = new ListNotesController();
+    routing = new Router((hash: string) => this.listNotes.setCurrentPage(hash));
 
     constructor() {
         DataHandler.initialize();
         this.routing.updateTitle("home-page");
-        this.listNotes.renderCurrentPage(this.routing.getCurrentHash());
+        this.listNotes.setCurrentPage(this.routing.getCurrentHash());
         this.insertTemplate();
     }
 
@@ -24,7 +22,7 @@ export default class App {
         appContainer.append(
             this.header.getComponent(),
             this.main.getComponent(),
-            this.listNotes.getComponent()
+            this.listNotes.getRender()
         );
     }
 }
