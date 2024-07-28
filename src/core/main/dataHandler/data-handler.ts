@@ -1,4 +1,3 @@
-// DataHandler.ts
 interface DataNote {
     title: string;
     isFavorite: string;
@@ -52,14 +51,6 @@ export default class DataHandler {
         localStorage.setItem(key, dataString);
     }
 
-    private static getNotesFromLocalStorage(key: string) {
-        const stringFromLocal = localStorage.getItem(key);
-        if (stringFromLocal) {
-            return JSON.parse(stringFromLocal) as allNotesParams;
-        }
-        return null;
-    }
-
     private static setDate() {
         const currentDate = new Date();
         return currentDate.toLocaleString("ru-RU", {
@@ -72,7 +63,7 @@ export default class DataHandler {
         });
     }
 
-    static dataNoteCreator(data: FormData) {
+    private static dataNoteCreator(data: FormData) {
         const newObj: DataNote = {
             title: "",
             isFavorite: "",
@@ -103,14 +94,28 @@ export default class DataHandler {
 
         newObj.date = DataHandler.setDate();
 
-        DataHandler.pushNewNoteObj(newObj);
-        DataHandler.setNotesToLocalStorage(
-            DataHandler.key,
-            DataHandler.allNotes
-        );
+        return newObj;
     }
 
     static initialize() {
         DataHandler.initialStorage();
+    }
+
+    static getNotesFromLocalStorage(key: string) {
+        const stringFromLocal = localStorage.getItem(key);
+        if (stringFromLocal) {
+            return JSON.parse(stringFromLocal) as allNotesParams;
+        }
+        return null;
+    }
+
+    static submitter(data: FormData) {
+        const preparetedData = DataHandler.dataNoteCreator(data);
+
+        DataHandler.pushNewNoteObj(preparetedData);
+        DataHandler.setNotesToLocalStorage(
+            DataHandler.key,
+            DataHandler.allNotes
+        );
     }
 }

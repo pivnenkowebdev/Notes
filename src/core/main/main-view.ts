@@ -2,7 +2,7 @@ import { ElementParams } from "../utilities/types";
 import View from "../utilities/view";
 import Nav from "./nav/nav-view";
 import NewNoteBtn from "./note/new-note-btn";
-import ListNotesView from "./note/list-notes-view";
+// import ListNotesView from "./note/list-notes-view";
 
 const sectionControllParams: ElementParams = {
     tagName: "section",
@@ -30,7 +30,7 @@ export default class MainView extends View {
         const newNoteBtn = new NewNoteBtn();
         this.addInnerElement(sectionControll, newNoteBtn);
 
-        const listNotes = new ListNotesView();
-        this.addInnerElement(this.component.getHtmlElement(), listNotes);
+        // const listNotes = new ListNotesView();
+        // this.addInnerElement(this.component.getHtmlElement(), listNotes);
     }
 }

@@ -54,13 +54,12 @@ export default class NewNoteBtn extends View {
         this.addInnerElement(this.component.getHtmlElement(), imgBtn);
     }
 
-    // singleTon или что-то придумать
     private visibleModal = () => {
         const isModal = document.querySelector("#form");
         if (!isModal) {
             const isNewNote = status;
-            const modalController = new ModalNoteController(isNewNote);
-            modalController.initialModal();
+            const newModal = new ModalNoteController(isNewNote);
+            newModal.initialModal();
         }
     };
 }

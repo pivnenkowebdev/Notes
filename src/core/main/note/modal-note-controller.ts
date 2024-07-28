@@ -6,7 +6,6 @@ export default class ModalNoteController {
 
     constructor(status: string) {
         this.modalView = new ModalNoteView(status);
-        DataHandler.initialize();
         this.setListener();
     }
 
@@ -40,7 +39,7 @@ export default class ModalNoteController {
         const form = this.modalView.getComponent();
         if (form instanceof HTMLFormElement) {
             const data = new FormData(form);
-            DataHandler.dataNoteCreator(data);
+            DataHandler.submitter(data);
             this.removeRender();
         }
     };

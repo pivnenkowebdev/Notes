@@ -9035,6 +9035,94 @@ var Router = /** @class */ (function () {
 }());
 /* harmony default export */ const rout = (Router);
 
+;// CONCATENATED MODULE: ./src/core/main/dataHandler/data-handler.ts
+var inputsName = {
+    titleInput: "title",
+    favoriteCheckbox: "favorite",
+    textInput: "text",
+};
+var DataHandler = /** @class */ (function () {
+    function DataHandler() {
+    }
+    DataHandler.initialStorage = function () {
+        var initialNotes = DataHandler.getNotesFromLocalStorage(DataHandler.key);
+        if (initialNotes) {
+            DataHandler.allNotes = initialNotes;
+        }
+        else {
+            DataHandler.allNotes = {
+                regularNotes: [],
+                favoriteNotes: [],
+            };
+        }
+    };
+    DataHandler.pushNewNoteObj = function (obj) {
+        if (obj.isFavorite) {
+            DataHandler.allNotes.favoriteNotes.push(obj);
+        }
+        else {
+            DataHandler.allNotes.regularNotes.push(obj);
+        }
+    };
+    DataHandler.setNotesToLocalStorage = function (key, data) {
+        var dataString = JSON.stringify(data);
+        localStorage.setItem(key, dataString);
+    };
+    DataHandler.getNotesFromLocalStorage = function (key) {
+        var stringFromLocal = localStorage.getItem(key);
+        if (stringFromLocal) {
+            return JSON.parse(stringFromLocal);
+        }
+        return null;
+    };
+    DataHandler.setDate = function () {
+        var currentDate = new Date();
+        return currentDate.toLocaleString("ru-RU", {
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+            hour12: false,
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    };
+    DataHandler.dataNoteCreator = function (data) {
+        var newObj = {
+            title: "",
+            isFavorite: "",
+            text: "",
+            id: 0,
+            date: "",
+            changed: false,
+        };
+        var title = data.get(inputsName.titleInput);
+        var statusFavorite = data.get(inputsName.favoriteCheckbox);
+        var text = data.get(inputsName.textInput);
+        if (typeof title === "string") {
+            newObj.title = title;
+        }
+        if (typeof text === "string") {
+            newObj.text = text;
+        }
+        if (statusFavorite === "on") {
+            newObj.isFavorite = statusFavorite;
+            newObj.id = DataHandler.allNotes.favoriteNotes.length + 1;
+        }
+        else {
+            newObj.id = DataHandler.allNotes.regularNotes.length + 1;
+        }
+        newObj.date = DataHandler.setDate();
+        DataHandler.pushNewNoteObj(newObj);
+        DataHandler.setNotesToLocalStorage(DataHandler.key, DataHandler.allNotes);
+    };
+    DataHandler.initialize = function () {
+        DataHandler.initialStorage();
+    };
+    DataHandler.key = "notes";
+    return DataHandler;
+}());
+/* harmony default export */ const data_handler = (DataHandler);
+
 ;// CONCATENATED MODULE: ./src/core/utilities/creator.ts
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -9648,6 +9736,7 @@ var ModalNoteView = /** @class */ (function (_super) {
 
 ;// CONCATENATED MODULE: ./src/core/main/note/modal-note-controller.ts
 
+
 var ModalNoteController = /** @class */ (function () {
     function ModalNoteController(status) {
         var _this = this;
@@ -9665,7 +9754,7 @@ var ModalNoteController = /** @class */ (function () {
             var form = _this.modalView.getComponent();
             if (form instanceof HTMLFormElement) {
                 var data = new FormData(form);
-                // DataHandler.dataNoteCreator(data);
+                data_handler.dataNoteCreator(data);
                 _this.removeRender();
             }
         };
@@ -9745,7 +9834,7 @@ var NewNoteBtn = /** @class */ (function (_super) {
             callback: function () { return _this.visibleModal(); },
         };
         _this = _super.call(this, btnNewNote) || this;
-        // singleTon или что-то придумать
+        // Static
         _this.visibleModal = function () {
             var isModal = document.querySelector("#form");
             if (!isModal) {
@@ -9766,6 +9855,55 @@ var NewNoteBtn = /** @class */ (function (_super) {
     return NewNoteBtn;
 }(view));
 /* harmony default export */ const new_note_btn = (NewNoteBtn);
+
+;// CONCATENATED MODULE: ./src/core/main/main-view.ts
+var main_view_extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+
+var sectionControllParams = {
+    tagName: "section",
+    classList: ["pt-8", "pb-12", "flex", "flex-col", "gap-4", "items-center"],
+};
+var MainView = /** @class */ (function (_super) {
+    main_view_extends(MainView, _super);
+    function MainView() {
+        var _this = this;
+        var mainParams = {
+            tagName: "main",
+            classList: ["container"],
+        };
+        _this = _super.call(this, mainParams) || this;
+        _this.configureView();
+        return _this;
+    }
+    MainView.prototype.configureView = function () {
+        var sectionControll = this.createElement(sectionControllParams);
+        this.addInnerElement(this.component.getHtmlElement(), sectionControll);
+        var nav = new nav_view();
+        this.addInnerElement(sectionControll, nav);
+        var newNoteBtn = new new_note_btn();
+        this.addInnerElement(sectionControll, newNoteBtn);
+        // const listNotes = new ListNotesView();
+        // this.addInnerElement(this.component.getHtmlElement(), listNotes);
+    };
+    return MainView;
+}(view));
+/* harmony default export */ const main_view = (MainView);
 
 ;// CONCATENATED MODULE: ./src/core/main/note/list-notes-view.ts
 var list_notes_view_extends = (undefined && undefined.__extends) || (function () {
@@ -9823,58 +9961,9 @@ var ListNotesView = /** @class */ (function (_super) {
 }(view));
 /* harmony default export */ const list_notes_view = (ListNotesView);
 
-;// CONCATENATED MODULE: ./src/core/main/main-view.ts
-var main_view_extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-
-
-
-
-var sectionControllParams = {
-    tagName: "section",
-    classList: ["pt-8", "pb-12", "flex", "flex-col", "gap-4", "items-center"],
-};
-var MainView = /** @class */ (function (_super) {
-    main_view_extends(MainView, _super);
-    function MainView() {
-        var _this = this;
-        var mainParams = {
-            tagName: "main",
-            classList: ["container"],
-        };
-        _this = _super.call(this, mainParams) || this;
-        _this.configureView();
-        return _this;
-    }
-    MainView.prototype.configureView = function () {
-        var sectionControll = this.createElement(sectionControllParams);
-        this.addInnerElement(this.component.getHtmlElement(), sectionControll);
-        var nav = new nav_view();
-        this.addInnerElement(sectionControll, nav);
-        var newNoteBtn = new new_note_btn();
-        this.addInnerElement(sectionControll, newNoteBtn);
-        var listNotes = new list_notes_view();
-        this.addInnerElement(this.component.getHtmlElement(), listNotes);
-    };
-    return MainView;
-}(view));
-/* harmony default export */ const main_view = (MainView);
-
 ;// CONCATENATED MODULE: ./src/core/app.ts
 var appContainer = document.body;
+
 
 
 
@@ -9885,7 +9974,10 @@ var App = /** @class */ (function () {
         this.listNotes = new list_notes_view();
         this.header = new header_view();
         this.main = new main_view();
-        this.routing = new rout(function (hash) { return _this.listNotes.renderCurrentPage(hash); });
+        this.routing = new rout(function (hash) {
+            return _this.listNotes.renderCurrentPage(hash);
+        });
+        data_handler.initialize();
         this.routing.updateTitle("home-page");
         this.listNotes.renderCurrentPage(this.routing.getCurrentHash());
         this.insertTemplate();
