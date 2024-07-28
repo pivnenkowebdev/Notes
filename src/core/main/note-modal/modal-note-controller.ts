@@ -1,5 +1,5 @@
 import ModalNoteView from "./modal-note-view";
-import DataHandler from "../dataHandler/data-handler";
+import DataHandler from "../../utilities/data-handler";
 
 export default class ModalNoteController {
     modalView: ModalNoteView;

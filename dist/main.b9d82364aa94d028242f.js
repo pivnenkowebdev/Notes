@@ -8999,7 +8999,7 @@ _global["default"]._babelPolyfill = true;
 (() => {
 "use strict";
 
-;// CONCATENATED MODULE: ./src/core/main/nav/rout.ts
+;// CONCATENATED MODULE: ./src/core/utilities/rout.ts
 var Router = /** @class */ (function () {
     function Router(onHashChange) {
         this.initialPage = "home-page";
@@ -9035,7 +9035,7 @@ var Router = /** @class */ (function () {
 }());
 /* harmony default export */ const rout = (Router);
 
-;// CONCATENATED MODULE: ./src/core/main/dataHandler/data-handler.ts
+;// CONCATENATED MODULE: ./src/core/utilities/data-handler.ts
 var inputsName = {
     titleInput: "title",
     favoriteCheckbox: "favorite",
@@ -9067,13 +9067,6 @@ var DataHandler = /** @class */ (function () {
     DataHandler.setNotesToLocalStorage = function (key, data) {
         var dataString = JSON.stringify(data);
         localStorage.setItem(key, dataString);
-    };
-    DataHandler.getNotesFromLocalStorage = function (key) {
-        var stringFromLocal = localStorage.getItem(key);
-        if (stringFromLocal) {
-            return JSON.parse(stringFromLocal);
-        }
-        return null;
     };
     DataHandler.setDate = function () {
         var currentDate = new Date();
@@ -9112,11 +9105,22 @@ var DataHandler = /** @class */ (function () {
             newObj.id = DataHandler.allNotes.regularNotes.length + 1;
         }
         newObj.date = DataHandler.setDate();
-        DataHandler.pushNewNoteObj(newObj);
-        DataHandler.setNotesToLocalStorage(DataHandler.key, DataHandler.allNotes);
+        return newObj;
     };
     DataHandler.initialize = function () {
         DataHandler.initialStorage();
+    };
+    DataHandler.getNotesFromLocalStorage = function (key) {
+        var stringFromLocal = localStorage.getItem(key);
+        if (stringFromLocal) {
+            return JSON.parse(stringFromLocal);
+        }
+        return null;
+    };
+    DataHandler.submitter = function (data) {
+        var preparetedData = DataHandler.dataNoteCreator(data);
+        DataHandler.pushNewNoteObj(preparetedData);
+        DataHandler.setNotesToLocalStorage(DataHandler.key, DataHandler.allNotes);
     };
     DataHandler.key = "notes";
     return DataHandler;
@@ -9378,7 +9382,7 @@ var HeaderView = /** @class */ (function (_super) {
 }(view));
 /* harmony default export */ const header_view = (HeaderView);
 
-;// CONCATENATED MODULE: ./src/core/main/nav/nav-view.ts
+;// CONCATENATED MODULE: ./src/core/main/controls/nav-view.ts
 var nav_view_extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -9475,7 +9479,7 @@ var Nav = /** @class */ (function (_super) {
 }(view));
 /* harmony default export */ const nav_view = (Nav);
 
-;// CONCATENATED MODULE: ./src/core/main/note/modal-note-view.ts
+;// CONCATENATED MODULE: ./src/core/main/note-modal/modal-note-view.ts
 var modal_note_view_extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -9734,7 +9738,7 @@ var ModalNoteView = /** @class */ (function (_super) {
 }(view));
 /* harmony default export */ const modal_note_view = (ModalNoteView);
 
-;// CONCATENATED MODULE: ./src/core/main/note/modal-note-controller.ts
+;// CONCATENATED MODULE: ./src/core/main/note-modal/modal-note-controller.ts
 
 
 var ModalNoteController = /** @class */ (function () {
@@ -9754,7 +9758,7 @@ var ModalNoteController = /** @class */ (function () {
             var form = _this.modalView.getComponent();
             if (form instanceof HTMLFormElement) {
                 var data = new FormData(form);
-                data_handler.dataNoteCreator(data);
+                data_handler.submitter(data);
                 _this.removeRender();
             }
         };
@@ -9777,7 +9781,7 @@ var ModalNoteController = /** @class */ (function () {
 }());
 /* harmony default export */ const modal_note_controller = (ModalNoteController);
 
-;// CONCATENATED MODULE: ./src/core/main/note/new-note-btn.ts
+;// CONCATENATED MODULE: ./src/core/main/note-modal/new-note-btn.ts
 var new_note_btn_extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -9834,13 +9838,12 @@ var NewNoteBtn = /** @class */ (function (_super) {
             callback: function () { return _this.visibleModal(); },
         };
         _this = _super.call(this, btnNewNote) || this;
-        // Static
         _this.visibleModal = function () {
             var isModal = document.querySelector("#form");
             if (!isModal) {
                 var isNewNote = new_note_btn_status;
-                var modalController = new modal_note_controller(isNewNote);
-                modalController.initialModal();
+                var newModal = new modal_note_controller(isNewNote);
+                newModal.initialModal();
             }
         };
         _this.configureView();
@@ -9856,8 +9859,8 @@ var NewNoteBtn = /** @class */ (function (_super) {
 }(view));
 /* harmony default export */ const new_note_btn = (NewNoteBtn);
 
-;// CONCATENATED MODULE: ./src/core/main/main-view.ts
-var main_view_extends = (undefined && undefined.__extends) || (function () {
+;// CONCATENATED MODULE: ./src/core/main/controls/control-elements-view.ts
+var control_elements_view_extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -9879,9 +9882,9 @@ var sectionControllParams = {
     tagName: "section",
     classList: ["pt-8", "pb-12", "flex", "flex-col", "gap-4", "items-center"],
 };
-var MainView = /** @class */ (function (_super) {
-    main_view_extends(MainView, _super);
-    function MainView() {
+var ControlElementsView = /** @class */ (function (_super) {
+    control_elements_view_extends(ControlElementsView, _super);
+    function ControlElementsView() {
         var _this = this;
         var mainParams = {
             tagName: "main",
@@ -9891,21 +9894,19 @@ var MainView = /** @class */ (function (_super) {
         _this.configureView();
         return _this;
     }
-    MainView.prototype.configureView = function () {
+    ControlElementsView.prototype.configureView = function () {
         var sectionControll = this.createElement(sectionControllParams);
         this.addInnerElement(this.component.getHtmlElement(), sectionControll);
         var nav = new nav_view();
         this.addInnerElement(sectionControll, nav);
         var newNoteBtn = new new_note_btn();
         this.addInnerElement(sectionControll, newNoteBtn);
-        // const listNotes = new ListNotesView();
-        // this.addInnerElement(this.component.getHtmlElement(), listNotes);
     };
-    return MainView;
+    return ControlElementsView;
 }(view));
-/* harmony default export */ const main_view = (MainView);
+/* harmony default export */ const control_elements_view = (ControlElementsView);
 
-;// CONCATENATED MODULE: ./src/core/main/note/list-notes-view.ts
+;// CONCATENATED MODULE: ./src/core/main/list-notes/list-notes-view.ts
 var list_notes_view_extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -9971,9 +9972,9 @@ var appContainer = document.body;
 var App = /** @class */ (function () {
     function App() {
         var _this = this;
-        this.listNotes = new list_notes_view();
         this.header = new header_view();
-        this.main = new main_view();
+        this.main = new control_elements_view();
+        this.listNotes = new list_notes_view();
         this.routing = new rout(function (hash) {
             return _this.listNotes.renderCurrentPage(hash);
         });

@@ -1,15 +1,14 @@
-import { ElementParams } from "../utilities/types";
-import View from "../utilities/view";
-import Nav from "./nav/nav-view";
-import NewNoteBtn from "./note/new-note-btn";
-// import ListNotesView from "./note/list-notes-view";
+import { ElementParams } from "../../utilities/types";
+import View from "../../utilities/view";
+import Nav from "./nav-view";
+import NewNoteBtn from "../note-modal/new-note-btn";
 
 const sectionControllParams: ElementParams = {
     tagName: "section",
     classList: ["pt-8", "pb-12", "flex", "flex-col", "gap-4", "items-center"],
 };
 
-export default class MainView extends View {
+export default class ControlElementsView extends View {
     constructor() {
         const mainParams: ElementParams = {
             tagName: "main",
@@ -29,8 +28,5 @@ export default class MainView extends View {
 
         const newNoteBtn = new NewNoteBtn();
         this.addInnerElement(sectionControll, newNoteBtn);
-
-        // const listNotes = new ListNotesView();
-        // this.addInnerElement(this.component.getHtmlElement(), listNotes);
     }
 }

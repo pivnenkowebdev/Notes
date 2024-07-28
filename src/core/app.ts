@@ -1,14 +1,14 @@
 export const appContainer: HTMLElement = document.body;
-import Router from "./main/nav/rout";
-import DataHandler from "./main/dataHandler/data-handler";
+import Router from "./utilities/rout";
+import DataHandler from "./utilities/data-handler";
 import HeaderView from "./header/header-view";
-import MainView from "./main/main-view";
-import ListNotesView from "./main/note/list-notes-view";
+import ControlElementsView from "./main/controls/control-elements-view";
+import ListNotesView from "./main/list-notes/list-notes-view";
 
 export default class App {
-    listNotes = new ListNotesView();
     header = new HeaderView();
-    main = new MainView();
+    main = new ControlElementsView();
+    listNotes = new ListNotesView();
     routing = new Router((hash: string) =>
         this.listNotes.renderCurrentPage(hash)
     );
