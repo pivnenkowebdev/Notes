@@ -9035,99 +9035,6 @@ var Router = /** @class */ (function () {
 }());
 /* harmony default export */ const rout = (Router);
 
-;// CONCATENATED MODULE: ./src/core/utilities/data-handler.ts
-var inputsName = {
-    titleInput: "title",
-    favoriteCheckbox: "favorite",
-    textInput: "text",
-};
-var DataHandler = /** @class */ (function () {
-    function DataHandler() {
-    }
-    DataHandler.initialStorage = function () {
-        var initialNotes = DataHandler.getNotesFromLocalStorage(DataHandler.key);
-        if (initialNotes) {
-            DataHandler.allNotes = initialNotes;
-        }
-        else {
-            DataHandler.allNotes = {
-                regularNotes: [],
-                favoriteNotes: [],
-            };
-        }
-    };
-    DataHandler.pushNewNoteObj = function (obj) {
-        if (obj.isFavorite) {
-            DataHandler.allNotes.favoriteNotes.push(obj);
-        }
-        else {
-            DataHandler.allNotes.regularNotes.push(obj);
-        }
-    };
-    DataHandler.setNotesToLocalStorage = function (key, data) {
-        var dataString = JSON.stringify(data);
-        localStorage.setItem(key, dataString);
-    };
-    DataHandler.setDate = function () {
-        var currentDate = new Date();
-        return currentDate.toLocaleString("ru-RU", {
-            year: "numeric",
-            month: "numeric",
-            day: "numeric",
-            hour12: false,
-            hour: "2-digit",
-            minute: "2-digit",
-        });
-    };
-    DataHandler.dataNoteCreator = function (data) {
-        var newObj = {
-            title: "",
-            isFavorite: "",
-            text: "",
-            id: 0,
-            date: "",
-            changed: false,
-        };
-        var title = data.get(inputsName.titleInput);
-        var statusFavorite = data.get(inputsName.favoriteCheckbox);
-        var text = data.get(inputsName.textInput);
-        if (typeof title === "string") {
-            newObj.title = title;
-        }
-        if (typeof text === "string") {
-            newObj.text = text;
-        }
-        if (statusFavorite === "on") {
-            newObj.isFavorite = statusFavorite;
-            newObj.id = DataHandler.allNotes.favoriteNotes.length + 1;
-        }
-        else {
-            newObj.id = DataHandler.allNotes.regularNotes.length + 1;
-        }
-        newObj.date = DataHandler.setDate();
-        return newObj;
-    };
-    DataHandler.initialize = function () {
-        DataHandler.initialStorage();
-    };
-    DataHandler.getNotesFromLocalStorage = function (key) {
-        if (key === void 0) { key = this.key; }
-        var stringFromLocal = localStorage.getItem(key);
-        if (stringFromLocal) {
-            return JSON.parse(stringFromLocal);
-        }
-        return null;
-    };
-    DataHandler.submitter = function (data) {
-        var preparetedData = DataHandler.dataNoteCreator(data);
-        DataHandler.pushNewNoteObj(preparetedData);
-        DataHandler.setNotesToLocalStorage(DataHandler.key, DataHandler.allNotes);
-    };
-    DataHandler.key = "notes";
-    return DataHandler;
-}());
-/* harmony default export */ const data_handler = (DataHandler);
-
 ;// CONCATENATED MODULE: ./src/core/utilities/creator.ts
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -9739,6 +9646,93 @@ var ModalNoteView = /** @class */ (function (_super) {
 }(view));
 /* harmony default export */ const modal_note_view = (ModalNoteView);
 
+;// CONCATENATED MODULE: ./src/core/utilities/data-handler.ts
+var inputsName = {
+    titleInput: "title",
+    favoriteCheckbox: "favorite",
+    textInput: "text",
+};
+var DataHandler = /** @class */ (function () {
+    function DataHandler() {
+    }
+    DataHandler.pushNewNoteObj = function (obj) {
+        if (obj.isFavorite) {
+            DataHandler.allNotes.favoriteNotes.push(obj);
+        }
+        else {
+            DataHandler.allNotes.regularNotes.push(obj);
+        }
+    };
+    DataHandler.setNotesToLocalStorage = function (key, data) {
+        var dataString = JSON.stringify(data);
+        localStorage.setItem(key, dataString);
+    };
+    DataHandler.setDate = function () {
+        var currentDate = new Date();
+        return currentDate.toLocaleString("ru-RU", {
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+            hour12: false,
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    };
+    DataHandler.dataNoteCreator = function (data) {
+        var newObj = {
+            title: "",
+            isFavorite: "",
+            text: "",
+            id: 0,
+            date: "",
+            changed: false,
+        };
+        var title = data.get(inputsName.titleInput);
+        var statusFavorite = data.get(inputsName.favoriteCheckbox);
+        var text = data.get(inputsName.textInput);
+        if (typeof title === "string") {
+            newObj.title = title;
+        }
+        if (typeof text === "string") {
+            newObj.text = text;
+        }
+        if (statusFavorite === "on") {
+            newObj.isFavorite = statusFavorite;
+            newObj.id = DataHandler.allNotes.favoriteNotes.length + 1;
+        }
+        else {
+            newObj.id = DataHandler.allNotes.regularNotes.length + 1;
+        }
+        newObj.date = DataHandler.setDate();
+        return newObj;
+    };
+    DataHandler.initialize = function () {
+        DataHandler.initialStorage();
+    };
+    DataHandler.initialStorage = function (key) {
+        if (key === void 0) { key = this.key; }
+        var initialNotes = localStorage.getItem(key);
+        if (initialNotes) {
+            DataHandler.allNotes = JSON.parse(initialNotes);
+        }
+        else {
+            DataHandler.allNotes = {
+                regularNotes: [],
+                favoriteNotes: [],
+            };
+        }
+        return DataHandler.allNotes;
+    };
+    DataHandler.submitter = function (data) {
+        var preparetedData = DataHandler.dataNoteCreator(data);
+        DataHandler.pushNewNoteObj(preparetedData);
+        DataHandler.setNotesToLocalStorage(DataHandler.key, DataHandler.allNotes);
+    };
+    DataHandler.key = "notes";
+    return DataHandler;
+}());
+/* harmony default export */ const data_handler = (DataHandler);
+
 ;// CONCATENATED MODULE: ./src/core/main/list-notes/list-notes-view.ts
 var list_notes_view_extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -9775,10 +9769,11 @@ var ListNotesView = /** @class */ (function (_super) {
     ListNotesView.prototype.createCurrentList = function (params, stage) {
         this.cleanWrapper();
         if (stage === stagesListParams.main) {
-            console.log("all notes");
+            console.log(params.favoriteNotes);
+            console.log(params.regularNotes);
         }
         else if (stage === stagesListParams.favorites) {
-            console.log("favorites notes");
+            console.log(params.favoriteNotes);
         }
     };
     return ListNotesView;
@@ -9801,7 +9796,7 @@ var ListNotesController = /** @class */ (function () {
         this.listNotesView = new list_notes_view();
     }
     ListNotesController.getCurrentData = function () {
-        var actuallyData = data_handler.getNotesFromLocalStorage();
+        var actuallyData = data_handler.initialStorage();
         checkTrust(actuallyData);
         return actuallyData;
     };
@@ -9991,7 +9986,6 @@ var appContainer = document.body;
 
 
 
-
 var App = /** @class */ (function () {
     function App() {
         var _this = this;
@@ -9999,9 +9993,8 @@ var App = /** @class */ (function () {
         this.main = new control_elements_view();
         this.listNotes = new list_notes_controller();
         this.routing = new rout(function (hash) { return _this.listNotes.setCurrentPage(hash); });
-        data_handler.initialize();
-        this.routing.updateTitle("home-page");
-        this.listNotes.setCurrentPage(this.routing.getCurrentHash());
+        // this.routing.updateTitle("home-page");
+        this.routing.rout();
         this.insertTemplate();
     }
     App.prototype.insertTemplate = function () {

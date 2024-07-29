@@ -1,6 +1,5 @@
 export const appContainer: HTMLElement = document.body;
 import Router from "./utilities/rout";
-import DataHandler from "./utilities/data-handler";
 import HeaderView from "./header/header-view";
 import ControlElementsView from "./main/controls/control-elements-view";
 import ListNotesController from "./main/list-notes/list-notes-controller";
@@ -12,9 +11,7 @@ export default class App {
     routing = new Router((hash: string) => this.listNotes.setCurrentPage(hash));
 
     constructor() {
-        DataHandler.initialize();
         this.routing.updateTitle("home-page");
-        // this.listNotes.setCurrentPage(this.routing.getCurrentHash());
         this.insertTemplate();
     }
 
