@@ -22,9 +22,10 @@ export default class ListNotesView extends View {
     createCurrentList(params: allNotesParams, stage: string) {
         this.cleanWrapper();
         if (stage === stagesListParams.main) {
-            console.log("all notes");
+            console.log(params.favoriteNotes);
+            console.log(params.regularNotes);
         } else if (stage === stagesListParams.favorites) {
-            console.log("favorites notes");
+            console.log(params.favoriteNotes);
         }
     }
 }

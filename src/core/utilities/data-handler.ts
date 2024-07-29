@@ -12,20 +12,6 @@ export default class DataHandler {
 
     private constructor() {}
 
-    private static initialStorage() {
-        const initialNotes = DataHandler.getNotesFromLocalStorage(
-            DataHandler.key
-        );
-        if (initialNotes) {
-            DataHandler.allNotes = initialNotes;
-        } else {
-            DataHandler.allNotes = {
-                regularNotes: [],
-                favoriteNotes: [],
-            };
-        }
-    }
-
     private static pushNewNoteObj(obj: DataNote) {
         if (obj.isFavorite) {
             DataHandler.allNotes.favoriteNotes.push(obj);
@@ -89,12 +75,18 @@ export default class DataHandler {
         DataHandler.initialStorage();
     }
 
-    static getNotesFromLocalStorage(key = this.key) {
-        const stringFromLocal = localStorage.getItem(key);
-        if (stringFromLocal) {
-            return JSON.parse(stringFromLocal) as allNotesParams;
+    static initialStorage(key = this.key) {
+        const initialNotes = localStorage.getItem(key);
+
+        if (initialNotes) {
+            DataHandler.allNotes = JSON.parse(initialNotes);
+        } else {
+            DataHandler.allNotes = {
+                regularNotes: [],
+                favoriteNotes: [],
+            };
         }
-        return null;
+        return DataHandler.allNotes;
     }
 
     static submitter(data: FormData) {

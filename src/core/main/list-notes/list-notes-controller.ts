@@ -10,7 +10,7 @@ export default class ListNotesController {
     }
 
     static getCurrentData() {
-        const actuallyData = DataHandler.getNotesFromLocalStorage();
+        const actuallyData = DataHandler.initialStorage();
         checkTrust(actuallyData);
         return actuallyData;
     }

@@ -14,7 +14,7 @@ export default class App {
     constructor() {
         DataHandler.initialize();
         this.routing.updateTitle("home-page");
-        this.listNotes.setCurrentPage(this.routing.getCurrentHash());
+        // this.listNotes.setCurrentPage(this.routing.getCurrentHash());
         this.insertTemplate();
     }
 

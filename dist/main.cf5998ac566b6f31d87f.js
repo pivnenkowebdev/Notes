@@ -9773,6 +9773,7 @@ var ListNotesView = /** @class */ (function (_super) {
         this.getComponent().innerHTML = "";
     };
     ListNotesView.prototype.createCurrentList = function (params, stage) {
+        this.cleanWrapper();
         if (stage === stagesListParams.main) {
             console.log("all notes");
         }
@@ -9997,9 +9998,7 @@ var App = /** @class */ (function () {
         this.header = new header_view();
         this.main = new control_elements_view();
         this.listNotes = new list_notes_controller();
-        this.routing = new rout(function (hash) {
-            return _this.listNotes.setCurrentPage(hash);
-        });
+        this.routing = new rout(function (hash) { return _this.listNotes.setCurrentPage(hash); });
         data_handler.initialize();
         this.routing.updateTitle("home-page");
         this.listNotes.setCurrentPage(this.routing.getCurrentHash());
