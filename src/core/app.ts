@@ -11,7 +11,7 @@ export default class App {
     routing = new Router((hash: string) => this.listNotes.setCurrentPage(hash));
 
     constructor() {
-        this.routing.updateTitle("home-page");
+        this.routing.onHashChange(this.routing.initialPage);
         this.insertTemplate();
     }
 
