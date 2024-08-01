@@ -9265,7 +9265,6 @@ var HeaderView = /** @class */ (function (_super) {
         var headerParams = {
             tagName: "header",
             classList: [
-                "container",
                 "pt-4",
                 "pb-4",
                 "flex",
@@ -9696,6 +9695,7 @@ var DataHandler = /** @class */ (function () {
         if (typeof text === "string") {
             newObj.text = text;
         }
+        // клик выёбывается
         if (statusFavorite === "on") {
             newObj.isFavorite = statusFavorite;
             newObj.id = DataHandler.allNotes.favoriteNotes.length + 1;
@@ -9705,9 +9705,6 @@ var DataHandler = /** @class */ (function () {
         }
         newObj.date = DataHandler.setDate();
         return newObj;
-    };
-    DataHandler.initialize = function () {
-        DataHandler.initialStorage();
     };
     DataHandler.initialStorage = function (key) {
         if (key === void 0) { key = this.key; }
@@ -9754,26 +9751,174 @@ var stagesListParams = {
     main: "home-page",
     favorites: "favorites-page",
 };
+var listItemParams = {
+    tagName: "li",
+    classList: ["border-cyan-700", "border-2", "py-1", "px-3", "rounded-md"],
+};
+var itemTopParams = {
+    tagName: "div",
+    classList: ["flex", "justify-between", "items-center"],
+};
+var titelAndDateWrapperParams = {
+    tagName: "div",
+    classList: ["flex", "gap-2", "items-center"],
+};
+var titleParams = {
+    tagName: "p",
+    classList: [],
+};
+var dateParams = {
+    tagName: "p",
+    classList: [],
+};
+var buttonsControlListParams = {
+    tagName: "div",
+    classList: ["flex", "gap-1", "items-center"],
+};
+var list_notes_view_wrapperFakeCheckboxParams = {
+    tagName: "label",
+    classList: [],
+};
+var list_notes_view_realCheckboxParams = {
+    tagName: "input",
+    classList: [
+        "w-0",
+        "h-0",
+        "opacity-0",
+        "absolute",
+        "top-0",
+        "left-0",
+        "z-[-1]",
+    ],
+    attrParams: {
+        type: "checkbox",
+        name: "favorite",
+    },
+};
+var list_notes_view_fakeCheckboxParams = {
+    tagName: "span",
+    classList: [
+        "block",
+        "w-6",
+        "h-6",
+        "relative",
+        "cursor-pointer",
+        "before:content-['']",
+        "before:block",
+        "before:absolute",
+        "before:top-2/4",
+        "before:left-2/4",
+        "before:w-5",
+        "before:h-5",
+        "before:translate-y-[-50%]",
+        "before:translate-x-[-50%]",
+        "before:bg-cover",
+        "favoriteBtn",
+    ],
+    attrParams: {
+        "data-controll": "check",
+    },
+};
+var list_notes_view_buttonEditParams = {
+    tagName: "button",
+    classList: [
+        "w-6",
+        "h-6",
+        "bg-[url('../../img/edit-btn.svg')]",
+        "bg-cover",
+    ],
+};
+var buttonDeleteParams = {
+    tagName: "button",
+    classList: [
+        "w-6",
+        "h-6",
+        "bg-[url('../../img/trash-btn.svg')]",
+    ],
+};
+var textPreviewParams = {
+    tagName: "p",
+    classList: [],
+};
 var ListNotesView = /** @class */ (function (_super) {
     list_notes_view_extends(ListNotesView, _super);
     function ListNotesView() {
         var listNotesParams = {
             tagName: "ul",
-            classList: [],
+            classList: [
+                "max-w-[900px]",
+                "mx-auto",
+                "flex",
+                "flex-col",
+                "gap-5",
+            ],
+            id: "list",
         };
         return _super.call(this, listNotesParams) || this;
     }
-    ListNotesView.prototype.cleanWrapper = function () {
-        this.getComponent().innerHTML = "";
-    };
     ListNotesView.prototype.createCurrentList = function (params, stage) {
-        this.cleanWrapper();
+        this.clearRender();
         if (stage === stagesListParams.main) {
-            console.log(params.favoriteNotes);
+            var favoritesList = this.createNoteItem(params.favoriteNotes);
+            var regularList = this.createNoteItem(params.regularNotes);
+            this.renderCurrentList(favoritesList);
+            this.renderCurrentList(regularList);
         }
         else if (stage === stagesListParams.favorites) {
-            console.log(params.favoriteNotes);
+            var favoritesList = this.createNoteItem(params.favoriteNotes);
+            this.renderCurrentList(favoritesList);
         }
+    };
+    ListNotesView.prototype.createNoteItem = function (listNotes) {
+        var _this = this;
+        var fragment = document.createDocumentFragment();
+        listNotes.forEach(function (item) {
+            var listItem = _this.createElement(listItemParams);
+            listItem.setAttribute("id", String(item.id));
+            var itemTop = _this.createElement(itemTopParams);
+            var titelAndDate = _this.createElement(titelAndDateWrapperParams);
+            var title = _this.createElement(titleParams);
+            title.textContent = item.title;
+            var date = _this.createElement(dateParams);
+            date.textContent = _this.formatterDateAndString(item.date);
+            var buttonsControlList = _this.createElement(buttonsControlListParams);
+            var buttonFavorite = _this.createElement(list_notes_view_wrapperFakeCheckboxParams);
+            var realInput = _this.createElement(list_notes_view_realCheckboxParams);
+            var fakeInput = _this.createElement(list_notes_view_fakeCheckboxParams);
+            var buttonEdit = _this.createElement(list_notes_view_buttonEditParams);
+            var buttonDel = _this.createElement(buttonDeleteParams);
+            var textPreview = _this.createElement(textPreviewParams);
+            _this.addInnerElement(itemTop, titelAndDate);
+            _this.addInnerElement(titelAndDate, title);
+            _this.addInnerElement(titelAndDate, date);
+            _this.addInnerElement(itemTop, buttonsControlList);
+            _this.addInnerElement(buttonsControlList, buttonFavorite);
+            _this.addInnerElement(buttonFavorite, realInput);
+            _this.addInnerElement(buttonFavorite, fakeInput);
+            _this.addInnerElement(buttonsControlList, buttonEdit);
+            _this.addInnerElement(buttonsControlList, buttonDel);
+            _this.addInnerElement(listItem, itemTop);
+            _this.addInnerElement(listItem, textPreview);
+            fragment.appendChild(listItem);
+        });
+        return fragment;
+    };
+    ListNotesView.prototype.renderCurrentList = function (items) {
+        var list = document.querySelector("#list");
+        if (list) {
+            list.appendChild(items);
+        }
+    };
+    ListNotesView.prototype.clearRender = function () {
+        var list = document.querySelector("#list");
+        if (list) {
+            list.innerHTML = "";
+        }
+    };
+    ListNotesView.prototype.formatterDateAndString = function (date) {
+        var _a = date.split(', '), currentDate = _a[0], currentTime = _a[1];
+        var doneString = "note created ".concat(currentDate, " at ").concat(currentTime);
+        return doneString;
     };
     return ListNotesView;
 }(view));
@@ -9794,16 +9939,11 @@ var ListNotesController = /** @class */ (function () {
     function ListNotesController() {
         this.listNotesView = new list_notes_view();
     }
-    ListNotesController.getCurrentData = function () {
-        var actuallyData = data_handler.initialStorage();
-        checkTrust(actuallyData);
-        return actuallyData;
-    };
     ListNotesController.prototype.setCurrentPage = function (urlPage) {
-        this.listNotesView.createCurrentList(ListNotesController.getCurrentData(), urlPage);
-    };
-    ListNotesController.prototype.getRender = function () {
-        return this.listNotesView.getComponent();
+        var currentPageLink = urlPage;
+        var currentData = data_handler.initialStorage();
+        checkTrust(currentPageLink);
+        this.listNotesView.createCurrentList(currentData, currentPageLink);
     };
     return ListNotesController;
 }());
@@ -9831,7 +9971,8 @@ var ModalNoteController = /** @class */ (function () {
             if (form instanceof HTMLFormElement) {
                 var data = new FormData(form);
                 data_handler.submitter(data);
-                list_notes_controller.getCurrentData();
+                var ListConroller = new list_notes_controller();
+                ListConroller.setCurrentPage("home-page");
                 _this.removeRender();
             }
         };
@@ -9884,7 +10025,7 @@ var imgParams = {
         "dark:bg-[url('../../img/btn-add-note-light.svg')]",
     ],
 };
-var titleParams = {
+var new_note_btn_titleParams = {
     tagName: "span",
     classList: [
         "text-xl",
@@ -9923,7 +10064,7 @@ var NewNoteBtn = /** @class */ (function (_super) {
         return _this;
     }
     NewNoteBtn.prototype.configureView = function () {
-        var titleBtn = this.createElement(titleParams);
+        var titleBtn = this.createElement(new_note_btn_titleParams);
         this.addInnerElement(this.getComponent(), titleBtn);
         var imgBtn = this.createElement(imgParams);
         this.addInnerElement(this.component.getHtmlElement(), imgBtn);
@@ -9960,7 +10101,7 @@ var ControlElementsView = /** @class */ (function (_super) {
     function ControlElementsView() {
         var _this = this;
         var mainParams = {
-            tagName: "main",
+            tagName: "section",
             classList: ["container"],
         };
         _this = _super.call(this, mainParams) || this;
@@ -9985,18 +10126,20 @@ var appContainer = document.body;
 
 
 
+
 var App = /** @class */ (function () {
     function App() {
         var _this = this;
         this.header = new header_view();
-        this.main = new control_elements_view();
-        this.listNotes = new list_notes_controller();
-        this.routing = new rout(function (hash) { return _this.listNotes.setCurrentPage(hash); });
-        this.routing.updateTitle("home-page");
+        this.controllElements = new control_elements_view();
+        this.listNotesController = new list_notes_controller();
+        this.listNotesView = new list_notes_view();
+        this.routing = new rout(function (hash) { return _this.listNotesController.setCurrentPage(hash); });
         this.insertTemplate();
+        this.routing.onHashChange(this.routing.initialPage);
     }
     App.prototype.insertTemplate = function () {
-        appContainer.append(this.header.getComponent(), this.main.getComponent(), this.listNotes.getRender());
+        appContainer.append(this.header.getComponent(), this.controllElements.getComponent(), this.listNotesView.getComponent());
     };
     return App;
 }());

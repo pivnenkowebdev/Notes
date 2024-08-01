@@ -19,7 +19,6 @@ export default class HeaderView extends View {
         const headerParams: ElementParams = {
             tagName: "header",
             classList: [
-                "container",
                 "pt-4",
                 "pb-4",
                 "flex",

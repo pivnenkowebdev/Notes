@@ -9,20 +9,10 @@ export default class ListNotesController {
         this.listNotesView = new ListNotesView();
     }
 
-    static getCurrentData() {
-        const actuallyData = DataHandler.initialStorage();
-        checkTrust(actuallyData);
-        return actuallyData;
-    }
-
     setCurrentPage(urlPage: string) {
-        this.listNotesView.createCurrentList(
-            ListNotesController.getCurrentData(),
-            urlPage
-        );
-    }
-
-    getRender() {
-        return this.listNotesView.getComponent();
+        const currentPageLink = urlPage;
+        const currentData = DataHandler.initialStorage();
+        checkTrust(currentPageLink);
+        this.listNotesView.createCurrentList(currentData, currentPageLink);
     }
 }

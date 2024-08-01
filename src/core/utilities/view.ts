@@ -27,7 +27,7 @@ export default class View extends BaseClassView {
 
     protected addInnerElement(
         parent: HTMLElement,
-        element: HTMLElement | View
+        element: HTMLElement | View | DocumentFragment
     ): void {
         if (element instanceof View) {
             parent.appendChild(element.getComponent());

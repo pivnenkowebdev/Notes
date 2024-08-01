@@ -71,10 +71,6 @@ export default class DataHandler {
         return newObj;
     }
 
-    static initialize() {
-        DataHandler.initialStorage();
-    }
-
     static initialStorage(key = this.key) {
         const initialNotes = localStorage.getItem(key);
 
@@ -91,6 +87,7 @@ export default class DataHandler {
 
     static submitter(data: FormData) {
         const preparetedData = DataHandler.dataNoteCreator(data);
+        console.log(preparetedData);
 
         DataHandler.pushNewNoteObj(preparetedData);
         DataHandler.setNotesToLocalStorage(

@@ -11,7 +11,7 @@ const sectionControllParams: ElementParams = {
 export default class ControlElementsView extends View {
     constructor() {
         const mainParams: ElementParams = {
-            tagName: "main",
+            tagName: "section",
             classList: ["container"],
         };
 

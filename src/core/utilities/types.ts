@@ -17,7 +17,7 @@ export interface DataNote {
     title: string;
     isFavorite: string;
     text: string;
-    id: number | undefined;
+    id: number | string | undefined;
     date: string;
     changed: boolean;
 }

@@ -10,7 +10,7 @@ abstract class BaseClassCreator {
     protected abstract createNewElement(params: ElementParams): HTMLElement;
     protected abstract setClassName(classList: string[]): void;
     protected abstract setInnerText(value?: string): void;
-    protected abstract setId(value?: string | number): void;
+    protected abstract setId(value?: string | number | undefined): void;
     protected abstract setHref(value?: string): void;
     protected abstract setDataAttr(value?: AttributeParams): void;
     protected abstract setCallback(
@@ -52,7 +52,7 @@ export default class Creator extends BaseClassCreator {
         }
     }
 
-    protected setId(id?: string | number) {
+    protected setId(id?: string | number | undefined) {
         if (id !== undefined && id !== null) {
             this.element.id = String(id);
         }

@@ -36,19 +36,61 @@ const buttonsControlListParams: ElementParams = {
     classList: ["flex", "gap-1", "items-center"],
 };
 
-const buttonFavoriteParams: ElementParams = {
-    tagName: "button",
-    classList: ["w-6", "h-6"],
+const wrapperFakeCheckboxParams: ElementParams = {
+    tagName: "label",
+    classList: [],
+};
+
+const realCheckboxParams = {
+    tagName: "input",
+    classList: [
+        "w-0",
+        "h-0",
+        "opacity-0",
+        "absolute",
+        "top-0",
+        "left-0",
+        "z-[-1]",
+    ],
+    attrParams: {
+        type: "checkbox",
+        name: "favorite",
+    },
+};
+
+const fakeCheckboxParams = {
+    tagName: "span",
+    classList: [
+        "block",
+        "w-6",
+        "h-6",
+        "relative",
+        "cursor-pointer",
+        "before:content-['']",
+        "before:block",
+        "before:absolute",
+        "before:top-2/4",
+        "before:left-2/4",
+        "before:w-5",
+        "before:h-5",
+        "before:translate-y-[-50%]",
+        "before:translate-x-[-50%]",
+        "before:bg-cover",
+        "favoriteBtn",
+    ],
+    attrParams: {
+        "data-controll": "check",
+    },
 };
 
 const buttonEditParams: ElementParams = {
     tagName: "button",
-    classList: ["w-6", "h-6"],
+    classList: ["w-6", "h-6", "bg-[url('../../img/edit-btn.svg')]", "bg-cover"],
 };
 
 const buttonDeleteParams: ElementParams = {
     tagName: "button",
-    classList: ["w-6", "h-6"],
+    classList: ["w-6", "h-6", "bg-[url('../../img/trash-btn.svg')]"],
 };
 
 const textPreviewParams: ElementParams = {
@@ -67,61 +109,96 @@ export default class ListNotesView extends View {
                 "flex-col",
                 "gap-5",
             ],
+            id: "list",
         };
         super(listNotesParams);
     }
 
-    private cleanWrapper() {
-        this.getComponent().innerHTML = "";
-    }
-
     createCurrentList(params: allNotesParams, stage: string) {
-        this.cleanWrapper();
+        this.clearRender();
+
         if (stage === stagesListParams.main) {
-            this.createNoteItem(params.favoriteNotes);
-            this.createNoteItem(params.regularNotes);
+            const favoritesList = this.createNoteItem(params.favoriteNotes);
+            const regularList = this.createNoteItem(params.regularNotes);
+
+            this.renderCurrentList(favoritesList);
+            this.renderCurrentList(regularList);
         } else if (stage === stagesListParams.favorites) {
-            this.createNoteItem(params.favoriteNotes);
+            const favoritesList = this.createNoteItem(params.favoriteNotes);
+            this.renderCurrentList(favoritesList);
         }
     }
 
-    createNoteItem(listNotes: DataNote[]) {
-        listNotes.forEach((item) => {
-            console.log(item);
+    private createNoteItem(listNotes: DataNote[]): DocumentFragment {
+        const fragment = document.createDocumentFragment();
 
+        listNotes.forEach((item) => {
             const listItem = this.createElement(listItemParams);
-            this.addInnerElement(this.getComponent(), listItem);
+            listItem.setAttribute("id", String(item.id));
 
             const itemTop = this.createElement(itemTopParams);
-            this.addInnerElement(listItem, itemTop);
-
             const titelAndDate = this.createElement(titelAndDateWrapperParams);
-            this.addInnerElement(itemTop, titelAndDate);
 
             const title = this.createElement(titleParams);
-            this.addInnerElement(titelAndDate, title);
+            title.textContent = item.title;
 
             const date = this.createElement(dateParams);
-            this.addInnerElement(titelAndDate, date);
+            date.textContent = this.formatterDateAndString(item.date);
 
             const buttonsControlList = this.createElement(
                 buttonsControlListParams
             );
-            this.addInnerElement(itemTop, buttonsControlList);
 
-            const buttonFavorite = this.createElement(buttonFavoriteParams);
-            this.addInnerElement(buttonsControlList, buttonFavorite);
+            const buttonFavorite = this.createElement(
+                wrapperFakeCheckboxParams
+            );
 
+            const realInput = this.createElement(realCheckboxParams);
+            if (item.isFavorite) {
+                realInput.setAttribute("checked", "");
+            }
+
+            const fakeInput = this.createElement(fakeCheckboxParams);
             const buttonEdit = this.createElement(buttonEditParams);
-            this.addInnerElement(buttonsControlList, buttonEdit);
-
             const buttonDel = this.createElement(buttonDeleteParams);
-            this.addInnerElement(buttonsControlList, buttonDel);
-
             const textPreview = this.createElement(textPreviewParams);
+
+            this.addInnerElement(itemTop, titelAndDate);
+            this.addInnerElement(titelAndDate, title);
+            this.addInnerElement(titelAndDate, date);
+            this.addInnerElement(itemTop, buttonsControlList);
+            this.addInnerElement(buttonsControlList, buttonFavorite);
+            this.addInnerElement(buttonFavorite, realInput);
+            this.addInnerElement(buttonFavorite, fakeInput);
+            this.addInnerElement(buttonsControlList, buttonEdit);
+            this.addInnerElement(buttonsControlList, buttonDel);
+            this.addInnerElement(listItem, itemTop);
             this.addInnerElement(listItem, textPreview);
+
+            fragment.appendChild(listItem);
         });
+
+        return fragment;
+    }
+
+    private renderCurrentList(items: DocumentFragment) {
+        const list = document.querySelector("#list");
+
+        if (list) {
+            list.appendChild(items);
+        }
+    }
+
+    private clearRender() {
+        const list = document.querySelector("#list");
+        if (list) {
+            list.innerHTML = "";
+        }
+    }
+
+    private formatterDateAndString(date: string) {
+        const [currentDate, currentTime] = date.split(", ");
+        const doneString = `note created ${currentDate} at ${currentTime}`;
+        return doneString;
     }
 }
-
-// 1. всё это вставить через фрейм или как там...
