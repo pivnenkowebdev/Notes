@@ -116,7 +116,6 @@ export default class ListNotesView extends View {
 
     createCurrentList(params: allNotesParams, stage: string) {
         this.clearRender();
-
         if (stage === stagesListParams.main) {
             const favoritesList = this.createNoteItem(params.favoriteNotes);
             const regularList = this.createNoteItem(params.regularNotes);

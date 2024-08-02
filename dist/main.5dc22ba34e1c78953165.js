@@ -9677,6 +9677,22 @@ var DataHandler = /** @class */ (function () {
             minute: "2-digit",
         });
     };
+    // private static setId(statusFavorite: FormDataEntryValue) {
+    //     let doneId;
+    //     let numberId;
+    //     let prefixId;
+    //     console.log(`statusFavorite: ${statusFavorite}`);
+    //     if (statusFavorite === "on") {
+    //         numberId = DataHandler.allNotes.favoriteNotes.length + 1;
+    //         prefixId = "favorite";
+    //     } else {
+    //         numberId = DataHandler.allNotes.regularNotes.length + 1;
+    //         prefixId = "regular";
+    //     }
+    //     doneId = prefixId + numberId;
+    //     console.log(`Generated ID: ${doneId}`);
+    //     return doneId;
+    // }
     DataHandler.dataNoteCreator = function (data) {
         var newObj = {
             title: "",
@@ -9687,22 +9703,15 @@ var DataHandler = /** @class */ (function () {
             changed: false,
         };
         var title = data.get(inputsName.titleInput);
-        var statusFavorite = data.get(inputsName.favoriteCheckbox);
         var text = data.get(inputsName.textInput);
+        var statusFavorite = data.get(inputsName.favoriteCheckbox);
         if (typeof title === "string") {
             newObj.title = title;
         }
         if (typeof text === "string") {
             newObj.text = text;
         }
-        // клик выёбывается
-        if (statusFavorite === "on") {
-            newObj.isFavorite = statusFavorite;
-            newObj.id = DataHandler.allNotes.favoriteNotes.length + 1;
-        }
-        else {
-            newObj.id = DataHandler.allNotes.regularNotes.length + 1;
-        }
+        // newObj.id = DataHandler.setId(statusFavorite);
         newObj.date = DataHandler.setDate();
         return newObj;
     };
@@ -9821,20 +9830,11 @@ var list_notes_view_fakeCheckboxParams = {
 };
 var list_notes_view_buttonEditParams = {
     tagName: "button",
-    classList: [
-        "w-6",
-        "h-6",
-        "bg-[url('../../img/edit-btn.svg')]",
-        "bg-cover",
-    ],
+    classList: ["w-6", "h-6", "bg-[url('../../img/edit-btn.svg')]", "bg-cover"],
 };
 var buttonDeleteParams = {
     tagName: "button",
-    classList: [
-        "w-6",
-        "h-6",
-        "bg-[url('../../img/trash-btn.svg')]",
-    ],
+    classList: ["w-6", "h-6", "bg-[url('../../img/trash-btn.svg')]"],
 };
 var textPreviewParams = {
     tagName: "p",
@@ -9884,6 +9884,9 @@ var ListNotesView = /** @class */ (function (_super) {
             var buttonsControlList = _this.createElement(buttonsControlListParams);
             var buttonFavorite = _this.createElement(list_notes_view_wrapperFakeCheckboxParams);
             var realInput = _this.createElement(list_notes_view_realCheckboxParams);
+            if (item.isFavorite) {
+                realInput.setAttribute("checked", "");
+            }
             var fakeInput = _this.createElement(list_notes_view_fakeCheckboxParams);
             var buttonEdit = _this.createElement(list_notes_view_buttonEditParams);
             var buttonDel = _this.createElement(buttonDeleteParams);
@@ -9916,7 +9919,7 @@ var ListNotesView = /** @class */ (function (_super) {
         }
     };
     ListNotesView.prototype.formatterDateAndString = function (date) {
-        var _a = date.split(', '), currentDate = _a[0], currentTime = _a[1];
+        var _a = date.split(", "), currentDate = _a[0], currentTime = _a[1];
         var doneString = "note created ".concat(currentDate, " at ").concat(currentTime);
         return doneString;
     };
@@ -10134,7 +10137,9 @@ var App = /** @class */ (function () {
         this.controllElements = new control_elements_view();
         this.listNotesController = new list_notes_controller();
         this.listNotesView = new list_notes_view();
-        this.routing = new rout(function (hash) { return _this.listNotesController.setCurrentPage(hash); });
+        this.routing = new rout(function (hash) {
+            return _this.listNotesController.setCurrentPage(hash);
+        });
         this.insertTemplate();
         this.routing.onHashChange(this.routing.initialPage);
     }
