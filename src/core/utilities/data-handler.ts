@@ -12,14 +12,6 @@ export default class DataHandler {
 
     private constructor() {}
 
-    private static pushNewNoteObj(obj: DataNote) {
-        if (obj.isFavorite) {
-            DataHandler.allNotes.favoriteNotes.push(obj);
-        } else {
-            DataHandler.allNotes.regularNotes.push(obj);
-        }
-    }
-
     private static setNotesToLocalStorage(key: string, data: allNotesParams) {
         const dataString = JSON.stringify(data);
         localStorage.setItem(key, dataString);
@@ -59,16 +51,39 @@ export default class DataHandler {
             newObj.text = text;
         }
 
-        if (statusFavorite === "on") {
+        if (typeof statusFavorite === "string") {
             newObj.isFavorite = statusFavorite;
-            newObj.id = DataHandler.allNotes.favoriteNotes.length + 1;
-        } else {
-            newObj.id = DataHandler.allNotes.regularNotes.length + 1;
         }
+
+        newObj.id = DataHandler.setId(statusFavorite);
 
         newObj.date = DataHandler.setDate();
 
         return newObj;
+    }
+
+    private static setId(status: FormDataEntryValue | null) {
+        const flagFavorites = "favorites";
+        const flagRegulars = "regulars";
+        let numberId;
+        let doneId;
+
+        if (status === "on") {
+            numberId = DataHandler.allNotes.favoriteNotes.length + 1;
+            doneId = numberId + flagFavorites;
+        } else {
+            numberId = DataHandler.allNotes.regularNotes.length + 1;
+            doneId = numberId + flagRegulars;
+        }
+        return doneId;
+    }
+
+    private static pushNewNoteObj(obj: DataNote) {
+        if (obj.isFavorite) {
+            DataHandler.allNotes.favoriteNotes.push(obj);
+        } else {
+            DataHandler.allNotes.regularNotes.push(obj);
+        }
     }
 
     static initialStorage(key = this.key) {
@@ -87,8 +102,6 @@ export default class DataHandler {
 
     static submitter(data: FormData) {
         const preparetedData = DataHandler.dataNoteCreator(data);
-        console.log(preparetedData);
-
         DataHandler.pushNewNoteObj(preparetedData);
         DataHandler.setNotesToLocalStorage(
             DataHandler.key,
