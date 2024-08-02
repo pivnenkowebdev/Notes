@@ -17,18 +17,6 @@ export default class DataHandler {
         localStorage.setItem(key, dataString);
     }
 
-    private static setDate() {
-        const currentDate = new Date();
-        return currentDate.toLocaleString("ru-RU", {
-            year: "numeric",
-            month: "numeric",
-            day: "numeric",
-            hour12: false,
-            hour: "2-digit",
-            minute: "2-digit",
-        });
-    }
-
     private static dataNoteCreator(data: FormData) {
         const newObj: DataNote = {
             title: "",
@@ -43,8 +31,10 @@ export default class DataHandler {
         const statusFavorite = data.get(inputsName.favoriteCheckbox);
         const text = data.get(inputsName.textInput);
 
-        if (typeof title === "string") {
+        if (typeof title === "string" && title.trim()) {
             newObj.title = title;
+        } else {
+            newObj.title = "No title";
         }
 
         if (typeof text === "string") {
@@ -60,6 +50,18 @@ export default class DataHandler {
         newObj.date = DataHandler.setDate();
 
         return newObj;
+    }
+
+    private static setDate() {
+        const currentDate = new Date();
+        return currentDate.toLocaleString("ru-RU", {
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+            hour12: false,
+            hour: "2-digit",
+            minute: "2-digit",
+        });
     }
 
     private static setId(status: FormDataEntryValue | null) {

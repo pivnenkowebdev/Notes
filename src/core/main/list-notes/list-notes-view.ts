@@ -95,7 +95,7 @@ const buttonDeleteParams: ElementParams = {
 
 const textPreviewParams: ElementParams = {
     tagName: "p",
-    classList: [],
+    classList: ["text-ellipsis", "overflow-hidden"],
 };
 
 export default class ListNotesView extends View {
@@ -132,6 +132,8 @@ export default class ListNotesView extends View {
         const fragment = document.createDocumentFragment();
 
         listNotes.forEach((item) => {
+            console.log(item);
+
             const listItem = this.createElement(listItemParams);
             listItem.setAttribute("id", String(item.id));
 
@@ -160,7 +162,9 @@ export default class ListNotesView extends View {
             const fakeInput = this.createElement(fakeCheckboxParams);
             const buttonEdit = this.createElement(buttonEditParams);
             const buttonDel = this.createElement(buttonDeleteParams);
+
             const textPreview = this.createElement(textPreviewParams);
+            textPreview.innerText = item.text;
 
             this.addInnerElement(itemTop, titelAndDate);
             this.addInnerElement(titelAndDate, title);
