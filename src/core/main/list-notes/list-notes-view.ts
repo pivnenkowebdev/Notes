@@ -13,27 +13,42 @@ const listItemParams: ElementParams = {
 
 const itemTopParams: ElementParams = {
     tagName: "div",
-    classList: ["flex", "justify-between", "items-center"],
+    classList: ["flex", "justify-between", "items-center", "flex-wrap"],
 };
 
-const titelAndDateWrapperParams: ElementParams = {
+const controllAndDateWrapperParams: ElementParams = {
     tagName: "div",
-    classList: ["flex", "gap-2", "items-center"],
+    classList: [
+        "flex",
+        "gap-2",
+        "items-center",
+        "justify-between",
+        "flex-wrap",
+        "max-w-[300px]",
+        "w-full",
+    ],
 };
 
 const titleParams: ElementParams = {
     tagName: "p",
-    classList: [],
+    classList: [
+        "text-2xl",
+        "font-medium",
+        "text-cyan-600",
+        "max-w-[400px]",
+        "text-ellipsis",
+        "overflow-hidden",
+    ],
 };
 
 const dateParams: ElementParams = {
     tagName: "p",
-    classList: [],
+    classList: ["text-stone-400"],
 };
 
 const buttonsControlListParams: ElementParams = {
     tagName: "div",
-    classList: ["flex", "gap-1", "items-center"],
+    classList: ["flex", "gap-1", "items-center", "shrink-0"],
 };
 
 const wrapperFakeCheckboxParams: ElementParams = {
@@ -95,7 +110,13 @@ const buttonDeleteParams: ElementParams = {
 
 const textPreviewParams: ElementParams = {
     tagName: "p",
-    classList: ["text-ellipsis", "overflow-hidden"],
+    classList: [
+        "text-ellipsis",
+        "overflow-hidden",
+        "text-base",
+        "font-medium",
+        "text-stone-600",
+    ],
 };
 
 export default class ListNotesView extends View {
@@ -138,7 +159,9 @@ export default class ListNotesView extends View {
             listItem.setAttribute("id", String(item.id));
 
             const itemTop = this.createElement(itemTopParams);
-            const titelAndDate = this.createElement(titelAndDateWrapperParams);
+            const controllAndDate = this.createElement(
+                controllAndDateWrapperParams
+            );
 
             const title = this.createElement(titleParams);
             title.textContent = item.title;
@@ -166,10 +189,10 @@ export default class ListNotesView extends View {
             const textPreview = this.createElement(textPreviewParams);
             textPreview.innerText = item.text;
 
-            this.addInnerElement(itemTop, titelAndDate);
-            this.addInnerElement(titelAndDate, title);
-            this.addInnerElement(titelAndDate, date);
-            this.addInnerElement(itemTop, buttonsControlList);
+            this.addInnerElement(itemTop, title);
+            this.addInnerElement(itemTop, controllAndDate);
+            this.addInnerElement(controllAndDate, date);
+            this.addInnerElement(controllAndDate, buttonsControlList);
             this.addInnerElement(buttonsControlList, buttonFavorite);
             this.addInnerElement(buttonFavorite, realInput);
             this.addInnerElement(buttonFavorite, fakeInput);
@@ -201,7 +224,7 @@ export default class ListNotesView extends View {
 
     private formatterDateAndString(date: string) {
         const [currentDate, currentTime] = date.split(", ");
-        const doneString = `note created ${currentDate} at ${currentTime}`;
+        const doneString = `Created ${currentDate} at ${currentTime}`;
         return doneString;
     }
 }

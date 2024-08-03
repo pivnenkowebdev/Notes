@@ -36,9 +36,10 @@ export default class DataHandler {
         } else {
             newObj.title = "No title";
         }
-
-        if (typeof text === "string") {
+        if (typeof text === "string" && text.trim()) {
             newObj.text = text;
+        } else {
+            newObj.text = "Empty";
         }
 
         if (typeof statusFavorite === "string") {
