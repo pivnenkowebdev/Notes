@@ -1,10 +1,10 @@
 export default class Router {
     initialPage: string = "home-page";
-    currentHash: string;
+    static currentHash: string;
     onHashChange: (hash: string) => void;
 
     constructor(onHashChange: (hash: string) => void) {
-        this.currentHash = this.initialPage;
+        Router.currentHash = this.initialPage;
         this.onHashChange = onHashChange;
         this.rout();
     }
@@ -12,9 +12,9 @@ export default class Router {
     rout() {
         location.replace(`${location.pathname}#` + this.initialPage);
         window.addEventListener("hashchange", () => {
-            this.currentHash = window.location.hash.slice(1);
-            this.onHashChange(this.currentHash);
-            this.updateTitle(this.currentHash);
+            Router.currentHash = window.location.hash.slice(1);
+            this.onHashChange(Router.currentHash);
+            this.updateTitle(Router.currentHash);
         });
     }
 
@@ -31,7 +31,7 @@ export default class Router {
         }
     }
 
-    getCurrentHash(): string {
+    static getCurrentHash(): string {
         return this.currentHash;
     }
 }

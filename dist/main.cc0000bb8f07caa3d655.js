@@ -9654,17 +9654,37 @@ var inputsName = {
 var DataHandler = /** @class */ (function () {
     function DataHandler() {
     }
-    DataHandler.pushNewNoteObj = function (obj) {
-        if (obj.isFavorite) {
-            DataHandler.allNotes.favoriteNotes.push(obj);
-        }
-        else {
-            DataHandler.allNotes.regularNotes.push(obj);
-        }
-    };
     DataHandler.setNotesToLocalStorage = function (key, data) {
         var dataString = JSON.stringify(data);
         localStorage.setItem(key, dataString);
+    };
+    DataHandler.dataNoteCreator = function (data) {
+        var newObj = {
+            title: "",
+            isFavorite: "",
+            text: "",
+            id: 0,
+            date: "",
+            changed: false,
+        };
+        var title = data.get(inputsName.titleInput);
+        var statusFavorite = data.get(inputsName.favoriteCheckbox);
+        var text = data.get(inputsName.textInput);
+        if (typeof title === "string" && title.trim()) {
+            newObj.title = title;
+        }
+        else {
+            newObj.title = "No title";
+        }
+        if (typeof text === "string") {
+            newObj.text = text;
+        }
+        if (typeof statusFavorite === "string") {
+            newObj.isFavorite = statusFavorite;
+        }
+        newObj.id = DataHandler.setId(statusFavorite);
+        newObj.date = DataHandler.setDate();
+        return newObj;
     };
     DataHandler.setDate = function () {
         var currentDate = new Date();
@@ -9677,43 +9697,28 @@ var DataHandler = /** @class */ (function () {
             minute: "2-digit",
         });
     };
-    // private static setId(statusFavorite: FormDataEntryValue) {
-    //     let doneId;
-    //     let numberId;
-    //     let prefixId;
-    //     console.log(`statusFavorite: ${statusFavorite}`);
-    //     if (statusFavorite === "on") {
-    //         numberId = DataHandler.allNotes.favoriteNotes.length + 1;
-    //         prefixId = "favorite";
-    //     } else {
-    //         numberId = DataHandler.allNotes.regularNotes.length + 1;
-    //         prefixId = "regular";
-    //     }
-    //     doneId = prefixId + numberId;
-    //     console.log(`Generated ID: ${doneId}`);
-    //     return doneId;
-    // }
-    DataHandler.dataNoteCreator = function (data) {
-        var newObj = {
-            title: "",
-            isFavorite: "",
-            text: "",
-            id: 0,
-            date: "",
-            changed: false,
-        };
-        var title = data.get(inputsName.titleInput);
-        var text = data.get(inputsName.textInput);
-        var statusFavorite = data.get(inputsName.favoriteCheckbox);
-        if (typeof title === "string") {
-            newObj.title = title;
+    DataHandler.setId = function (status) {
+        var flagFavorites = "favorites";
+        var flagRegulars = "regulars";
+        var numberId;
+        var doneId;
+        if (status === "on") {
+            numberId = DataHandler.allNotes.favoriteNotes.length + 1;
+            doneId = numberId + flagFavorites;
         }
-        if (typeof text === "string") {
-            newObj.text = text;
+        else {
+            numberId = DataHandler.allNotes.regularNotes.length + 1;
+            doneId = numberId + flagRegulars;
         }
-        // newObj.id = DataHandler.setId(statusFavorite);
-        newObj.date = DataHandler.setDate();
-        return newObj;
+        return doneId;
+    };
+    DataHandler.pushNewNoteObj = function (obj) {
+        if (obj.isFavorite) {
+            DataHandler.allNotes.favoriteNotes.push(obj);
+        }
+        else {
+            DataHandler.allNotes.regularNotes.push(obj);
+        }
     };
     DataHandler.initialStorage = function (key) {
         if (key === void 0) { key = this.key; }
@@ -9838,7 +9843,7 @@ var buttonDeleteParams = {
 };
 var textPreviewParams = {
     tagName: "p",
-    classList: [],
+    classList: ["text-ellipsis", "overflow-hidden"],
 };
 var ListNotesView = /** @class */ (function (_super) {
     list_notes_view_extends(ListNotesView, _super);
@@ -9873,6 +9878,7 @@ var ListNotesView = /** @class */ (function (_super) {
         var _this = this;
         var fragment = document.createDocumentFragment();
         listNotes.forEach(function (item) {
+            console.log(item);
             var listItem = _this.createElement(listItemParams);
             listItem.setAttribute("id", String(item.id));
             var itemTop = _this.createElement(itemTopParams);
@@ -9891,6 +9897,7 @@ var ListNotesView = /** @class */ (function (_super) {
             var buttonEdit = _this.createElement(list_notes_view_buttonEditParams);
             var buttonDel = _this.createElement(buttonDeleteParams);
             var textPreview = _this.createElement(textPreviewParams);
+            textPreview.innerText = item.text;
             _this.addInnerElement(itemTop, titelAndDate);
             _this.addInnerElement(titelAndDate, title);
             _this.addInnerElement(titelAndDate, date);
