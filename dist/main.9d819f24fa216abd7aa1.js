@@ -9003,7 +9003,7 @@ _global["default"]._babelPolyfill = true;
 var Router = /** @class */ (function () {
     function Router(onHashChange) {
         this.initialPage = "home-page";
-        this.currentHash = this.initialPage;
+        Router.currentHash = this.initialPage;
         this.onHashChange = onHashChange;
         this.rout();
     }
@@ -9011,9 +9011,9 @@ var Router = /** @class */ (function () {
         var _this = this;
         location.replace("".concat(location.pathname, "#") + this.initialPage);
         window.addEventListener("hashchange", function () {
-            _this.currentHash = window.location.hash.slice(1);
-            _this.onHashChange(_this.currentHash);
-            _this.updateTitle(_this.currentHash);
+            Router.currentHash = window.location.hash.slice(1);
+            _this.onHashChange(Router.currentHash);
+            _this.updateTitle(Router.currentHash);
         });
     };
     Router.prototype.updateTitle = function (hash) {
@@ -9028,7 +9028,7 @@ var Router = /** @class */ (function () {
             }
         }
     };
-    Router.prototype.getCurrentHash = function () {
+    Router.getCurrentHash = function () {
         return this.currentHash;
     };
     return Router;
@@ -9676,8 +9676,11 @@ var DataHandler = /** @class */ (function () {
         else {
             newObj.title = "No title";
         }
-        if (typeof text === "string") {
+        if (typeof text === "string" && text.trim()) {
             newObj.text = text;
+        }
+        else {
+            newObj.text = "Empty";
         }
         if (typeof statusFavorite === "string") {
             newObj.isFavorite = statusFavorite;
@@ -9771,23 +9774,38 @@ var listItemParams = {
 };
 var itemTopParams = {
     tagName: "div",
-    classList: ["flex", "justify-between", "items-center"],
+    classList: ["flex", "justify-between", "items-center", "flex-wrap"],
 };
-var titelAndDateWrapperParams = {
+var controllAndDateWrapperParams = {
     tagName: "div",
-    classList: ["flex", "gap-2", "items-center"],
+    classList: [
+        "flex",
+        "gap-2",
+        "items-center",
+        "justify-between",
+        "flex-wrap",
+        "max-w-[300px]",
+        "w-full",
+    ],
 };
 var titleParams = {
     tagName: "p",
-    classList: [],
+    classList: [
+        "text-2xl",
+        "font-medium",
+        "text-cyan-600",
+        "max-w-[400px]",
+        "text-ellipsis",
+        "overflow-hidden",
+    ],
 };
 var dateParams = {
     tagName: "p",
-    classList: [],
+    classList: ["text-stone-400"],
 };
 var buttonsControlListParams = {
     tagName: "div",
-    classList: ["flex", "gap-1", "items-center"],
+    classList: ["flex", "gap-1", "items-center", "shrink-0"],
 };
 var list_notes_view_wrapperFakeCheckboxParams = {
     tagName: "label",
@@ -9843,7 +9861,13 @@ var buttonDeleteParams = {
 };
 var textPreviewParams = {
     tagName: "p",
-    classList: ["text-ellipsis", "overflow-hidden"],
+    classList: [
+        "text-ellipsis",
+        "overflow-hidden",
+        "text-base",
+        "font-medium",
+        "text-stone-600",
+    ],
 };
 var ListNotesView = /** @class */ (function (_super) {
     list_notes_view_extends(ListNotesView, _super);
@@ -9853,9 +9877,13 @@ var ListNotesView = /** @class */ (function (_super) {
             classList: [
                 "max-w-[900px]",
                 "mx-auto",
+                "max-h-[540px]",
+                "overflow-auto",
                 "flex",
                 "flex-col",
                 "gap-5",
+                "scrollbar",
+                "pr-1",
             ],
             id: "list",
         };
@@ -9882,7 +9910,7 @@ var ListNotesView = /** @class */ (function (_super) {
             var listItem = _this.createElement(listItemParams);
             listItem.setAttribute("id", String(item.id));
             var itemTop = _this.createElement(itemTopParams);
-            var titelAndDate = _this.createElement(titelAndDateWrapperParams);
+            var controllAndDate = _this.createElement(controllAndDateWrapperParams);
             var title = _this.createElement(titleParams);
             title.textContent = item.title;
             var date = _this.createElement(dateParams);
@@ -9898,10 +9926,10 @@ var ListNotesView = /** @class */ (function (_super) {
             var buttonDel = _this.createElement(buttonDeleteParams);
             var textPreview = _this.createElement(textPreviewParams);
             textPreview.innerText = item.text;
-            _this.addInnerElement(itemTop, titelAndDate);
-            _this.addInnerElement(titelAndDate, title);
-            _this.addInnerElement(titelAndDate, date);
-            _this.addInnerElement(itemTop, buttonsControlList);
+            _this.addInnerElement(itemTop, title);
+            _this.addInnerElement(itemTop, controllAndDate);
+            _this.addInnerElement(controllAndDate, date);
+            _this.addInnerElement(controllAndDate, buttonsControlList);
             _this.addInnerElement(buttonsControlList, buttonFavorite);
             _this.addInnerElement(buttonFavorite, realInput);
             _this.addInnerElement(buttonFavorite, fakeInput);
@@ -9927,7 +9955,7 @@ var ListNotesView = /** @class */ (function (_super) {
     };
     ListNotesView.prototype.formatterDateAndString = function (date) {
         var _a = date.split(", "), currentDate = _a[0], currentTime = _a[1];
-        var doneString = "note created ".concat(currentDate, " at ").concat(currentTime);
+        var doneString = "Created ".concat(currentDate, " at ").concat(currentTime);
         return doneString;
     };
     return ListNotesView;
@@ -9963,6 +9991,7 @@ var ListNotesController = /** @class */ (function () {
 
 
 
+
 var ModalNoteController = /** @class */ (function () {
     function ModalNoteController(status) {
         var _this = this;
@@ -9981,8 +10010,9 @@ var ModalNoteController = /** @class */ (function () {
             if (form instanceof HTMLFormElement) {
                 var data = new FormData(form);
                 data_handler.submitter(data);
+                var currentHashGlobal = rout.getCurrentHash();
                 var ListConroller = new list_notes_controller();
-                ListConroller.setCurrentPage("home-page");
+                ListConroller.setCurrentPage(currentHashGlobal);
                 _this.removeRender();
             }
         };

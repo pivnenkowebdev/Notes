@@ -126,9 +126,13 @@ export default class ListNotesView extends View {
             classList: [
                 "max-w-[900px]",
                 "mx-auto",
+                "max-h-[540px]",
+                "overflow-auto",
                 "flex",
                 "flex-col",
                 "gap-5",
+                "scrollbar",
+                "pr-1",
             ],
             id: "list",
         };
