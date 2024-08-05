@@ -9655,8 +9655,36 @@ var DataHandler = /** @class */ (function () {
     function DataHandler() {
     }
     DataHandler.setNotesToLocalStorage = function (key, data) {
+        if (key === void 0) { key = this.key; }
+        if (data === void 0) { data = this.allNotes; }
         var dataString = JSON.stringify(data);
         localStorage.setItem(key, dataString);
+    };
+    DataHandler.setDate = function () {
+        var currentDate = new Date();
+        return currentDate.toLocaleString("ru-RU", {
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+            hour12: false,
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    };
+    DataHandler.setId = function (status) {
+        var flagFavorites = "favorites";
+        var flagRegulars = "regulars";
+        var numberId;
+        var doneId;
+        if (status === "on") {
+            numberId = DataHandler.allNotes.favoriteNotes.length + 1;
+            doneId = numberId + flagFavorites;
+        }
+        else {
+            numberId = DataHandler.allNotes.regularNotes.length + 1;
+            doneId = numberId + flagRegulars;
+        }
+        return doneId;
     };
     DataHandler.dataNoteCreator = function (data) {
         var newObj = {
@@ -9689,38 +9717,40 @@ var DataHandler = /** @class */ (function () {
         newObj.date = DataHandler.setDate();
         return newObj;
     };
-    DataHandler.setDate = function () {
-        var currentDate = new Date();
-        return currentDate.toLocaleString("ru-RU", {
-            year: "numeric",
-            month: "numeric",
-            day: "numeric",
-            hour12: false,
-            hour: "2-digit",
-            minute: "2-digit",
-        });
-    };
-    DataHandler.setId = function (status) {
-        var flagFavorites = "favorites";
-        var flagRegulars = "regulars";
-        var numberId;
-        var doneId;
-        if (status === "on") {
-            numberId = DataHandler.allNotes.favoriteNotes.length + 1;
-            doneId = numberId + flagFavorites;
-        }
-        else {
-            numberId = DataHandler.allNotes.regularNotes.length + 1;
-            doneId = numberId + flagRegulars;
-        }
-        return doneId;
-    };
     DataHandler.pushNewNoteObj = function (obj) {
         if (obj.isFavorite) {
             DataHandler.allNotes.favoriteNotes.push(obj);
         }
         else {
             DataHandler.allNotes.regularNotes.push(obj);
+        }
+    };
+    DataHandler.removeNote = function (idCurrentNote) {
+        var selectedListIdentificator = idCurrentNote.slice(1);
+        var counterDeletingNotes = 1;
+        var indexCurrentNote;
+        if (selectedListIdentificator === "favorites") {
+            for (var i = 0; i < this.allNotes.favoriteNotes.length; i++) {
+                var currentNote = this.allNotes.favoriteNotes[i];
+                if (idCurrentNote === currentNote.id) {
+                    indexCurrentNote = i;
+                    break; // Если найдено, выходим из цикла
+                }
+            }
+            if (indexCurrentNote !== undefined) {
+                // Удаление заметки
+                this.allNotes.favoriteNotes.splice(indexCurrentNote, counterDeletingNotes);
+                this.setNotesToLocalStorage();
+                // Обновление id последующих заметок
+                for (var j = indexCurrentNote; j < this.allNotes.favoriteNotes.length; j++) {
+                    var nextNoteId = this.allNotes.favoriteNotes[j].id;
+                    if (typeof nextNoteId === "string") {
+                        var newNumberId = (parseFloat(nextNoteId) - 1).toString();
+                        var newId = newNumberId + selectedListIdentificator;
+                        this.allNotes.favoriteNotes[j].id = newId;
+                    }
+                }
+            }
         }
     };
     DataHandler.initialStorage = function (key) {
@@ -9771,6 +9801,9 @@ var stagesListParams = {
 var listItemParams = {
     tagName: "li",
     classList: ["border-cyan-700", "border-2", "py-1", "px-3", "rounded-md"],
+    attrParams: {
+        "data-note": "",
+    },
 };
 var itemTopParams = {
     tagName: "div",
@@ -9858,6 +9891,9 @@ var list_notes_view_buttonEditParams = {
 var buttonDeleteParams = {
     tagName: "button",
     classList: ["w-6", "h-6", "bg-[url('../../img/trash-btn.svg')]"],
+    attrParams: {
+        "data-action": "remove",
+    },
 };
 var textPreviewParams = {
     tagName: "p",
@@ -9906,7 +9942,6 @@ var ListNotesView = /** @class */ (function (_super) {
         var _this = this;
         var fragment = document.createDocumentFragment();
         listNotes.forEach(function (item) {
-            console.log(item);
             var listItem = _this.createElement(listItemParams);
             listItem.setAttribute("id", String(item.id));
             var itemTop = _this.createElement(itemTopParams);
@@ -9973,22 +10008,49 @@ function checkTrust(value) {
 
 
 
+
 var ListNotesController = /** @class */ (function () {
     function ListNotesController() {
+        this.isListener = false;
         this.listNotesView = new list_notes_view();
+        this.currentHashGlobal = rout.getCurrentHash();
     }
+    ListNotesController.prototype.setListener = function () {
+        var list = document.querySelector("#list");
+        if (!this.isListener) {
+            list === null || list === void 0 ? void 0 : list.addEventListener("click", this.handlerAction.bind(this));
+            this.isListener = true;
+        }
+    };
+    ListNotesController.prototype.removeNoteItem = function (removeBtn) {
+        var currentRemoveNote = removeBtn.closest("[data-note]");
+        checkTrust(currentRemoveNote);
+        var idCurrentNote = currentRemoveNote.id;
+        data_handler.removeNote(idCurrentNote);
+        this.currentHashGlobal = rout.getCurrentHash();
+        this.setCurrentPage();
+    };
+    ListNotesController.prototype.handlerAction = function (event) {
+        if (event.target instanceof HTMLElement) {
+            var isRemoveBtn = event.target.closest("[data-action='remove']");
+            if (isRemoveBtn) {
+                this.removeNoteItem(isRemoveBtn);
+            }
+        }
+    };
     ListNotesController.prototype.setCurrentPage = function (urlPage) {
+        if (urlPage === void 0) { urlPage = this.currentHashGlobal; }
         var currentPageLink = urlPage;
         var currentData = data_handler.initialStorage();
         checkTrust(currentPageLink);
         this.listNotesView.createCurrentList(currentData, currentPageLink);
+        this.setListener();
     };
     return ListNotesController;
 }());
 /* harmony default export */ const list_notes_controller = (ListNotesController);
 
 ;// CONCATENATED MODULE: ./src/core/main/note-modal/modal-note-controller.ts
-
 
 
 
@@ -10010,14 +10072,13 @@ var ModalNoteController = /** @class */ (function () {
             if (form instanceof HTMLFormElement) {
                 var data = new FormData(form);
                 data_handler.submitter(data);
-                var currentHashGlobal = rout.getCurrentHash();
-                var ListConroller = new list_notes_controller();
-                ListConroller.setCurrentPage(currentHashGlobal);
+                _this.listController.setCurrentPage();
                 _this.removeRender();
             }
         };
         this.modalView = new modal_note_view(status);
         this.setListener();
+        this.listController = new list_notes_controller();
     }
     ModalNoteController.prototype.removeRender = function () {
         this.modalView.removeModal();

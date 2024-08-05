@@ -1,4 +1,5 @@
 import { DataNote, allNotesParams } from "../utilities/types";
+import { checkTrust } from "./helper";
 
 const inputsName = {
     titleInput: "title",
@@ -12,9 +13,40 @@ export default class DataHandler {
 
     private constructor() {}
 
-    private static setNotesToLocalStorage(key: string, data: allNotesParams) {
+    private static setNotesToLocalStorage(
+        key: string = this.key,
+        data: allNotesParams = this.allNotes
+    ) {
         const dataString = JSON.stringify(data);
         localStorage.setItem(key, dataString);
+    }
+
+    private static setDate() {
+        const currentDate = new Date();
+        return currentDate.toLocaleString("ru-RU", {
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+            hour12: false,
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    }
+
+    private static setId(status: FormDataEntryValue | null) {
+        const flagFavorites = "favorites";
+        const flagRegulars = "regulars";
+        let numberId;
+        let doneId;
+
+        if (status === "on") {
+            numberId = DataHandler.allNotes.favoriteNotes.length + 1;
+            doneId = numberId + flagFavorites;
+        } else {
+            numberId = DataHandler.allNotes.regularNotes.length + 1;
+            doneId = numberId + flagRegulars;
+        }
+        return doneId;
     }
 
     private static dataNoteCreator(data: FormData) {
@@ -53,39 +85,50 @@ export default class DataHandler {
         return newObj;
     }
 
-    private static setDate() {
-        const currentDate = new Date();
-        return currentDate.toLocaleString("ru-RU", {
-            year: "numeric",
-            month: "numeric",
-            day: "numeric",
-            hour12: false,
-            hour: "2-digit",
-            minute: "2-digit",
-        });
-    }
-
-    private static setId(status: FormDataEntryValue | null) {
-        const flagFavorites = "favorites";
-        const flagRegulars = "regulars";
-        let numberId;
-        let doneId;
-
-        if (status === "on") {
-            numberId = DataHandler.allNotes.favoriteNotes.length + 1;
-            doneId = numberId + flagFavorites;
-        } else {
-            numberId = DataHandler.allNotes.regularNotes.length + 1;
-            doneId = numberId + flagRegulars;
-        }
-        return doneId;
-    }
-
     private static pushNewNoteObj(obj: DataNote) {
         if (obj.isFavorite) {
             DataHandler.allNotes.favoriteNotes.push(obj);
         } else {
             DataHandler.allNotes.regularNotes.push(obj);
+        }
+    }
+
+    static choiceListForRemove(idCurrentNote: string) {
+        const selectedListIdentificator = idCurrentNote.slice(
+            1,
+            idCurrentNote.length
+        );
+        let currentList;
+
+        if (selectedListIdentificator === "favorites") {
+            currentList = this.allNotes.favoriteNotes;
+        } else if (selectedListIdentificator === "regulars") {
+            currentList = this.allNotes.regularNotes;
+        }
+
+        checkTrust(currentList);
+        this.removeNote(idCurrentNote, currentList);
+    }
+
+    static removeNote(idCurrentNote: string, currentList: DataNote[]) {
+        const counterDeletingNotes: number = 1;
+        let indexCurrentNote: number;
+
+        for (let i = 0; i < currentList.length; i++) {
+            const currentNote = currentList[i];
+
+            if (idCurrentNote === currentNote.id) {
+                const necessaryNote = currentList[i];
+                indexCurrentNote = currentList.indexOf(necessaryNote);
+
+                // // после добавления новой заметки добавляется судя по всему ещё один обработчик клика
+                // console.log(indexCurrentNote);
+
+                if (typeof indexCurrentNote === "number") {
+                    currentList.splice(indexCurrentNote, counterDeletingNotes);
+                    this.setNotesToLocalStorage();
+                }
+            }
         }
     }
 

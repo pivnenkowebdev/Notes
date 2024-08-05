@@ -1,15 +1,16 @@
 import ModalNoteView from "./modal-note-view";
 import DataHandler from "../../utilities/data-handler";
 import ListNotesController from "../list-notes/list-notes-controller";
-import Router from "../../utilities/rout";
 
 export default class ModalNoteController {
     modalView: ModalNoteView;
     currentPageId: string;
+    listController: ListNotesController;
 
     constructor(status: string) {
         this.modalView = new ModalNoteView(status);
         this.setListener();
+        this.listController = new ListNotesController();
     }
 
     private removeRender() {
@@ -43,11 +44,7 @@ export default class ModalNoteController {
         if (form instanceof HTMLFormElement) {
             const data = new FormData(form);
             DataHandler.submitter(data);
-
-            const currentHashGlobal = Router.getCurrentHash();
-
-            const ListConroller = new ListNotesController();
-            ListConroller.setCurrentPage(currentHashGlobal);
+            this.listController.setCurrentPage();
             this.removeRender();
         }
     };

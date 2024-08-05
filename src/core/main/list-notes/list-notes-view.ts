@@ -9,6 +9,9 @@ const stagesListParams = {
 const listItemParams: ElementParams = {
     tagName: "li",
     classList: ["border-cyan-700", "border-2", "py-1", "px-3", "rounded-md"],
+    attrParams: {
+        "data-note": "",
+    },
 };
 
 const itemTopParams: ElementParams = {
@@ -106,6 +109,9 @@ const buttonEditParams: ElementParams = {
 const buttonDeleteParams: ElementParams = {
     tagName: "button",
     classList: ["w-6", "h-6", "bg-[url('../../img/trash-btn.svg')]"],
+    attrParams: {
+        "data-action": "remove",
+    },
 };
 
 const textPreviewParams: ElementParams = {
@@ -157,8 +163,6 @@ export default class ListNotesView extends View {
         const fragment = document.createDocumentFragment();
 
         listNotes.forEach((item) => {
-            console.log(item);
-
             const listItem = this.createElement(listItemParams);
             listItem.setAttribute("id", String(item.id));
 
