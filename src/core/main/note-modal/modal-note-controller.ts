@@ -1,14 +1,21 @@
 import ModalNoteView from "./modal-note-view";
 import DataHandler from "../../utilities/data-handler";
 import ListNotesController from "../list-notes/list-notes-controller";
+import { DataNote } from "../../utilities/types";
 
 export default class ModalNoteController {
     modalView: ModalNoteView;
     currentPageId: string;
     listController: ListNotesController;
+    editNoteObj: DataNote | undefined;
 
-    constructor(status: string) {
-        this.modalView = new ModalNoteView(status);
+    // если id передано, то вызвать из handlera метод для поиска заметки
+    // набить модалку данными из объекта
+    constructor(status: string, currentId?: string) {
+        if (currentId) {
+            this.editNoteObj = DataHandler.findNote(currentId)?.necessaryNote;
+        }
+        this.modalView = new ModalNoteView(status, this.editNoteObj);
         this.setListener();
         this.listController = new ListNotesController();
     }
@@ -50,6 +57,6 @@ export default class ModalNoteController {
     };
 
     initialModal() {
-        this.modalView.renderModal();
+        this.listController.setCurrentPage();
     }
 }

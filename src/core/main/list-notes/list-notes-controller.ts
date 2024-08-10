@@ -2,6 +2,9 @@ import ListNotesView from "./list-notes-view";
 import DataHandler from "../../utilities/data-handler";
 import { checkTrust } from "../../utilities/helper";
 import Router from "../../utilities/rout";
+import ModalNoteController from "../note-modal/modal-note-controller";
+
+const status: string = "edit";
 
 export default class ListNotesController {
     listNotesView: ListNotesView;
@@ -16,30 +19,54 @@ export default class ListNotesController {
 
     private setListener() {
         const list = document.querySelector("#list");
+
         if (!this.isListener) {
-            list?.addEventListener("click", this.handlerAction.bind(this));
             this.isListener = true;
+            list?.addEventListener("click", (event) => {
+                this.handlerAction(event);
+            });
         }
     }
 
     private removeNoteItem(removeBtn: Element) {
         const currentRemoveNote = removeBtn.closest("[data-note]");
+
         checkTrust(currentRemoveNote);
         const idCurrentNote = currentRemoveNote.id;
 
-        DataHandler.choiceListForRemove(idCurrentNote);
+        DataHandler.removeNote(idCurrentNote);
+    }
 
-        this.currentHashGlobal = Router.getCurrentHash();
-        this.setCurrentPage();
+    private editNote(editBtn: Element) {
+        const currentEditNote = editBtn.closest("[data-note]");
+
+        checkTrust(currentEditNote);
+        const currentId = currentEditNote.id;
+
+        const isModal = document.querySelector("#form");
+
+        if (!isModal) {
+            const isEditNote = status;
+            const newModal = new ModalNoteController(isEditNote, currentId);
+            newModal.initialModal();
+        }
     }
 
     private handlerAction(event: Event) {
         if (event.target instanceof HTMLElement) {
             const isRemoveBtn = event.target.closest("[data-action='remove']");
+            const isEditBtn = event.target.closest("[data-controll='edit']");
 
             if (isRemoveBtn) {
                 this.removeNoteItem(isRemoveBtn);
             }
+
+            if (isEditBtn) {
+                this.editNote(isEditBtn);
+            }
+
+            this.currentHashGlobal = Router.getCurrentHash();
+            this.setCurrentPage();
         }
     }
 

@@ -8181,6 +8181,35 @@ module.exports = __webpack_require__(6094);
 
 /***/ }),
 
+/***/ 4385:
+/***/ ((module) => {
+
+"use strict";
+
+
+module.exports = function (url, options) {
+  if (!options) {
+    // eslint-disable-next-line no-param-reassign
+    options = {};
+  }
+  if (!url) {
+    return url;
+  }
+
+  // eslint-disable-next-line no-underscore-dangle, no-param-reassign
+  url = String(url.__esModule ? url.default : url);
+  if (options.hash) {
+    // eslint-disable-next-line no-param-reassign
+    url += options.hash;
+  }
+  if (options.maybeNeedQuotes && /[\t\n\f\r "'=<>`]/.test(url)) {
+    return "\"".concat(url, "\"");
+  }
+  return url;
+};
+
+/***/ }),
+
 /***/ 7452:
 /***/ ((module) => {
 
@@ -8947,6 +8976,14 @@ try {
 }
 
 
+/***/ }),
+
+/***/ 5880:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "img/favicond7992a3351427cb8329a.svg";
+
 /***/ })
 
 /******/ 	});
@@ -8974,6 +9011,100 @@ try {
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
+/******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/global */
+/******/ 	(() => {
+/******/ 		__webpack_require__.g = (function() {
+/******/ 			if (typeof globalThis === 'object') return globalThis;
+/******/ 			try {
+/******/ 				return this || new Function('return this')();
+/******/ 			} catch (e) {
+/******/ 				if (typeof window === 'object') return window;
+/******/ 			}
+/******/ 		})();
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/publicPath */
+/******/ 	(() => {
+/******/ 		var scriptUrl;
+/******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
+/******/ 		var document = __webpack_require__.g.document;
+/******/ 		if (!scriptUrl && document) {
+/******/ 			if (document.currentScript)
+/******/ 				scriptUrl = document.currentScript.src;
+/******/ 			if (!scriptUrl) {
+/******/ 				var scripts = document.getElementsByTagName("script");
+/******/ 				if(scripts.length) {
+/******/ 					var i = scripts.length - 1;
+/******/ 					while (i > -1 && (!scriptUrl || !/^http(s?):/.test(scriptUrl))) scriptUrl = scripts[i--].src;
+/******/ 				}
+/******/ 			}
+/******/ 		}
+/******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
+/******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
+/******/ 		if (!scriptUrl) throw new Error("Automatic publicPath is not supported in this browser");
+/******/ 		scriptUrl = scriptUrl.replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
+/******/ 		__webpack_require__.p = scriptUrl;
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	(() => {
+/******/ 		__webpack_require__.b = document.baseURI || self.location.href;
+/******/ 		
+/******/ 		// object to store loaded and loading chunks
+/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
+/******/ 		var installedChunks = {
+/******/ 			792: 0
+/******/ 		};
+/******/ 		
+/******/ 		// no chunk on demand loading
+/******/ 		
+/******/ 		// no prefetching
+/******/ 		
+/******/ 		// no preloaded
+/******/ 		
+/******/ 		// no HMR
+/******/ 		
+/******/ 		// no HMR manifest
+/******/ 		
+/******/ 		// no on chunks loaded
+/******/ 		
+/******/ 		// no jsonp function
+/******/ 	})();
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
@@ -9645,11 +9776,20 @@ var ModalNoteView = /** @class */ (function (_super) {
 }(view));
 /* harmony default export */ const modal_note_view = (ModalNoteView);
 
+;// CONCATENATED MODULE: ./src/core/utilities/helper.ts
+function checkTrust(value) {
+    if (value === undefined || value === null) {
+        throw new Error("".concat(value, " is not defined"));
+    }
+}
+
 ;// CONCATENATED MODULE: ./src/core/utilities/data-handler.ts
+
 var inputsName = {
     titleInput: "title",
     favoriteCheckbox: "favorite",
     textInput: "text",
+    id: "id",
 };
 var DataHandler = /** @class */ (function () {
     function DataHandler() {
@@ -9698,6 +9838,7 @@ var DataHandler = /** @class */ (function () {
         var title = data.get(inputsName.titleInput);
         var statusFavorite = data.get(inputsName.favoriteCheckbox);
         var text = data.get(inputsName.textInput);
+        var id = data.get(inputsName.id);
         if (typeof title === "string" && title.trim()) {
             newObj.title = title;
         }
@@ -9725,33 +9866,45 @@ var DataHandler = /** @class */ (function () {
             DataHandler.allNotes.regularNotes.push(obj);
         }
     };
-    DataHandler.removeNote = function (idCurrentNote) {
-        var selectedListIdentificator = idCurrentNote.slice(1);
-        var counterDeletingNotes = 1;
-        var indexCurrentNote;
+    DataHandler.choiceListForRemove = function (idCurrentNote) {
+        var selectedListIdentificator = idCurrentNote.slice(1, idCurrentNote.length);
+        var currentList;
         if (selectedListIdentificator === "favorites") {
-            for (var i = 0; i < this.allNotes.favoriteNotes.length; i++) {
-                var currentNote = this.allNotes.favoriteNotes[i];
-                if (idCurrentNote === currentNote.id) {
-                    indexCurrentNote = i;
-                    break; // Если найдено, выходим из цикла
-                }
-            }
-            if (indexCurrentNote !== undefined) {
-                // Удаление заметки
-                this.allNotes.favoriteNotes.splice(indexCurrentNote, counterDeletingNotes);
-                this.setNotesToLocalStorage();
-                // Обновление id последующих заметок
-                for (var j = indexCurrentNote; j < this.allNotes.favoriteNotes.length; j++) {
-                    var nextNoteId = this.allNotes.favoriteNotes[j].id;
-                    if (typeof nextNoteId === "string") {
-                        var newNumberId = (parseFloat(nextNoteId) - 1).toString();
-                        var newId = newNumberId + selectedListIdentificator;
-                        this.allNotes.favoriteNotes[j].id = newId;
-                    }
-                }
+            currentList = this.allNotes.favoriteNotes;
+        }
+        else if (selectedListIdentificator === "regulars") {
+            currentList = this.allNotes.regularNotes;
+        }
+        checkTrust(currentList);
+        this.removeNote(idCurrentNote, currentList, selectedListIdentificator);
+    };
+    DataHandler.removeNote = function (idCurrentNote, currentList, identificator) {
+        var counterDeletingNotes = 1;
+        var indexCurrentNote = 1;
+        for (var i = 0; i < currentList.length; i++) {
+            var currentNote = currentList[i];
+            if (idCurrentNote === currentNote.id) {
+                var necessaryNote = currentList[i];
+                indexCurrentNote = currentList.indexOf(necessaryNote);
+                currentList.splice(indexCurrentNote, counterDeletingNotes);
+                break;
             }
         }
+        // по какой-то причине выводится по количеству заметок
+        // это происходит только если не обновить страницу или после создания заметки
+        console.log(1);
+        // const nextNoteIndex = indexCurrentNote;
+        // console.log(currentList[nextNoteIndex]);
+        // for (let j = nextNoteIndex; j < currentList.length; j++) {
+        //     const currentOldId = currentList[j].id;
+        //     if (currentOldId && typeof currentOldId === "string") {
+        //             const currentOldIdNumber = parseFloat(currentOldId);
+        //             const newDecrementIDNumber = currentOldIdNumber - 1;
+        //             const newId = newDecrementIDNumber + identificator;
+        //             currentList[j].id = newId;
+        //     }
+        // }
+        this.setNotesToLocalStorage();
     };
     DataHandler.initialStorage = function (key) {
         if (key === void 0) { key = this.key; }
@@ -9887,6 +10040,9 @@ var list_notes_view_fakeCheckboxParams = {
 var list_notes_view_buttonEditParams = {
     tagName: "button",
     classList: ["w-6", "h-6", "bg-[url('../../img/edit-btn.svg')]", "bg-cover"],
+    attrParams: {
+        "data-controll": "edit",
+    },
 };
 var buttonDeleteParams = {
     tagName: "button",
@@ -9997,18 +10153,13 @@ var ListNotesView = /** @class */ (function (_super) {
 }(view));
 /* harmony default export */ const list_notes_view = (ListNotesView);
 
-;// CONCATENATED MODULE: ./src/core/utilities/helper.ts
-function checkTrust(value) {
-    if (value === undefined || value === null) {
-        throw new Error("".concat(value, " is not defined"));
-    }
-}
-
 ;// CONCATENATED MODULE: ./src/core/main/list-notes/list-notes-controller.ts
 
 
 
 
+
+var list_notes_controller_status = "edit";
 var ListNotesController = /** @class */ (function () {
     function ListNotesController() {
         this.isListener = false;
@@ -10016,26 +10167,44 @@ var ListNotesController = /** @class */ (function () {
         this.currentHashGlobal = rout.getCurrentHash();
     }
     ListNotesController.prototype.setListener = function () {
+        var _this = this;
         var list = document.querySelector("#list");
         if (!this.isListener) {
-            list === null || list === void 0 ? void 0 : list.addEventListener("click", this.handlerAction.bind(this));
             this.isListener = true;
+            list === null || list === void 0 ? void 0 : list.addEventListener("click", function (event) {
+                _this.handlerAction(event);
+            });
         }
     };
     ListNotesController.prototype.removeNoteItem = function (removeBtn) {
         var currentRemoveNote = removeBtn.closest("[data-note]");
         checkTrust(currentRemoveNote);
         var idCurrentNote = currentRemoveNote.id;
-        data_handler.removeNote(idCurrentNote);
-        this.currentHashGlobal = rout.getCurrentHash();
-        this.setCurrentPage();
+        data_handler.choiceListForRemove(idCurrentNote);
+    };
+    ListNotesController.prototype.editNote = function (editBtn) {
+        var currentEditNote = editBtn.closest("[data-note]");
+        checkTrust(currentEditNote);
+        var currentId = currentEditNote.id;
+        var isModal = document.querySelector("#form");
+        if (!isModal) {
+            var isEditNote = list_notes_controller_status;
+            var newModal = new modal_note_controller(isEditNote);
+            newModal.initialModal();
+        }
     };
     ListNotesController.prototype.handlerAction = function (event) {
         if (event.target instanceof HTMLElement) {
             var isRemoveBtn = event.target.closest("[data-action='remove']");
+            var isEditBtn = event.target.closest("[data-controll='edit']");
             if (isRemoveBtn) {
                 this.removeNoteItem(isRemoveBtn);
             }
+            if (isEditBtn) {
+                this.editNote(isEditBtn);
+            }
+            this.currentHashGlobal = rout.getCurrentHash();
+            this.setCurrentPage();
         }
     };
     ListNotesController.prototype.setCurrentPage = function (urlPage) {
@@ -10248,6 +10417,18 @@ var App = /** @class */ (function () {
 }());
 /* harmony default export */ const app = (App);
 
+// EXTERNAL MODULE: ./node_modules/html-loader/dist/runtime/getUrl.js
+var getUrl = __webpack_require__(4385);
+var getUrl_default = /*#__PURE__*/__webpack_require__.n(getUrl);
+;// CONCATENATED MODULE: ./src/index.html
+// Imports
+
+var ___HTML_LOADER_IMPORT_0___ = new URL(/* asset import */ __webpack_require__(5880), __webpack_require__.b);
+// Module
+var ___HTML_LOADER_REPLACEMENT_0___ = getUrl_default()(___HTML_LOADER_IMPORT_0___);
+var code = "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"> <title></title> <link rel=\"shortcut icon\" href=\"" + ___HTML_LOADER_REPLACEMENT_0___ + "\" type=\"image/x-icon\"> </head> <body> </body> </html>";
+// Exports
+/* harmony default export */ const src = ((/* unused pure expression or super */ null && (code)));
 ;// CONCATENATED MODULE: ./src/index.ts
 
 

@@ -104,6 +104,9 @@ const fakeCheckboxParams = {
 const buttonEditParams: ElementParams = {
     tagName: "button",
     classList: ["w-6", "h-6", "bg-[url('../../img/edit-btn.svg')]", "bg-cover"],
+    attrParams: {
+        "data-controll": "edit",
+    },
 };
 
 const buttonDeleteParams: ElementParams = {

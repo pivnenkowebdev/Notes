@@ -5,6 +5,7 @@ const inputsName = {
     titleInput: "title",
     favoriteCheckbox: "favorite",
     textInput: "text",
+    id: "id",
 };
 
 export default class DataHandler {
@@ -49,6 +50,11 @@ export default class DataHandler {
         return doneId;
     }
 
+    // рефактор
+    // отдельный метод для поиска по id
+    // если была передана id, то создавать объект на основе старой заметки
+    // менять статус
+
     private static dataNoteCreator(data: FormData) {
         const newObj: DataNote = {
             title: "",
@@ -62,6 +68,7 @@ export default class DataHandler {
         const title = data.get(inputsName.titleInput);
         const statusFavorite = data.get(inputsName.favoriteCheckbox);
         const text = data.get(inputsName.textInput);
+        // const id = data.get(inputsName.id);
 
         if (typeof title === "string" && title.trim()) {
             newObj.title = title;
@@ -93,11 +100,9 @@ export default class DataHandler {
         }
     }
 
-    static choiceListForRemove(idCurrentNote: string) {
-        const selectedListIdentificator = idCurrentNote.slice(
-            1,
-            idCurrentNote.length
-        );
+    static findNote(currentId: string) {
+        const selectedListIdentificator = currentId.slice(1, currentId.length);
+
         let currentList;
 
         if (selectedListIdentificator === "favorites") {
@@ -107,29 +112,53 @@ export default class DataHandler {
         }
 
         checkTrust(currentList);
-        this.removeNote(idCurrentNote, currentList);
-    }
-
-    static removeNote(idCurrentNote: string, currentList: DataNote[]) {
-        const counterDeletingNotes: number = 1;
-        let indexCurrentNote: number;
 
         for (let i = 0; i < currentList.length; i++) {
             const currentNote = currentList[i];
-
-            if (idCurrentNote === currentNote.id) {
+            if (currentId === currentNote.id) {
                 const necessaryNote = currentList[i];
-                indexCurrentNote = currentList.indexOf(necessaryNote);
+                return { necessaryNote, currentList };
+            }
+        }
+    }
 
-                // // после добавления новой заметки добавляется судя по всему ещё один обработчик клика
-                // console.log(indexCurrentNote);
+    static removeNote(idCurrentNote: string) {
+        const currentObjInfo = this.findNote(idCurrentNote);
+        if (currentObjInfo) {
+            const counterDeletingNotes: number = 1;
+            let indexCurrentNote: number = 1;
 
-                if (typeof indexCurrentNote === "number") {
-                    currentList.splice(indexCurrentNote, counterDeletingNotes);
-                    this.setNotesToLocalStorage();
+            for (let i = 0; i < currentObjInfo.currentList.length; i++) {
+                const currentNote = currentObjInfo.currentList[i];
+                if (idCurrentNote === currentNote.id) {
+                    const necessaryNote = currentObjInfo.currentList[i];
+                    indexCurrentNote =
+                        currentObjInfo.currentList.indexOf(necessaryNote);
+                    currentObjInfo.currentList.splice(
+                        indexCurrentNote,
+                        counterDeletingNotes
+                    );
+                    break;
                 }
             }
         }
+        // по какой-то причине выводится по количеству заметок
+        // это происходит только если не обновить страницу или после создания заметки
+        // console.log(1);
+
+        // const nextNoteIndex = indexCurrentNote;
+        // console.log(currentList[nextNoteIndex]);
+
+        // for (let j = nextNoteIndex; j < currentList.length; j++) {
+        //     const currentOldId = currentList[j].id;
+        //     if (currentOldId && typeof currentOldId === "string") {
+        //             const currentOldIdNumber = parseFloat(currentOldId);
+        //             const newDecrementIDNumber = currentOldIdNumber - 1;
+        //             const newId = newDecrementIDNumber + identificator;
+        //             currentList[j].id = newId;
+        //     }
+        // }
+        this.setNotesToLocalStorage();
     }
 
     static initialStorage(key = this.key) {

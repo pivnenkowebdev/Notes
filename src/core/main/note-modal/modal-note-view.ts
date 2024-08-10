@@ -1,6 +1,7 @@
 import View from "../../utilities/view";
 import { ElementParams } from "../../utilities/types";
 import { appContainer } from "../../app";
+import { DataNote } from "../../utilities/types";
 
 const fadeBlockParams: ElementParams = {
     tagName: "div",
@@ -187,7 +188,7 @@ export default class ModalNoteView extends View {
     realCheckbox: HTMLElement;
     fakeCheckbox: HTMLSpanElement;
     cancelBtn: HTMLElement;
-    constructor(status: string) {
+    constructor(status: string, noteObj?: DataNote) {
         const formParams: ElementParams = {
             tagName: "form",
             classList: [
@@ -207,6 +208,11 @@ export default class ModalNoteView extends View {
             ],
             id: "form",
         };
+
+        if (noteObj) {
+            console.log(1);
+        }
+
         super(formParams);
         this.configureView(status);
     }
