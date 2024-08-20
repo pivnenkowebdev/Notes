@@ -121,7 +121,11 @@ export default class DataHandler {
             const currentNote = currentList[i];
             if (currentId === currentNote.id) {
                 const necessaryNote = currentList[i];
-                return { necessaryNote, currentList };
+                return {
+                    necessaryNote,
+                    currentList,
+                    selectedListIdentificator,
+                };
             }
         }
     }
@@ -145,23 +149,23 @@ export default class DataHandler {
                     break;
                 }
             }
+
+            for (
+                let j = indexCurrentNote;
+                j < currentObjInfo.currentList.length;
+                j++
+            ) {
+                const currentOldId = currentObjInfo.currentList[j].id;
+                if (currentOldId && typeof currentOldId === "string") {
+                    const currentOldIdNumber = parseFloat(currentOldId);
+                    const newDecrementIDNumber = currentOldIdNumber - 1;
+                    const newId =
+                        newDecrementIDNumber +
+                        currentObjInfo.selectedListIdentificator;
+                    currentObjInfo.currentList[j].id = newId;
+                }
+            }
         }
-        // по какой-то причине выводится по количеству заметок
-        // это происходит только если не обновить страницу или после создания заметки
-        // console.log(1);
-
-        // const nextNoteIndex = indexCurrentNote;
-        // console.log(currentList[nextNoteIndex]);
-
-        // for (let j = nextNoteIndex; j < currentList.length; j++) {
-        //     const currentOldId = currentList[j].id;
-        //     if (currentOldId && typeof currentOldId === "string") {
-        //             const currentOldIdNumber = parseFloat(currentOldId);
-        //             const newDecrementIDNumber = currentOldIdNumber - 1;
-        //             const newId = newDecrementIDNumber + identificator;
-        //             currentList[j].id = newId;
-        //     }
-        // }
         this.setNotesToLocalStorage();
     }
 

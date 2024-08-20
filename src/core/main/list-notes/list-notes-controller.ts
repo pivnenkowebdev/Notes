@@ -64,7 +64,6 @@ export default class ListNotesController {
         const currentData = DataHandler.initialStorage();
         checkTrust(currentPageLink);
         this.listNotesView.createCurrentList(currentData, currentPageLink);
-        console.log(1);
     }
 
     setListener() {
