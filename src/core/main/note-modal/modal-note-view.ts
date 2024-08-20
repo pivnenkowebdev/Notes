@@ -35,7 +35,7 @@ const titleWrapperParams: ElementParams = {
     ],
 };
 
-const inputTitleWrapperParams: ElementParams = {
+const inputTitleParams: ElementParams = {
     tagName: "input",
     classList: ["block", "max-w-[330px]", "w-full", "outline-none", "text-2xl"],
     attrParams: {
@@ -188,6 +188,7 @@ export default class ModalNoteView extends View {
     realCheckbox: HTMLElement;
     fakeCheckbox: HTMLSpanElement;
     cancelBtn: HTMLElement;
+
     constructor(status: string, noteObj?: DataNote) {
         const formParams: ElementParams = {
             tagName: "form",
@@ -210,7 +211,8 @@ export default class ModalNoteView extends View {
         };
 
         if (noteObj) {
-            console.log(1);
+            inputTitleParams.attrParams = { value: noteObj.title };
+            textareaParams.textContent = noteObj.text;
         }
 
         super(formParams);
@@ -225,7 +227,7 @@ export default class ModalNoteView extends View {
         const titleWrapper = this.createElement(titleWrapperParams);
         this.addInnerElement(this.component.getHtmlElement(), titleWrapper);
 
-        const inputTitle = this.createElement(inputTitleWrapperParams);
+        const inputTitle = this.createElement(inputTitleParams);
         this.addInnerElement(titleWrapper, inputTitle);
 
         const wrapperFakeCheckbox = this.createElement(
@@ -257,6 +259,7 @@ export default class ModalNoteView extends View {
         }
     }
 
+    // где этот ёбаный рендер вызывается????
     renderModal() {
         this.addInnerElement(appContainer, this.getComponent());
         const isFirstInput: HTMLInputElement | null = this.component

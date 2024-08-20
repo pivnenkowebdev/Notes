@@ -9565,7 +9565,7 @@ var titleWrapperParams = {
         "py-1",
     ],
 };
-var inputTitleWrapperParams = {
+var inputTitleParams = {
     tagName: "input",
     classList: ["block", "max-w-[330px]", "w-full", "outline-none", "text-2xl"],
     attrParams: {
@@ -9705,7 +9705,8 @@ var buttonEditParams = {
 };
 var ModalNoteView = /** @class */ (function (_super) {
     modal_note_view_extends(ModalNoteView, _super);
-    function ModalNoteView(status) {
+    // id и статус
+    function ModalNoteView(status, noteObj) {
         var _this = this;
         var formParams = {
             tagName: "form",
@@ -9726,6 +9727,10 @@ var ModalNoteView = /** @class */ (function (_super) {
             ],
             id: "form",
         };
+        if (noteObj) {
+            inputTitleParams.attrParams = { "value": noteObj.title };
+            textareaParams.textContent = noteObj.text;
+        }
         _this = _super.call(this, formParams) || this;
         _this.configureView(status);
         return _this;
@@ -9736,7 +9741,7 @@ var ModalNoteView = /** @class */ (function (_super) {
         this.addInnerElement(appContainer, this.component.getHtmlElement());
         var titleWrapper = this.createElement(titleWrapperParams);
         this.addInnerElement(this.component.getHtmlElement(), titleWrapper);
-        var inputTitle = this.createElement(inputTitleWrapperParams);
+        var inputTitle = this.createElement(inputTitleParams);
         this.addInnerElement(titleWrapper, inputTitle);
         var wrapperFakeCheckbox = this.createElement(wrapperFakeCheckboxParams);
         this.addInnerElement(titleWrapper, wrapperFakeCheckbox);
@@ -9826,12 +9831,15 @@ var DataHandler = /** @class */ (function () {
         }
         return doneId;
     };
+    // если был передан объект заметки, то создавать объект на основе старой заметки
+    // переопределять нужную заметку
+    // менять статус
     DataHandler.dataNoteCreator = function (data) {
         var newObj = {
             title: "",
             isFavorite: "",
             text: "",
-            id: 0,
+            id: "",
             date: "",
             changed: false,
         };
@@ -9854,7 +9862,12 @@ var DataHandler = /** @class */ (function () {
         if (typeof statusFavorite === "string") {
             newObj.isFavorite = statusFavorite;
         }
-        newObj.id = DataHandler.setId(statusFavorite);
+        if (id) {
+            newObj.id = id.toString();
+        }
+        else {
+            newObj.id = DataHandler.setId(statusFavorite);
+        }
         newObj.date = DataHandler.setDate();
         return newObj;
     };
@@ -9866,8 +9879,8 @@ var DataHandler = /** @class */ (function () {
             DataHandler.allNotes.regularNotes.push(obj);
         }
     };
-    DataHandler.choiceListForRemove = function (idCurrentNote) {
-        var selectedListIdentificator = idCurrentNote.slice(1, idCurrentNote.length);
+    DataHandler.findNote = function (currentId) {
+        var selectedListIdentificator = currentId.slice(1, currentId.length);
         var currentList;
         if (selectedListIdentificator === "favorites") {
             currentList = this.allNotes.favoriteNotes;
@@ -9876,23 +9889,33 @@ var DataHandler = /** @class */ (function () {
             currentList = this.allNotes.regularNotes;
         }
         checkTrust(currentList);
-        this.removeNote(idCurrentNote, currentList, selectedListIdentificator);
-    };
-    DataHandler.removeNote = function (idCurrentNote, currentList, identificator) {
-        var counterDeletingNotes = 1;
-        var indexCurrentNote = 1;
         for (var i = 0; i < currentList.length; i++) {
             var currentNote = currentList[i];
-            if (idCurrentNote === currentNote.id) {
+            if (currentId === currentNote.id) {
                 var necessaryNote = currentList[i];
-                indexCurrentNote = currentList.indexOf(necessaryNote);
-                currentList.splice(indexCurrentNote, counterDeletingNotes);
-                break;
+                return { necessaryNote: necessaryNote, currentList: currentList };
+            }
+        }
+    };
+    DataHandler.removeNote = function (idCurrentNote) {
+        var currentObjInfo = this.findNote(idCurrentNote);
+        if (currentObjInfo) {
+            var counterDeletingNotes = 1;
+            var indexCurrentNote = 1;
+            for (var i = 0; i < currentObjInfo.currentList.length; i++) {
+                var currentNote = currentObjInfo.currentList[i];
+                if (idCurrentNote === currentNote.id) {
+                    var necessaryNote = currentObjInfo.currentList[i];
+                    indexCurrentNote =
+                        currentObjInfo.currentList.indexOf(necessaryNote);
+                    currentObjInfo.currentList.splice(indexCurrentNote, counterDeletingNotes);
+                    break;
+                }
             }
         }
         // по какой-то причине выводится по количеству заметок
         // это происходит только если не обновить страницу или после создания заметки
-        console.log(1);
+        // console.log(1);
         // const nextNoteIndex = indexCurrentNote;
         // console.log(currentList[nextNoteIndex]);
         // for (let j = nextNoteIndex; j < currentList.length; j++) {
@@ -10161,8 +10184,10 @@ var ListNotesView = /** @class */ (function (_super) {
 
 var list_notes_controller_status = "edit";
 var ListNotesController = /** @class */ (function () {
+    // принимать объект заметки 
     function ListNotesController() {
         this.isListener = false;
+        // отправить на рендер
         this.listNotesView = new list_notes_view();
         this.currentHashGlobal = rout.getCurrentHash();
     }
@@ -10180,7 +10205,7 @@ var ListNotesController = /** @class */ (function () {
         var currentRemoveNote = removeBtn.closest("[data-note]");
         checkTrust(currentRemoveNote);
         var idCurrentNote = currentRemoveNote.id;
-        data_handler.choiceListForRemove(idCurrentNote);
+        data_handler.removeNote(idCurrentNote);
     };
     ListNotesController.prototype.editNote = function (editBtn) {
         var currentEditNote = editBtn.closest("[data-note]");
@@ -10189,7 +10214,7 @@ var ListNotesController = /** @class */ (function () {
         var isModal = document.querySelector("#form");
         if (!isModal) {
             var isEditNote = list_notes_controller_status;
-            var newModal = new modal_note_controller(isEditNote);
+            var newModal = new modal_note_controller(isEditNote, currentId);
             newModal.initialModal();
         }
     };
@@ -10224,8 +10249,9 @@ var ListNotesController = /** @class */ (function () {
 
 
 var ModalNoteController = /** @class */ (function () {
-    function ModalNoteController(status) {
+    function ModalNoteController(status, currentId) {
         var _this = this;
+        var _a;
         this.handlerAction = function (event) {
             if (event.target instanceof HTMLElement) {
                 var isCancelBtn = event.target.closest("[data-controll='cancel']");
@@ -10236,16 +10262,26 @@ var ModalNoteController = /** @class */ (function () {
             }
         };
         this.dataCollector = function (event) {
+            var _a;
             event.preventDefault();
             var form = _this.modalView.getComponent();
             if (form instanceof HTMLFormElement) {
                 var data = new FormData(form);
+                if (_this.editNoteObj !== undefined && _this.editNoteObj.id !== undefined) {
+                    data.set("id", (_a = _this.editNoteObj.id) === null || _a === void 0 ? void 0 : _a.toString());
+                }
+                // if (this.editNoteObj !== undefined && this.editNoteObj.isFavorite !== undefined) {
+                //     data.set("isFavorite", this.editNoteObj.isFavorite);
+                // }
                 data_handler.submitter(data);
                 _this.listController.setCurrentPage();
                 _this.removeRender();
             }
         };
-        this.modalView = new modal_note_view(status);
+        if (currentId) {
+            this.editNoteObj = (_a = data_handler.findNote(currentId)) === null || _a === void 0 ? void 0 : _a.necessaryNote;
+        }
+        this.modalView = new modal_note_view(status, this.editNoteObj);
         this.setListener();
         this.listController = new list_notes_controller();
     }
@@ -10259,7 +10295,7 @@ var ModalNoteController = /** @class */ (function () {
         window.addEventListener("click", this.handlerAction);
     };
     ModalNoteController.prototype.initialModal = function () {
-        this.modalView.renderModal();
+        this.listController.setCurrentPage();
     };
     return ModalNoteController;
 }());

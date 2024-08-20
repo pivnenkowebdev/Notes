@@ -148,20 +148,6 @@ export default class ListNotesView extends View {
         super(listNotesParams);
     }
 
-    createCurrentList(params: allNotesParams, stage: string) {
-        this.clearRender();
-        if (stage === stagesListParams.main) {
-            const favoritesList = this.createNoteItem(params.favoriteNotes);
-            const regularList = this.createNoteItem(params.regularNotes);
-
-            this.renderCurrentList(favoritesList);
-            this.renderCurrentList(regularList);
-        } else if (stage === stagesListParams.favorites) {
-            const favoritesList = this.createNoteItem(params.favoriteNotes);
-            this.renderCurrentList(favoritesList);
-        }
-    }
-
     private createNoteItem(listNotes: DataNote[]): DocumentFragment {
         const fragment = document.createDocumentFragment();
 
@@ -237,5 +223,19 @@ export default class ListNotesView extends View {
         const [currentDate, currentTime] = date.split(", ");
         const doneString = `Created ${currentDate} at ${currentTime}`;
         return doneString;
+    }
+
+    createCurrentList(params: allNotesParams, stage: string) {
+        this.clearRender();
+        if (stage === stagesListParams.main) {
+            const favoritesList = this.createNoteItem(params.favoriteNotes);
+            const regularList = this.createNoteItem(params.regularNotes);
+
+            this.renderCurrentList(favoritesList);
+            this.renderCurrentList(regularList);
+        } else if (stage === stagesListParams.favorites) {
+            const favoritesList = this.createNoteItem(params.favoriteNotes);
+            this.renderCurrentList(favoritesList);
+        }
     }
 }

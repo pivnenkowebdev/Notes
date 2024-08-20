@@ -11,21 +11,11 @@ export default class ListNotesController {
     private currentHashGlobal: string;
     protected isListener: boolean;
 
+    // принимать объект заметки
     constructor() {
         this.isListener = false;
         this.listNotesView = new ListNotesView();
         this.currentHashGlobal = Router.getCurrentHash();
-    }
-
-    private setListener() {
-        const list = document.querySelector("#list");
-
-        if (!this.isListener) {
-            this.isListener = true;
-            list?.addEventListener("click", (event) => {
-                this.handlerAction(event);
-            });
-        }
     }
 
     private removeNoteItem(removeBtn: Element) {
@@ -47,8 +37,7 @@ export default class ListNotesController {
 
         if (!isModal) {
             const isEditNote = status;
-            const newModal = new ModalNoteController(isEditNote, currentId);
-            newModal.initialModal();
+            new ModalNoteController(isEditNote, currentId);
         }
     }
 
@@ -75,6 +64,17 @@ export default class ListNotesController {
         const currentData = DataHandler.initialStorage();
         checkTrust(currentPageLink);
         this.listNotesView.createCurrentList(currentData, currentPageLink);
-        this.setListener();
+        console.log(1);
+    }
+
+    setListener() {
+        const list = document.querySelector("#list");
+
+        if (!this.isListener) {
+            this.isListener = true;
+            list?.addEventListener("click", (event) => {
+                this.handlerAction(event);
+            });
+        }
     }
 }

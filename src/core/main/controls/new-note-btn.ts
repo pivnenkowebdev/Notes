@@ -58,8 +58,7 @@ export default class NewNoteBtn extends View {
         const isModal = document.querySelector("#form");
         if (!isModal) {
             const isNewNote = status;
-            const newModal = new ModalNoteController(isNewNote);
-            newModal.initialModal();
+            new ModalNoteController(isNewNote);
         }
     };
 }

@@ -50,9 +50,8 @@ export default class DataHandler {
         return doneId;
     }
 
-    // рефактор
-    // отдельный метод для поиска по id
-    // если была передана id, то создавать объект на основе старой заметки
+    // если был передан объект заметки, то создавать объект на основе старой заметки
+    // переопределять нужную заметку
     // менять статус
 
     private static dataNoteCreator(data: FormData) {
@@ -60,7 +59,7 @@ export default class DataHandler {
             title: "",
             isFavorite: "",
             text: "",
-            id: 0,
+            id: "",
             date: "",
             changed: false,
         };
@@ -68,13 +67,14 @@ export default class DataHandler {
         const title = data.get(inputsName.titleInput);
         const statusFavorite = data.get(inputsName.favoriteCheckbox);
         const text = data.get(inputsName.textInput);
-        // const id = data.get(inputsName.id);
+        const id = data.get(inputsName.id);
 
         if (typeof title === "string" && title.trim()) {
             newObj.title = title;
         } else {
             newObj.title = "No title";
         }
+
         if (typeof text === "string" && text.trim()) {
             newObj.text = text;
         } else {
@@ -85,7 +85,11 @@ export default class DataHandler {
             newObj.isFavorite = statusFavorite;
         }
 
-        newObj.id = DataHandler.setId(statusFavorite);
+        if (id) {
+            newObj.id = id.toString();
+        } else {
+            newObj.id = DataHandler.setId(statusFavorite);
+        }
 
         newObj.date = DataHandler.setDate();
 

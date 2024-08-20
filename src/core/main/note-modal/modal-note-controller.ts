@@ -9,12 +9,11 @@ export default class ModalNoteController {
     listController: ListNotesController;
     editNoteObj: DataNote | undefined;
 
-    // если id передано, то вызвать из handlera метод для поиска заметки
-    // набить модалку данными из объекта
     constructor(status: string, currentId?: string) {
         if (currentId) {
             this.editNoteObj = DataHandler.findNote(currentId)?.necessaryNote;
         }
+
         this.modalView = new ModalNoteView(status, this.editNoteObj);
         this.setListener();
         this.listController = new ListNotesController();
@@ -50,13 +49,17 @@ export default class ModalNoteController {
         const form = this.modalView.getComponent();
         if (form instanceof HTMLFormElement) {
             const data = new FormData(form);
+
+            if (
+                this.editNoteObj !== undefined &&
+                this.editNoteObj.id !== undefined
+            ) {
+                data.set("id", this.editNoteObj.id?.toString());
+            }
+
             DataHandler.submitter(data);
             this.listController.setCurrentPage();
             this.removeRender();
         }
     };
-
-    initialModal() {
-        this.listController.setCurrentPage();
-    }
 }
