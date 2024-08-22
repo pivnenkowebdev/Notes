@@ -29,6 +29,7 @@ export interface allNotesParams {
 
 export interface objInfoAboutNote {
     necessaryNote: DataNote;
+    indexCurrentNote: number;
     currentList: DataNote[];
     selectedListIdentificator: string;
 }

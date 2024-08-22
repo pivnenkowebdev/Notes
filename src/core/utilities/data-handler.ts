@@ -121,8 +121,10 @@ export default class DataHandler {
             const currentNote = currentList[i];
             if (currentId === currentNote.id) {
                 const necessaryNote = currentList[i];
+                const indexCurrentNote = currentList.indexOf(necessaryNote);
                 return {
                     necessaryNote,
+                    indexCurrentNote,
                     currentList,
                     selectedListIdentificator,
                 };
@@ -130,12 +132,9 @@ export default class DataHandler {
         }
     }
 
-    static decreaseIdNotes(
-        indexCurrentNote: number,
-        currentObjInfo: objInfoAboutNote
-    ) {
+    static decreaseIdNotes(currentObjInfo: objInfoAboutNote) {
         for (
-            let j = indexCurrentNote;
+            let j = currentObjInfo.indexCurrentNote;
             j < currentObjInfo.currentList.length;
             j++
         ) {
@@ -153,19 +152,15 @@ export default class DataHandler {
 
     static removeNote(idCurrentNote: string) {
         const currentObjInfo = this.findNote(idCurrentNote);
-        let indexCurrentNote: number = 1;
 
         if (currentObjInfo) {
             const counterDeletingNotes: number = 1;
-            indexCurrentNote = currentObjInfo.currentList.indexOf(
-                currentObjInfo.necessaryNote
-            );
             currentObjInfo.currentList.splice(
-                indexCurrentNote,
+                currentObjInfo.indexCurrentNote,
                 counterDeletingNotes
             );
 
-            DataHandler.decreaseIdNotes(indexCurrentNote, currentObjInfo);
+            DataHandler.decreaseIdNotes(currentObjInfo);
         }
         this.setNotesToLocalStorage();
     }
