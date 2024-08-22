@@ -26,3 +26,9 @@ export interface allNotesParams {
     regularNotes: DataNote[];
     favoriteNotes: DataNote[];
 }
+
+export interface objInfoAboutNote {
+    necessaryNote: DataNote;
+    currentList: DataNote[];
+    selectedListIdentificator: string;
+}

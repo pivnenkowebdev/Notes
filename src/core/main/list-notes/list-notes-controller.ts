@@ -11,7 +11,6 @@ export default class ListNotesController {
     private currentHashGlobal: string;
     protected isListener: boolean;
 
-    // принимать объект заметки
     constructor() {
         this.isListener = false;
         this.listNotesView = new ListNotesView();

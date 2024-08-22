@@ -67,7 +67,6 @@ export default class Nav extends View {
 
     setCurrentLink(event: Event) {
         const currentLink = event.target;
-        // избавиться от queryselector
         if (
             currentLink instanceof HTMLAnchorElement &&
             !currentLink.classList.contains("active")

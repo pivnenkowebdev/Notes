@@ -259,7 +259,6 @@ export default class ModalNoteView extends View {
         }
     }
 
-    // где этот ёбаный рендер вызывается????
     renderModal() {
         this.addInnerElement(appContainer, this.getComponent());
         const isFirstInput: HTMLInputElement | null = this.component

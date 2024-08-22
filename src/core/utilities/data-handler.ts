@@ -1,4 +1,4 @@
-import { DataNote, allNotesParams } from "../utilities/types";
+import { DataNote, allNotesParams, objInfoAboutNote } from "../utilities/types";
 import { checkTrust } from "./helper";
 
 const inputsName = {
@@ -104,7 +104,7 @@ export default class DataHandler {
         }
     }
 
-    static findNote(currentId: string) {
+    static findNote(currentId: string): objInfoAboutNote | undefined {
         const selectedListIdentificator = currentId.slice(1, currentId.length);
 
         let currentList;
@@ -130,41 +130,42 @@ export default class DataHandler {
         }
     }
 
+    static decreaseIdNotes(
+        indexCurrentNote: number,
+        currentObjInfo: objInfoAboutNote
+    ) {
+        for (
+            let j = indexCurrentNote;
+            j < currentObjInfo.currentList.length;
+            j++
+        ) {
+            const currentOldId = currentObjInfo.currentList[j].id;
+            if (currentOldId && typeof currentOldId === "string") {
+                const currentOldIdNumber = parseFloat(currentOldId);
+                const newDecrementIDNumber = currentOldIdNumber - 1;
+                const newId =
+                    newDecrementIDNumber +
+                    currentObjInfo.selectedListIdentificator;
+                currentObjInfo.currentList[j].id = newId;
+            }
+        }
+    }
+
     static removeNote(idCurrentNote: string) {
         const currentObjInfo = this.findNote(idCurrentNote);
+        let indexCurrentNote: number = 1;
+
         if (currentObjInfo) {
             const counterDeletingNotes: number = 1;
-            let indexCurrentNote: number = 1;
+            indexCurrentNote = currentObjInfo.currentList.indexOf(
+                currentObjInfo.necessaryNote
+            );
+            currentObjInfo.currentList.splice(
+                indexCurrentNote,
+                counterDeletingNotes
+            );
 
-            for (let i = 0; i < currentObjInfo.currentList.length; i++) {
-                const currentNote = currentObjInfo.currentList[i];
-                if (idCurrentNote === currentNote.id) {
-                    const necessaryNote = currentObjInfo.currentList[i];
-                    indexCurrentNote =
-                        currentObjInfo.currentList.indexOf(necessaryNote);
-                    currentObjInfo.currentList.splice(
-                        indexCurrentNote,
-                        counterDeletingNotes
-                    );
-                    break;
-                }
-            }
-
-            for (
-                let j = indexCurrentNote;
-                j < currentObjInfo.currentList.length;
-                j++
-            ) {
-                const currentOldId = currentObjInfo.currentList[j].id;
-                if (currentOldId && typeof currentOldId === "string") {
-                    const currentOldIdNumber = parseFloat(currentOldId);
-                    const newDecrementIDNumber = currentOldIdNumber - 1;
-                    const newId =
-                        newDecrementIDNumber +
-                        currentObjInfo.selectedListIdentificator;
-                    currentObjInfo.currentList[j].id = newId;
-                }
-            }
+            DataHandler.decreaseIdNotes(indexCurrentNote, currentObjInfo);
         }
         this.setNotesToLocalStorage();
     }
