@@ -56,8 +56,6 @@ export default class ModalNoteController {
                 this.editNoteObj.id !== undefined
             ) {
                 data.set("id", this.editNoteObj.id?.toString());
-
-                // заголовок не попадает в дату при нажатии на изменение
             }
 
             DataHandler.submitter(data);

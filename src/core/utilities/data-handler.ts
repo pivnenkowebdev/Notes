@@ -34,6 +34,7 @@ export default class DataHandler {
         });
     }
 
+    // пересмотреть метод
     private static setId(status: FormDataEntryValue | null) {
         const flagFavorites = "favorites";
         const flagRegulars = "regulars";
@@ -63,7 +64,6 @@ export default class DataHandler {
         const title = data.get(inputsName.titleInput);
         const text = data.get(inputsName.textInput);
         const statusFavorite = data.get(inputsName.favoriteCheckbox);
-        // const id = data.get(inputsName.id);
 
         if (typeof title === "string" && title.trim()) {
             newObj.title = title;
@@ -79,10 +79,9 @@ export default class DataHandler {
 
         if (typeof statusFavorite === "string") {
             newObj.isFavorite = statusFavorite;
-        } else {
-            newObj.id = DataHandler.setId(statusFavorite);
         }
 
+        newObj.id = DataHandler.setId(statusFavorite);
         newObj.date = DataHandler.setDate();
 
         return newObj;
@@ -171,6 +170,11 @@ export default class DataHandler {
         return DataHandler.allNotes;
     }
 
+    // 1. смена даты и времени (подписи) +
+    // 1.1. сделать через статус
+    // 2. смена избранная\не избранная при редактировании (можно сначала реализовать эту функцию и потом вшить дальше в режим редактирования)
+    // 3. Убирать заглушки если в объекте пустота
+
     static changeNote(data: FormData) {
         const currentId = data.get(inputsName.id);
 
@@ -184,6 +188,8 @@ export default class DataHandler {
             const currentNote = currentList[indexCurrentNote];
             currentNote.title = String(data.get(inputsName.titleInput));
             currentNote.text = String(data.get(inputsName.textInput));
+            currentNote.date = DataHandler.setDate();
+            currentNote.changed = true;
         }
     }
 

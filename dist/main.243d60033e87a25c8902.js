@@ -9516,6 +9516,13 @@ var Nav = /** @class */ (function (_super) {
 }(view));
 /* harmony default export */ const nav_view = (Nav);
 
+;// CONCATENATED MODULE: ./src/core/utilities/helper.ts
+function checkTrust(value) {
+    if (value === undefined || value === null) {
+        throw new Error("".concat(value, " is not defined"));
+    }
+}
+
 ;// CONCATENATED MODULE: ./src/core/main/note-modal/modal-note-view.ts
 var modal_note_view_extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -9532,6 +9539,7 @@ var modal_note_view_extends = (undefined && undefined.__extends) || (function ()
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+
 
 
 var fadeBlockParams = {
@@ -9566,13 +9574,7 @@ var titleWrapperParams = {
 };
 var inputTitleParams = {
     tagName: "input",
-    classList: [
-        "block",
-        "max-w-[330px]",
-        "w-full",
-        "outline-none",
-        "text-2xl"
-    ],
+    classList: ["block", "max-w-[330px]", "w-full", "outline-none", "text-2xl"],
     attrParams: {
         placeholder: "Title",
         name: "title",
@@ -9732,7 +9734,8 @@ var ModalNoteView = /** @class */ (function (_super) {
             id: "form",
         };
         if (noteObj) {
-            inputTitleParams.attrParams = { value: noteObj.title };
+            checkTrust(inputTitleParams.attrParams);
+            inputTitleParams.attrParams.value = noteObj.title;
             textareaParams.textContent = noteObj.text;
         }
         _this = _super.call(this, formParams) || this;
@@ -9785,13 +9788,6 @@ var ModalNoteView = /** @class */ (function (_super) {
 }(view));
 /* harmony default export */ const modal_note_view = (ModalNoteView);
 
-;// CONCATENATED MODULE: ./src/core/utilities/helper.ts
-function checkTrust(value) {
-    if (value === undefined || value === null) {
-        throw new Error("".concat(value, " is not defined"));
-    }
-}
-
 ;// CONCATENATED MODULE: ./src/core/utilities/data-handler.ts
 
 var inputsName = {
@@ -9820,6 +9816,7 @@ var DataHandler = /** @class */ (function () {
             minute: "2-digit",
         });
     };
+    // пересмотреть метод 
     DataHandler.setId = function (status) {
         var flagFavorites = "favorites";
         var flagRegulars = "regulars";
@@ -9847,7 +9844,6 @@ var DataHandler = /** @class */ (function () {
         var title = data.get(inputsName.titleInput);
         var text = data.get(inputsName.textInput);
         var statusFavorite = data.get(inputsName.favoriteCheckbox);
-        var id = data.get(inputsName.id);
         if (typeof title === "string" && title.trim()) {
             newObj.title = title;
         }
@@ -9863,9 +9859,7 @@ var DataHandler = /** @class */ (function () {
         if (typeof statusFavorite === "string") {
             newObj.isFavorite = statusFavorite;
         }
-        else {
-            newObj.id = DataHandler.setId(statusFavorite);
-        }
+        newObj.id = DataHandler.setId(statusFavorite);
         newObj.date = DataHandler.setDate();
         return newObj;
     };
@@ -9936,6 +9930,10 @@ var DataHandler = /** @class */ (function () {
         }
         return DataHandler.allNotes;
     };
+    // 1. смена даты и времени (подписи) +
+    // 1.1. сделать через статус 
+    // 2. смена избранная\не избранная при редактировании (можно сначала реализовать эту функцию и потом вшить дальше в режим редактирования)
+    // 3. Убирать заглушки если в объекте пустота
     DataHandler.changeNote = function (data) {
         var currentId = data.get(inputsName.id);
         if (typeof currentId === "string") {
@@ -9947,6 +9945,8 @@ var DataHandler = /** @class */ (function () {
             var currentNote = currentList[indexCurrentNote];
             currentNote.title = String(data.get(inputsName.titleInput));
             currentNote.text = String(data.get(inputsName.textInput));
+            currentNote.date = DataHandler.setDate();
+            currentNote.changed = true;
         }
     };
     DataHandler.submitter = function (data) {
@@ -10126,7 +10126,7 @@ var ListNotesView = /** @class */ (function (_super) {
             var title = _this.createElement(titleParams);
             title.textContent = item.title;
             var date = _this.createElement(dateParams);
-            date.textContent = _this.formatterDateAndString(item.date);
+            date.textContent = _this.formatterDateAndString(item);
             var buttonsControlList = _this.createElement(buttonsControlListParams);
             var buttonFavorite = _this.createElement(list_notes_view_wrapperFakeCheckboxParams);
             var realInput = _this.createElement(list_notes_view_realCheckboxParams);
@@ -10165,9 +10165,17 @@ var ListNotesView = /** @class */ (function (_super) {
             list.innerHTML = "";
         }
     };
-    ListNotesView.prototype.formatterDateAndString = function (date) {
-        var _a = date.split(", "), currentDate = _a[0], currentTime = _a[1];
-        var doneString = "Created ".concat(currentDate, " at ").concat(currentTime);
+    ListNotesView.prototype.formatterDateAndString = function (noteObj) {
+        var status = noteObj.changed;
+        var titleForDate;
+        if (status) {
+            titleForDate = "changed";
+        }
+        else {
+            titleForDate = "Created";
+        }
+        var _a = noteObj.date.split(", "), currentDate = _a[0], currentTime = _a[1];
+        var doneString = "".concat(titleForDate, " ").concat(currentDate, " at ").concat(currentTime);
         return doneString;
     };
     ListNotesView.prototype.createCurrentList = function (params, stage) {
@@ -10274,11 +10282,10 @@ var ModalNoteController = /** @class */ (function () {
             var form = _this.modalView.getComponent();
             if (form instanceof HTMLFormElement) {
                 var data = new FormData(form);
+                console.log(data.get("title"));
                 if (_this.editNoteObj !== undefined &&
                     _this.editNoteObj.id !== undefined) {
                     data.set("id", (_a = _this.editNoteObj.id) === null || _a === void 0 ? void 0 : _a.toString());
-                    // заголовок не попадает в дату при нажатии на изменение
-                    console.log(data.get('title'));
                 }
                 data_handler.submitter(data);
                 _this.listController.setCurrentPage();

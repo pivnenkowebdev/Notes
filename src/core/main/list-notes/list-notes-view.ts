@@ -164,7 +164,7 @@ export default class ListNotesView extends View {
             title.textContent = item.title;
 
             const date = this.createElement(dateParams);
-            date.textContent = this.formatterDateAndString(item.date);
+            date.textContent = this.formatterDateAndString(item);
 
             const buttonsControlList = this.createElement(
                 buttonsControlListParams
@@ -219,9 +219,16 @@ export default class ListNotesView extends View {
         }
     }
 
-    private formatterDateAndString(date: string) {
-        const [currentDate, currentTime] = date.split(", ");
-        const doneString = `Created ${currentDate} at ${currentTime}`;
+    private formatterDateAndString(noteObj: DataNote) {
+        const status = noteObj.changed;
+        let titleForDate: string;
+        if (status) {
+            titleForDate = "Changed";
+        } else {
+            titleForDate = "Created";
+        }
+        const [currentDate, currentTime] = noteObj.date.split(", ");
+        const doneString = `${titleForDate} ${currentDate} at ${currentTime}`;
         return doneString;
     }
 
