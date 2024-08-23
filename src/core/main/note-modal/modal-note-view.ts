@@ -2,6 +2,7 @@ import View from "../../utilities/view";
 import { ElementParams } from "../../utilities/types";
 import { appContainer } from "../../app";
 import { DataNote } from "../../utilities/types";
+import { checkTrust } from "../../utilities/helper";
 
 const fadeBlockParams: ElementParams = {
     tagName: "div",
@@ -211,7 +212,8 @@ export default class ModalNoteView extends View {
         };
 
         if (noteObj) {
-            inputTitleParams.attrParams = { value: noteObj.title };
+            checkTrust(inputTitleParams.attrParams);
+            inputTitleParams.attrParams.value = noteObj.title;
             textareaParams.textContent = noteObj.text;
         }
 

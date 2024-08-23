@@ -9503,7 +9503,6 @@ var Nav = /** @class */ (function (_super) {
     };
     Nav.prototype.setCurrentLink = function (event) {
         var currentLink = event.target;
-        // избавиться от queryselector
         if (currentLink instanceof HTMLAnchorElement &&
             !currentLink.classList.contains("active")) {
             var activeLink = this.component
@@ -9567,7 +9566,13 @@ var titleWrapperParams = {
 };
 var inputTitleParams = {
     tagName: "input",
-    classList: ["block", "max-w-[330px]", "w-full", "outline-none", "text-2xl"],
+    classList: [
+        "block",
+        "max-w-[330px]",
+        "w-full",
+        "outline-none",
+        "text-2xl"
+    ],
     attrParams: {
         placeholder: "Title",
         name: "title",
@@ -9763,7 +9768,6 @@ var ModalNoteView = /** @class */ (function (_super) {
             this.addInnerElement(buttonsList, buttonEdit);
         }
     };
-    // где этот ёбаный рендер вызывается????
     ModalNoteView.prototype.renderModal = function () {
         this.addInnerElement(appContainer, this.getComponent());
         var isFirstInput = this.component
@@ -9831,21 +9835,18 @@ var DataHandler = /** @class */ (function () {
         }
         return doneId;
     };
-    // если был передан объект заметки, то создавать объект на основе старой заметки
-    // переопределять нужную заметку
-    // менять статус
     DataHandler.dataNoteCreator = function (data) {
         var newObj = {
             title: "",
-            isFavorite: "",
             text: "",
+            isFavorite: "",
             id: "",
             date: "",
             changed: false,
         };
         var title = data.get(inputsName.titleInput);
-        var statusFavorite = data.get(inputsName.favoriteCheckbox);
         var text = data.get(inputsName.textInput);
+        var statusFavorite = data.get(inputsName.favoriteCheckbox);
         var id = data.get(inputsName.id);
         if (typeof title === "string" && title.trim()) {
             newObj.title = title;
@@ -9861,9 +9862,6 @@ var DataHandler = /** @class */ (function () {
         }
         if (typeof statusFavorite === "string") {
             newObj.isFavorite = statusFavorite;
-        }
-        if (id) {
-            newObj.id = id.toString();
         }
         else {
             newObj.id = DataHandler.setId(statusFavorite);
@@ -9893,11 +9891,25 @@ var DataHandler = /** @class */ (function () {
             var currentNote = currentList[i];
             if (currentId === currentNote.id) {
                 var necessaryNote = currentList[i];
+                var indexCurrentNote = currentList.indexOf(necessaryNote);
                 return {
                     necessaryNote: necessaryNote,
+                    indexCurrentNote: indexCurrentNote,
                     currentList: currentList,
                     selectedListIdentificator: selectedListIdentificator,
                 };
+            }
+        }
+    };
+    DataHandler.decreaseIdNotes = function (currentObjInfo) {
+        for (var j = currentObjInfo.indexCurrentNote; j < currentObjInfo.currentList.length; j++) {
+            var currentOldId = currentObjInfo.currentList[j].id;
+            if (currentOldId && typeof currentOldId === "string") {
+                var currentOldIdNumber = parseFloat(currentOldId);
+                var newDecrementIDNumber = currentOldIdNumber - 1;
+                var newId = newDecrementIDNumber +
+                    currentObjInfo.selectedListIdentificator;
+                currentObjInfo.currentList[j].id = newId;
             }
         }
     };
@@ -9905,27 +9917,8 @@ var DataHandler = /** @class */ (function () {
         var currentObjInfo = this.findNote(idCurrentNote);
         if (currentObjInfo) {
             var counterDeletingNotes = 1;
-            var indexCurrentNote = 1;
-            for (var i = 0; i < currentObjInfo.currentList.length; i++) {
-                var currentNote = currentObjInfo.currentList[i];
-                if (idCurrentNote === currentNote.id) {
-                    var necessaryNote = currentObjInfo.currentList[i];
-                    indexCurrentNote =
-                        currentObjInfo.currentList.indexOf(necessaryNote);
-                    currentObjInfo.currentList.splice(indexCurrentNote, counterDeletingNotes);
-                    break;
-                }
-            }
-            for (var j = indexCurrentNote; j < currentObjInfo.currentList.length; j++) {
-                var currentOldId = currentObjInfo.currentList[j].id;
-                if (currentOldId && typeof currentOldId === "string") {
-                    var currentOldIdNumber = parseFloat(currentOldId);
-                    var newDecrementIDNumber = currentOldIdNumber - 1;
-                    var newId = newDecrementIDNumber +
-                        currentObjInfo.selectedListIdentificator;
-                    currentObjInfo.currentList[j].id = newId;
-                }
-            }
+            currentObjInfo.currentList.splice(currentObjInfo.indexCurrentNote, counterDeletingNotes);
+            DataHandler.decreaseIdNotes(currentObjInfo);
         }
         this.setNotesToLocalStorage();
     };
@@ -9943,7 +9936,25 @@ var DataHandler = /** @class */ (function () {
         }
         return DataHandler.allNotes;
     };
+    DataHandler.changeNote = function (data) {
+        var currentId = data.get(inputsName.id);
+        if (typeof currentId === "string") {
+            var objCurrentNote = DataHandler.findNote(currentId);
+            var currentList = objCurrentNote === null || objCurrentNote === void 0 ? void 0 : objCurrentNote.currentList;
+            var indexCurrentNote = objCurrentNote === null || objCurrentNote === void 0 ? void 0 : objCurrentNote.indexCurrentNote;
+            checkTrust(currentList);
+            checkTrust(indexCurrentNote);
+            var currentNote = currentList[indexCurrentNote];
+            currentNote.title = String(data.get(inputsName.titleInput));
+            currentNote.text = String(data.get(inputsName.textInput));
+        }
+    };
     DataHandler.submitter = function (data) {
+        if (data.get(inputsName.id)) {
+            DataHandler.changeNote(data);
+            DataHandler.setNotesToLocalStorage(DataHandler.key, DataHandler.allNotes);
+            return;
+        }
         var preparetedData = DataHandler.dataNoteCreator(data);
         DataHandler.pushNewNoteObj(preparetedData);
         DataHandler.setNotesToLocalStorage(DataHandler.key, DataHandler.allNotes);
@@ -10184,7 +10195,6 @@ var ListNotesView = /** @class */ (function (_super) {
 
 var list_notes_controller_status = "edit";
 var ListNotesController = /** @class */ (function () {
-    // принимать объект заметки
     function ListNotesController() {
         this.isListener = false;
         this.listNotesView = new list_notes_view();
@@ -10267,6 +10277,8 @@ var ModalNoteController = /** @class */ (function () {
                 if (_this.editNoteObj !== undefined &&
                     _this.editNoteObj.id !== undefined) {
                     data.set("id", (_a = _this.editNoteObj.id) === null || _a === void 0 ? void 0 : _a.toString());
+                    // заголовок не попадает в дату при нажатии на изменение
+                    console.log(data.get('title'));
                 }
                 data_handler.submitter(data);
                 _this.listController.setCurrentPage();

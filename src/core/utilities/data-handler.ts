@@ -50,24 +50,20 @@ export default class DataHandler {
         return doneId;
     }
 
-    // если был передан объект заметки, то создавать объект на основе старой заметки
-    // переопределять нужную заметку
-    // менять статус
-
     private static dataNoteCreator(data: FormData) {
         const newObj: DataNote = {
             title: "",
-            isFavorite: "",
             text: "",
+            isFavorite: "",
             id: "",
             date: "",
             changed: false,
         };
 
         const title = data.get(inputsName.titleInput);
-        const statusFavorite = data.get(inputsName.favoriteCheckbox);
         const text = data.get(inputsName.textInput);
-        const id = data.get(inputsName.id);
+        const statusFavorite = data.get(inputsName.favoriteCheckbox);
+        // const id = data.get(inputsName.id);
 
         if (typeof title === "string" && title.trim()) {
             newObj.title = title;
@@ -83,10 +79,6 @@ export default class DataHandler {
 
         if (typeof statusFavorite === "string") {
             newObj.isFavorite = statusFavorite;
-        }
-
-        if (id) {
-            newObj.id = id.toString();
         } else {
             newObj.id = DataHandler.setId(statusFavorite);
         }
@@ -179,7 +171,32 @@ export default class DataHandler {
         return DataHandler.allNotes;
     }
 
+    static changeNote(data: FormData) {
+        const currentId = data.get(inputsName.id);
+
+        if (typeof currentId === "string") {
+            const objCurrentNote = DataHandler.findNote(currentId);
+            const currentList = objCurrentNote?.currentList;
+            const indexCurrentNote = objCurrentNote?.indexCurrentNote;
+            checkTrust(currentList);
+            checkTrust(indexCurrentNote);
+
+            const currentNote = currentList[indexCurrentNote];
+            currentNote.title = String(data.get(inputsName.titleInput));
+            currentNote.text = String(data.get(inputsName.textInput));
+        }
+    }
+
     static submitter(data: FormData) {
+        if (data.get(inputsName.id)) {
+            DataHandler.changeNote(data);
+            DataHandler.setNotesToLocalStorage(
+                DataHandler.key,
+                DataHandler.allNotes
+            );
+            return;
+        }
+
         const preparetedData = DataHandler.dataNoteCreator(data);
         DataHandler.pushNewNoteObj(preparetedData);
         DataHandler.setNotesToLocalStorage(
