@@ -15,7 +15,7 @@ export interface ElementParams {
 
 export interface DataNote {
     title: string;
-    isFavorite: string;
+    isFavorite: boolean;
     text: string;
     id: number | string | undefined;
     date: string;

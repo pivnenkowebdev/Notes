@@ -49,7 +49,6 @@ export default class ModalNoteController {
         const form = this.modalView.getComponent();
         if (form instanceof HTMLFormElement) {
             const data = new FormData(form);
-            console.log(data.get("title"));
 
             if (
                 this.editNoteObj !== undefined &&

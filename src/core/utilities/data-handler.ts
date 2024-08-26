@@ -34,14 +34,13 @@ export default class DataHandler {
         });
     }
 
-    // пересмотреть метод
-    private static setId(status: FormDataEntryValue | null) {
+    private static setId(status: boolean) {
         const flagFavorites = "favorites";
         const flagRegulars = "regulars";
         let numberId;
         let doneId;
 
-        if (status === "on") {
+        if (status) {
             numberId = DataHandler.allNotes.favoriteNotes.length + 1;
             doneId = numberId + flagFavorites;
         } else {
@@ -55,7 +54,7 @@ export default class DataHandler {
         const newObj: DataNote = {
             title: "",
             text: "",
-            isFavorite: "",
+            isFavorite: false,
             id: "",
             date: "",
             changed: false,
@@ -63,7 +62,31 @@ export default class DataHandler {
 
         const title = data.get(inputsName.titleInput);
         const text = data.get(inputsName.textInput);
-        const statusFavorite = data.get(inputsName.favoriteCheckbox);
+        const statusFavorite = data.get(inputsName.favoriteCheckbox)
+            ? true
+            : false;
+        const currentId = data.get(inputsName.id);
+
+        if (typeof currentId === "string") {
+            const oldNote = DataHandler.findNote(currentId)?.necessaryNote;
+
+            const oldTitle = oldNote?.title;
+            const oldText = oldNote?.text;
+            const oldFavorite = oldNote?.isFavorite;
+
+            console.log(oldFavorite);
+            console.log(statusFavorite);
+
+            if (
+                String(oldTitle) !== title ||
+                String(oldText) !== text ||
+                oldFavorite !== statusFavorite
+            ) {
+                newObj.changed = true;
+            }
+
+            DataHandler.removeNote(currentId);
+        }
 
         if (typeof title === "string" && title.trim()) {
             newObj.title = title;
@@ -77,10 +100,7 @@ export default class DataHandler {
             newObj.text = "Empty";
         }
 
-        if (typeof statusFavorite === "string") {
-            newObj.isFavorite = statusFavorite;
-        }
-
+        newObj.isFavorite = statusFavorite;
         newObj.id = DataHandler.setId(statusFavorite);
         newObj.date = DataHandler.setDate();
 
@@ -170,39 +190,10 @@ export default class DataHandler {
         return DataHandler.allNotes;
     }
 
-    // 1. смена даты и времени (подписи) +
-    // 1.1. сделать через статус
-    // 2. смена избранная\не избранная при редактировании (можно сначала реализовать эту функцию и потом вшить дальше в режим редактирования)
-    // 3. Убирать заглушки если в объекте пустота
-
-    static changeNote(data: FormData) {
-        const currentId = data.get(inputsName.id);
-
-        if (typeof currentId === "string") {
-            const objCurrentNote = DataHandler.findNote(currentId);
-            const currentList = objCurrentNote?.currentList;
-            const indexCurrentNote = objCurrentNote?.indexCurrentNote;
-            checkTrust(currentList);
-            checkTrust(indexCurrentNote);
-
-            const currentNote = currentList[indexCurrentNote];
-            currentNote.title = String(data.get(inputsName.titleInput));
-            currentNote.text = String(data.get(inputsName.textInput));
-            currentNote.date = DataHandler.setDate();
-            currentNote.changed = true;
-        }
-    }
+    // 1. смена избранная\не избранная при редактировании (можно сначала реализовать эту функцию и потом вшить дальше в режим редактирования)
+    // 2. Убирать заглушки если в объекте пустота
 
     static submitter(data: FormData) {
-        if (data.get(inputsName.id)) {
-            DataHandler.changeNote(data);
-            DataHandler.setNotesToLocalStorage(
-                DataHandler.key,
-                DataHandler.allNotes
-            );
-            return;
-        }
-
         const preparetedData = DataHandler.dataNoteCreator(data);
         DataHandler.pushNewNoteObj(preparetedData);
         DataHandler.setNotesToLocalStorage(

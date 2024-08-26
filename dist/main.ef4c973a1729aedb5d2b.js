@@ -9816,7 +9816,6 @@ var DataHandler = /** @class */ (function () {
             minute: "2-digit",
         });
     };
-    // пересмотреть метод 
     DataHandler.setId = function (status) {
         var flagFavorites = "favorites";
         var flagRegulars = "regulars";
@@ -9841,9 +9840,16 @@ var DataHandler = /** @class */ (function () {
             date: "",
             changed: false,
         };
+        // если id есть в data, то искать заметку и выпиливать
+        // данные из заметки после сравнения с данными из data помещать в obj
         var title = data.get(inputsName.titleInput);
         var text = data.get(inputsName.textInput);
         var statusFavorite = data.get(inputsName.favoriteCheckbox);
+        var currentId = data.get(inputsName.id);
+        // вот тут удаление старой
+        if (typeof currentId === "string") {
+            DataHandler.removeNote(currentId);
+        }
         if (typeof title === "string" && title.trim()) {
             newObj.title = title;
         }
@@ -9859,6 +9865,7 @@ var DataHandler = /** @class */ (function () {
         if (typeof statusFavorite === "string") {
             newObj.isFavorite = statusFavorite;
         }
+        // менять changed в newObj в зависимости от того изменен ли заголовок, текст или статус
         newObj.id = DataHandler.setId(statusFavorite);
         newObj.date = DataHandler.setDate();
         return newObj;
@@ -9930,31 +9937,9 @@ var DataHandler = /** @class */ (function () {
         }
         return DataHandler.allNotes;
     };
-    // 1. смена даты и времени (подписи) +
-    // 1.1. сделать через статус 
-    // 2. смена избранная\не избранная при редактировании (можно сначала реализовать эту функцию и потом вшить дальше в режим редактирования)
-    // 3. Убирать заглушки если в объекте пустота
-    DataHandler.changeNote = function (data) {
-        var currentId = data.get(inputsName.id);
-        if (typeof currentId === "string") {
-            var objCurrentNote = DataHandler.findNote(currentId);
-            var currentList = objCurrentNote === null || objCurrentNote === void 0 ? void 0 : objCurrentNote.currentList;
-            var indexCurrentNote = objCurrentNote === null || objCurrentNote === void 0 ? void 0 : objCurrentNote.indexCurrentNote;
-            checkTrust(currentList);
-            checkTrust(indexCurrentNote);
-            var currentNote = currentList[indexCurrentNote];
-            currentNote.title = String(data.get(inputsName.titleInput));
-            currentNote.text = String(data.get(inputsName.textInput));
-            currentNote.date = DataHandler.setDate();
-            currentNote.changed = true;
-        }
-    };
+    // 1. смена избранная\не избранная при редактировании (можно сначала реализовать эту функцию и потом вшить дальше в режим редактирования)
+    // 2. Убирать заглушки если в объекте пустота
     DataHandler.submitter = function (data) {
-        if (data.get(inputsName.id)) {
-            DataHandler.changeNote(data);
-            DataHandler.setNotesToLocalStorage(DataHandler.key, DataHandler.allNotes);
-            return;
-        }
         var preparetedData = DataHandler.dataNoteCreator(data);
         DataHandler.pushNewNoteObj(preparetedData);
         DataHandler.setNotesToLocalStorage(DataHandler.key, DataHandler.allNotes);
@@ -10149,7 +10134,7 @@ var ListNotesView = /** @class */ (function (_super) {
             _this.addInnerElement(buttonsControlList, buttonDel);
             _this.addInnerElement(listItem, itemTop);
             _this.addInnerElement(listItem, textPreview);
-            fragment.appendChild(listItem);
+            fragment.prepend(listItem);
         });
         return fragment;
     };
@@ -10169,7 +10154,7 @@ var ListNotesView = /** @class */ (function (_super) {
         var status = noteObj.changed;
         var titleForDate;
         if (status) {
-            titleForDate = "changed";
+            titleForDate = "Changed";
         }
         else {
             titleForDate = "Created";
@@ -10221,6 +10206,8 @@ var ListNotesController = /** @class */ (function () {
         var isModal = document.querySelector("#form");
         if (!isModal) {
             var isEditNote = list_notes_controller_status;
+            // при попытке создать новое окно после редактирования, старая инфа рендерится в модалке
+            // подсвечивать звезду
             new modal_note_controller(isEditNote, currentId);
         }
     };
@@ -10228,14 +10215,20 @@ var ListNotesController = /** @class */ (function () {
         if (event.target instanceof HTMLElement) {
             var isRemoveBtn = event.target.closest("[data-action='remove']");
             var isEditBtn = event.target.closest("[data-controll='edit']");
+            var isFavoriteBtn = event.target.closest("[data-controll='check']");
             if (isRemoveBtn) {
                 this.removeNoteItem(isRemoveBtn);
+                this.currentHashGlobal = rout.getCurrentHash();
+                this.setCurrentPage();
             }
             if (isEditBtn) {
                 this.editNote(isEditBtn);
             }
-            this.currentHashGlobal = rout.getCurrentHash();
-            this.setCurrentPage();
+            if (isFavoriteBtn) {
+                // запуск поиска
+                // удаление из текущего списка
+                // рендер нового списка
+            }
         }
     };
     ListNotesController.prototype.setCurrentPage = function (urlPage) {
@@ -10282,7 +10275,6 @@ var ModalNoteController = /** @class */ (function () {
             var form = _this.modalView.getComponent();
             if (form instanceof HTMLFormElement) {
                 var data = new FormData(form);
-                console.log(data.get("title"));
                 if (_this.editNoteObj !== undefined &&
                     _this.editNoteObj.id !== undefined) {
                     data.set("id", (_a = _this.editNoteObj.id) === null || _a === void 0 ? void 0 : _a.toString());

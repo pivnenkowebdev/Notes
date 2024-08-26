@@ -198,7 +198,7 @@ export default class ListNotesView extends View {
             this.addInnerElement(listItem, itemTop);
             this.addInnerElement(listItem, textPreview);
 
-            fragment.appendChild(listItem);
+            fragment.prepend(listItem);
         });
 
         return fragment;
