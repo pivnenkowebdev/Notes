@@ -50,7 +50,7 @@ const wrapperFakeCheckboxParams: ElementParams = {
     classList: [],
 };
 
-const realCheckboxParams = {
+const realCheckboxParams: ElementParams = {
     tagName: "input",
     classList: [
         "w-0",
@@ -67,7 +67,7 @@ const realCheckboxParams = {
     },
 };
 
-const fakeCheckboxParams = {
+const fakeCheckboxParams: ElementParams = {
     tagName: "span",
     classList: [
         "block",
@@ -183,7 +183,7 @@ const buttonEditParams: ElementParams = {
     },
 };
 // подсвечивать звезду в модалке
-// плейсхолдеры не должны быть текстом
+
 export default class ModalNoteView extends View {
     fade: HTMLElement;
     form: HTMLElement;
@@ -213,6 +213,7 @@ export default class ModalNoteView extends View {
         };
 
         checkTrust(inputTitleParams.attrParams);
+        checkTrust(realCheckboxParams.attrParams);
 
         if (noteObj && noteObj.title !== "No title") {
             inputTitleParams.attrParams.value = noteObj.title;
@@ -224,6 +225,12 @@ export default class ModalNoteView extends View {
             textareaParams.textContent = noteObj.text;
         } else {
             textareaParams.textContent = "";
+        }
+
+        if (noteObj && noteObj.isFavorite) {
+            realCheckboxParams.attrParams.checked = "";
+        } else {
+            delete realCheckboxParams.attrParams.checked;
         }
 
         super(formParams);
