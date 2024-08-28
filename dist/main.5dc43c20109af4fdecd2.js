@@ -9821,7 +9821,7 @@ var DataHandler = /** @class */ (function () {
         var flagRegulars = "regulars";
         var numberId;
         var doneId;
-        if (status === "on") {
+        if (status) {
             numberId = DataHandler.allNotes.favoriteNotes.length + 1;
             doneId = numberId + flagFavorites;
         }
@@ -9832,22 +9832,31 @@ var DataHandler = /** @class */ (function () {
         return doneId;
     };
     DataHandler.dataNoteCreator = function (data) {
+        var _a;
         var newObj = {
             title: "",
             text: "",
-            isFavorite: "",
+            isFavorite: false,
             id: "",
             date: "",
             changed: false,
         };
-        // если id есть в data, то искать заметку и выпиливать
-        // данные из заметки после сравнения с данными из data помещать в obj
         var title = data.get(inputsName.titleInput);
         var text = data.get(inputsName.textInput);
-        var statusFavorite = data.get(inputsName.favoriteCheckbox);
+        var statusFavorite = data.get(inputsName.favoriteCheckbox)
+            ? true
+            : false;
         var currentId = data.get(inputsName.id);
-        // вот тут удаление старой
         if (typeof currentId === "string") {
+            var oldNote = (_a = DataHandler.findNote(currentId)) === null || _a === void 0 ? void 0 : _a.necessaryNote;
+            var oldTitle = oldNote === null || oldNote === void 0 ? void 0 : oldNote.title;
+            var oldText = oldNote === null || oldNote === void 0 ? void 0 : oldNote.text;
+            var oldFavorite = oldNote === null || oldNote === void 0 ? void 0 : oldNote.isFavorite;
+            if (String(oldTitle) !== title ||
+                String(oldText) !== text ||
+                oldFavorite !== statusFavorite) {
+                newObj.changed = true;
+            }
             DataHandler.removeNote(currentId);
         }
         if (typeof title === "string" && title.trim()) {
@@ -9862,15 +9871,35 @@ var DataHandler = /** @class */ (function () {
         else {
             newObj.text = "Empty";
         }
-        if (typeof statusFavorite === "string") {
-            newObj.isFavorite = statusFavorite;
-        }
-        // менять changed в newObj в зависимости от того изменен ли заголовок, текст или статус
+        newObj.isFavorite = statusFavorite;
         newObj.id = DataHandler.setId(statusFavorite);
         newObj.date = DataHandler.setDate();
         return newObj;
     };
+    // тут надо менять id, дату, статус
+    DataHandler.changeStatusFavorite = function (currentId) {
+        var _a;
+        var currentNote = (_a = DataHandler.findNote(currentId)) === null || _a === void 0 ? void 0 : _a.necessaryNote;
+        checkTrust(currentNote);
+        currentNote.changed = true;
+        if (currentNote.isFavorite) {
+            currentNote.isFavorite = false;
+        }
+        else {
+            currentNote.isFavorite = true;
+        }
+        console.log(currentNote.isFavorite);
+        currentNote.id = DataHandler.setId(currentNote.isFavorite);
+        currentNote.date = DataHandler.setDate();
+        // заметка меняет статус и флаг изменения, но остается в старом массиве (меняется оригинальный объект)
+        // нужно посмотреть как работает findNote и removeNote (конфликт)
+        // нужно как то декомпозировать креатор и использовать эти методы в изменении (или сам креатор)
+        // 
+        this.pushNewNoteObj(currentNote);
+        DataHandler.removeNote(currentId);
+    };
     DataHandler.pushNewNoteObj = function (obj) {
+        console.log(obj);
         if (obj.isFavorite) {
             DataHandler.allNotes.favoriteNotes.push(obj);
         }
@@ -9937,8 +9966,8 @@ var DataHandler = /** @class */ (function () {
         }
         return DataHandler.allNotes;
     };
-    // 1. смена избранная\не избранная при редактировании (можно сначала реализовать эту функцию и потом вшить дальше в режим редактирования)
-    // 2. Убирать заглушки если в объекте пустота
+    // 1. Убирать заглушки если в объекте пустота
+    // 2. Изменение избранности через список
     DataHandler.submitter = function (data) {
         var preparetedData = DataHandler.dataNoteCreator(data);
         DataHandler.pushNewNoteObj(preparetedData);
@@ -10207,9 +10236,15 @@ var ListNotesController = /** @class */ (function () {
         if (!isModal) {
             var isEditNote = list_notes_controller_status;
             // при попытке создать новое окно после редактирования, старая инфа рендерится в модалке
-            // подсвечивать звезду
+            // подсвечивать звезду в модалке
             new modal_note_controller(isEditNote, currentId);
         }
+    };
+    ListNotesController.prototype.changeStatus = function (statusBtn) {
+        var currentChangedNote = statusBtn.closest("[data-note]");
+        checkTrust(currentChangedNote);
+        var idCurrentNote = currentChangedNote.id;
+        data_handler.changeStatusFavorite(idCurrentNote);
     };
     ListNotesController.prototype.handlerAction = function (event) {
         if (event.target instanceof HTMLElement) {
@@ -10225,9 +10260,9 @@ var ListNotesController = /** @class */ (function () {
                 this.editNote(isEditBtn);
             }
             if (isFavoriteBtn) {
-                // запуск поиска
-                // удаление из текущего списка
-                // рендер нового списка
+                this.changeStatus(isFavoriteBtn);
+                this.currentHashGlobal = rout.getCurrentHash();
+                this.setCurrentPage();
             }
         }
     };

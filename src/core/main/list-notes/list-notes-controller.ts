@@ -37,9 +37,17 @@ export default class ListNotesController {
         if (!isModal) {
             const isEditNote = status;
             // при попытке создать новое окно после редактирования, старая инфа рендерится в модалке
-            // подсвечивать звезду
+            // подсвечивать звезду в модалке
             new ModalNoteController(isEditNote, currentId);
         }
+    }
+
+    private changeStatus(statusBtn: Element) {
+        const currentChangedNote = statusBtn.closest("[data-note]");
+
+        checkTrust(currentChangedNote);
+        const idCurrentNote = currentChangedNote.id;
+        DataHandler.changeStatusFavorite(idCurrentNote);
     }
 
     private handlerAction(event: Event) {
@@ -61,9 +69,9 @@ export default class ListNotesController {
             }
 
             if (isFavoriteBtn) {
-                // запуск поиска
-                // удаление из текущего списка
-                // рендер нового списка
+                this.changeStatus(isFavoriteBtn);
+                this.currentHashGlobal = Router.getCurrentHash();
+                this.setCurrentPage();
             }
         }
     }

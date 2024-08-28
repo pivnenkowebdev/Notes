@@ -74,9 +74,6 @@ export default class DataHandler {
             const oldText = oldNote?.text;
             const oldFavorite = oldNote?.isFavorite;
 
-            console.log(oldFavorite);
-            console.log(statusFavorite);
-
             if (
                 String(oldTitle) !== title ||
                 String(oldText) !== text ||
@@ -105,6 +102,26 @@ export default class DataHandler {
         newObj.date = DataHandler.setDate();
 
         return newObj;
+    }
+
+    static changeStatusFavorite(currentId: string) {
+        const currentNote = DataHandler.findNote(currentId)?.necessaryNote;
+        checkTrust(currentNote);
+        const newVersionNoteObj = Object.assign({}, currentNote);
+
+        newVersionNoteObj.changed = true;
+
+        if (newVersionNoteObj.isFavorite) {
+            newVersionNoteObj.isFavorite = false;
+        } else {
+            newVersionNoteObj.isFavorite = true;
+        }
+
+        newVersionNoteObj.id = DataHandler.setId(newVersionNoteObj.isFavorite);
+        newVersionNoteObj.date = DataHandler.setDate();
+
+        this.pushNewNoteObj(newVersionNoteObj);
+        DataHandler.removeNote(currentId);
     }
 
     private static pushNewNoteObj(obj: DataNote) {
@@ -190,8 +207,8 @@ export default class DataHandler {
         return DataHandler.allNotes;
     }
 
-    // 1. смена избранная\не избранная при редактировании (можно сначала реализовать эту функцию и потом вшить дальше в режим редактирования)
-    // 2. Убирать заглушки если в объекте пустота
+    // 1. Убирать заглушки если в объекте пустота
+    // 2. Изменение избранности через список
 
     static submitter(data: FormData) {
         const preparetedData = DataHandler.dataNoteCreator(data);
