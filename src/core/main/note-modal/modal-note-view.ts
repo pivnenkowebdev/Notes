@@ -182,7 +182,8 @@ const buttonEditParams: ElementParams = {
         "data-controll": "edit",
     },
 };
-
+// подсвечивать звезду в модалке
+// плейсхолдеры не должны быть текстом
 export default class ModalNoteView extends View {
     fade: HTMLElement;
     form: HTMLElement;
@@ -213,11 +214,15 @@ export default class ModalNoteView extends View {
 
         checkTrust(inputTitleParams.attrParams);
 
-        if (noteObj) {
+        if (noteObj && noteObj.title !== "No title") {
             inputTitleParams.attrParams.value = noteObj.title;
-            textareaParams.textContent = noteObj.text;
         } else {
             inputTitleParams.attrParams.value = "";
+        }
+
+        if (noteObj && noteObj.text !== "Empty") {
+            textareaParams.textContent = noteObj.text;
+        } else {
             textareaParams.textContent = "";
         }
 

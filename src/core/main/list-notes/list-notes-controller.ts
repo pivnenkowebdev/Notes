@@ -36,8 +36,6 @@ export default class ListNotesController {
 
         if (!isModal) {
             const isEditNote = status;
-            // при попытке создать новое окно после редактирования, старая инфа рендерится в модалке
-            // подсвечивать звезду в модалке
             new ModalNoteController(isEditNote, currentId);
         }
     }
