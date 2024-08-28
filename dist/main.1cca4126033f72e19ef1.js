@@ -9876,30 +9876,24 @@ var DataHandler = /** @class */ (function () {
         newObj.date = DataHandler.setDate();
         return newObj;
     };
-    // тут надо менять id, дату, статус
     DataHandler.changeStatusFavorite = function (currentId) {
         var _a;
         var currentNote = (_a = DataHandler.findNote(currentId)) === null || _a === void 0 ? void 0 : _a.necessaryNote;
         checkTrust(currentNote);
-        currentNote.changed = true;
-        if (currentNote.isFavorite) {
-            currentNote.isFavorite = false;
+        var newVersionNoteObj = Object.assign({}, currentNote);
+        newVersionNoteObj.changed = true;
+        if (newVersionNoteObj.isFavorite) {
+            newVersionNoteObj.isFavorite = false;
         }
         else {
-            currentNote.isFavorite = true;
+            newVersionNoteObj.isFavorite = true;
         }
-        console.log(currentNote.isFavorite);
-        currentNote.id = DataHandler.setId(currentNote.isFavorite);
-        currentNote.date = DataHandler.setDate();
-        // заметка меняет статус и флаг изменения, но остается в старом массиве (меняется оригинальный объект)
-        // нужно посмотреть как работает findNote и removeNote (конфликт)
-        // нужно как то декомпозировать креатор и использовать эти методы в изменении (или сам креатор)
-        // 
-        this.pushNewNoteObj(currentNote);
+        newVersionNoteObj.id = DataHandler.setId(newVersionNoteObj.isFavorite);
+        newVersionNoteObj.date = DataHandler.setDate();
+        this.pushNewNoteObj(newVersionNoteObj);
         DataHandler.removeNote(currentId);
     };
     DataHandler.pushNewNoteObj = function (obj) {
-        console.log(obj);
         if (obj.isFavorite) {
             DataHandler.allNotes.favoriteNotes.push(obj);
         }
@@ -9966,8 +9960,6 @@ var DataHandler = /** @class */ (function () {
         }
         return DataHandler.allNotes;
     };
-    // 1. Убирать заглушки если в объекте пустота
-    // 2. Изменение избранности через список
     DataHandler.submitter = function (data) {
         var preparetedData = DataHandler.dataNoteCreator(data);
         DataHandler.pushNewNoteObj(preparetedData);
@@ -9977,6 +9969,9 @@ var DataHandler = /** @class */ (function () {
     return DataHandler;
 }());
 /* harmony default export */ const data_handler = (DataHandler);
+// 1. После изменения заметки через модалку при вызове окна для создания новой заметки сохраняется заполенение инпутов старой инфой
+// 2. Плейсхолдеры не должны превращаться в текст при изменении заметки
+// 3. Фильтрация 
 
 ;// CONCATENATED MODULE: ./src/core/main/list-notes/list-notes-view.ts
 var list_notes_view_extends = (undefined && undefined.__extends) || (function () {

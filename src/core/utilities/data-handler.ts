@@ -207,9 +207,6 @@ export default class DataHandler {
         return DataHandler.allNotes;
     }
 
-    // 1. Убирать заглушки если в объекте пустота
-    // 2. Изменение избранности через список
-
     static submitter(data: FormData) {
         const preparetedData = DataHandler.dataNoteCreator(data);
         DataHandler.pushNewNoteObj(preparetedData);
@@ -219,3 +216,7 @@ export default class DataHandler {
         );
     }
 }
+
+// 1. После изменения заметки через модалку при вызове окна для создания новой заметки сохраняется заполенение инпутов старой инфой
+// 2. Плейсхолдеры не должны превращаться в текст при изменении заметки
+// 3. Фильтрация

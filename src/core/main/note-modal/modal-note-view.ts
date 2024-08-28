@@ -211,10 +211,14 @@ export default class ModalNoteView extends View {
             id: "form",
         };
 
+        checkTrust(inputTitleParams.attrParams);
+
         if (noteObj) {
-            checkTrust(inputTitleParams.attrParams);
             inputTitleParams.attrParams.value = noteObj.title;
             textareaParams.textContent = noteObj.text;
+        } else {
+            inputTitleParams.attrParams.value = "";
+            textareaParams.textContent = "";
         }
 
         super(formParams);
