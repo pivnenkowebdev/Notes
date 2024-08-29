@@ -5,11 +5,13 @@ const linksParams: ElementParams[] = [
     {
         tagName: "a",
         classList: [
-            "bg-cyan-600",
+            "border-2",
+            "border-cyan-600",
+            "bg-gray-200",
             "rounded-lg",
             "py-1",
             "px-3",
-            "text-gray-50",
+            "text-cyan-600",
             "text-xl",
             "capitalize",
             "cursor-pointer",
@@ -26,11 +28,13 @@ const linksParams: ElementParams[] = [
     {
         tagName: "a",
         classList: [
-            "bg-cyan-600",
+            "border-2",
+            "border-cyan-600",
+            "bg-gray-200",
             "rounded-lg",
             "py-1",
             "px-3",
-            "text-gray-50",
+            "text-cyan-600",
             "text-xl",
             "capitalize",
             "cursor-pointer",

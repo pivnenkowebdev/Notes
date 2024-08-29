@@ -10043,7 +10043,7 @@ var titleParams = {
     ],
     attrParams: {
         "data-note-title": "",
-    }
+    },
 };
 var dateParams = {
     tagName: "p",
@@ -10099,14 +10099,14 @@ var list_notes_view_fakeCheckboxParams = {
 };
 var list_notes_view_buttonEditParams = {
     tagName: "button",
-    classList: ["w-6", "h-6", "bg-[url('../../img/edit-btn.svg')]", "bg-cover"],
+    classList: ["w-6", "h-6", "bg-[url('../../img/edit-btn.svg')]", "dark:bg-[url('../../img/edit-btn-light.svg')]", "bg-cover"],
     attrParams: {
         "data-controll": "edit",
     },
 };
 var buttonDeleteParams = {
     tagName: "button",
-    classList: ["w-6", "h-6", "bg-[url('../../img/trash-btn.svg')]"],
+    classList: ["w-6", "h-6", "bg-[url('../../img/trash-btn.svg')]", "dark:bg-[url('../../img/trash-btn-light.svg')]", "bg-cover"],
     attrParams: {
         "data-action": "remove",
     },
@@ -10122,7 +10122,7 @@ var textPreviewParams = {
     ],
     attrParams: {
         "data-note-text": "",
-    }
+    },
 };
 var ListNotesView = /** @class */ (function (_super) {
     list_notes_view_extends(ListNotesView, _super);
@@ -10446,6 +10446,7 @@ var search_extends = (undefined && undefined.__extends) || (function () {
     };
 })();
 
+
 var Filter = /** @class */ (function (_super) {
     search_extends(Filter, _super);
     function Filter() {
@@ -10477,11 +10478,26 @@ var Filter = /** @class */ (function (_super) {
     }
     Filter.prototype.configureView = function () { };
     Filter.prototype.filterCurrentNotes = function () {
-        var listNotes = document.querySelector("#list");
-        var notes = listNotes === null || listNotes === void 0 ? void 0 : listNotes.querySelectorAll("[data-note]");
-        if (this.component instanceof HTMLInputElement) {
-            var inputValueLowerCase = this.component.value.toLowerCase;
-            console.log(inputValueLowerCase);
+        var component = this.getComponent();
+        if (component instanceof HTMLInputElement) {
+            var inputValueLowerCase_1 = component.value.toLowerCase();
+            var notes = document.querySelectorAll("[data-note]");
+            notes.forEach(function (note) {
+                var htmlNote = note;
+                var noteTitle = note.querySelector("[data-note-title]");
+                var noteText = note.querySelector("[data-note-text]");
+                checkTrust(noteTitle);
+                checkTrust(noteText);
+                var valueTitleLowerCase = noteTitle.innerHTML.toLowerCase();
+                var valueTextLowerCase = noteText.innerHTML.toLowerCase();
+                if (valueTextLowerCase.indexOf(inputValueLowerCase_1) != -1 ||
+                    valueTitleLowerCase.indexOf(inputValueLowerCase_1) != -1) {
+                    htmlNote.style.display = "block";
+                }
+                else {
+                    htmlNote.style.display = "none";
+                }
+            });
         }
     };
     return Filter;

@@ -10,20 +10,18 @@ body {
 
 :root {
     --btn-current-bg-light: #0b708a;
-    --btn-current-bg-dark: #aaafb1;
+    --btn-current-bg-dark: #045170;
 }
 
 @layer utilities {
     .active {
         @apply bg-[var(--btn-current-bg-light)];
+        color: #fff;
     }
 
     .dark .active {
         @apply bg-[var(--btn-current-bg-dark)];
-    }
-
-    .favoriteBtn::before {
-        @apply bg-[url('../../img/star-btn.svg')];
+        color: #fff;
     }
 
     input:checked + .favoriteBtn::before {

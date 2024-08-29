@@ -196,9 +196,9 @@ export default class ModalNoteView extends View {
             tagName: "form",
             classList: [
                 "max-w-[915px]",
-                "w-full",
-                "py-9",
-                "px-[36px]",
+                "w-[95%]",
+                "md:py-9",
+                "md:px-[36px]",
                 "bg-white",
                 "rounded-md",
                 "shadow-lg",
@@ -208,6 +208,7 @@ export default class ModalNoteView extends View {
                 "translate-x-1/2",
                 "translate-y-1/2",
                 "z-2",
+                "p-2",
             ],
             id: "form",
         };

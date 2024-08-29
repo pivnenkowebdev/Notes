@@ -38,6 +38,7 @@ const titleParams: ElementParams = {
         "text-2xl",
         "font-medium",
         "text-cyan-600",
+        "dark:text-cyan-400",
         "max-w-[400px]",
         "text-ellipsis",
         "overflow-hidden",
@@ -49,7 +50,7 @@ const titleParams: ElementParams = {
 
 const dateParams: ElementParams = {
     tagName: "p",
-    classList: ["text-stone-400"],
+    classList: ["text-stone-400", "dark:text-stone-200"],
 };
 
 const buttonsControlListParams: ElementParams = {
@@ -97,6 +98,8 @@ const fakeCheckboxParams = {
         "before:translate-y-[-50%]",
         "before:translate-x-[-50%]",
         "before:bg-cover",
+        "before:bg-[url('../../img/star-btn.svg')]",
+        "before:dark:bg-[url('../../img/star-btn-light.svg')]",
         "favoriteBtn",
     ],
     attrParams: {
@@ -106,7 +109,13 @@ const fakeCheckboxParams = {
 
 const buttonEditParams: ElementParams = {
     tagName: "button",
-    classList: ["w-6", "h-6", "bg-[url('../../img/edit-btn.svg')]", "bg-cover"],
+    classList: [
+        "w-6",
+        "h-6",
+        "bg-[url('../../img/edit-btn.svg')]",
+        "dark:bg-[url('../../img/edit-btn-light.svg')]",
+        "bg-cover",
+    ],
     attrParams: {
         "data-controll": "edit",
     },
@@ -114,7 +123,13 @@ const buttonEditParams: ElementParams = {
 
 const buttonDeleteParams: ElementParams = {
     tagName: "button",
-    classList: ["w-6", "h-6", "bg-[url('../../img/trash-btn.svg')]"],
+    classList: [
+        "w-6",
+        "h-6",
+        "bg-[url('../../img/trash-btn.svg')]",
+        "dark:bg-[url('../../img/trash-btn-light.svg')]",
+        "bg-cover",
+    ],
     attrParams: {
         "data-action": "remove",
     },
@@ -128,6 +143,7 @@ const textPreviewParams: ElementParams = {
         "text-base",
         "font-medium",
         "text-stone-600",
+        "dark:text-stone-200",
     ],
     attrParams: {
         "data-note-text": "",
