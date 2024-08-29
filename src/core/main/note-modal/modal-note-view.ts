@@ -85,6 +85,7 @@ const fakeCheckboxParams: ElementParams = {
         "before:translate-y-[-50%]",
         "before:translate-x-[-50%]",
         "before:bg-cover",
+        "before:bg-[url('../../img/star-btn.svg')]",
         "favoriteBtn",
     ],
     attrParams: {
