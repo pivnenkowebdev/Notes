@@ -20,6 +20,7 @@ export default class Filter extends View {
             ],
             attrParams: {
                 type: "search",
+                placeholder: "Filter...",
             },
             id: "inputSearch",
             eventType: "input",
