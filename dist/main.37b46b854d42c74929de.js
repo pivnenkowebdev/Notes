@@ -9441,11 +9441,13 @@ var linksParams = [
     {
         tagName: "a",
         classList: [
-            "bg-cyan-600",
+            "border-2",
+            "border-cyan-600",
+            "bg-gray-200",
             "rounded-lg",
             "py-1",
             "px-3",
-            "text-gray-50",
+            "text-cyan-600",
             "text-xl",
             "capitalize",
             "cursor-pointer",
@@ -9462,11 +9464,13 @@ var linksParams = [
     {
         tagName: "a",
         classList: [
-            "bg-cyan-600",
+            "border-2",
+            "border-cyan-600",
+            "bg-gray-200",
             "rounded-lg",
             "py-1",
             "px-3",
-            "text-gray-50",
+            "text-cyan-600",
             "text-xl",
             "capitalize",
             "cursor-pointer",
@@ -9719,9 +9723,9 @@ var ModalNoteView = /** @class */ (function (_super) {
             tagName: "form",
             classList: [
                 "max-w-[915px]",
-                "w-full",
-                "py-9",
-                "px-[36px]",
+                "w-[95%]",
+                "md:py-9",
+                "md:px-[36px]",
                 "bg-white",
                 "rounded-md",
                 "shadow-lg",
@@ -9731,6 +9735,7 @@ var ModalNoteView = /** @class */ (function (_super) {
                 "translate-x-1/2",
                 "translate-y-1/2",
                 "z-2",
+                "p-2",
             ],
             id: "form",
         };
@@ -10037,6 +10042,7 @@ var titleParams = {
         "text-2xl",
         "font-medium",
         "text-cyan-600",
+        "dark:text-cyan-400",
         "max-w-[400px]",
         "text-ellipsis",
         "overflow-hidden",
@@ -10047,7 +10053,7 @@ var titleParams = {
 };
 var dateParams = {
     tagName: "p",
-    classList: ["text-stone-400"],
+    classList: ["text-stone-400", "dark:text-stone-200"],
 };
 var buttonsControlListParams = {
     tagName: "div",
@@ -10091,6 +10097,8 @@ var list_notes_view_fakeCheckboxParams = {
         "before:translate-y-[-50%]",
         "before:translate-x-[-50%]",
         "before:bg-cover",
+        "before:bg-[url('../../img/star-btn.svg')]",
+        "before:dark:bg-[url('../../img/star-btn-light.svg')]",
         "favoriteBtn",
     ],
     attrParams: {
@@ -10099,14 +10107,26 @@ var list_notes_view_fakeCheckboxParams = {
 };
 var list_notes_view_buttonEditParams = {
     tagName: "button",
-    classList: ["w-6", "h-6", "bg-[url('../../img/edit-btn.svg')]", "dark:bg-[url('../../img/edit-btn-light.svg')]", "bg-cover"],
+    classList: [
+        "w-6",
+        "h-6",
+        "bg-[url('../../img/edit-btn.svg')]",
+        "dark:bg-[url('../../img/edit-btn-light.svg')]",
+        "bg-cover",
+    ],
     attrParams: {
         "data-controll": "edit",
     },
 };
 var buttonDeleteParams = {
     tagName: "button",
-    classList: ["w-6", "h-6", "bg-[url('../../img/trash-btn.svg')]", "dark:bg-[url('../../img/trash-btn-light.svg')]", "bg-cover"],
+    classList: [
+        "w-6",
+        "h-6",
+        "bg-[url('../../img/trash-btn.svg')]",
+        "dark:bg-[url('../../img/trash-btn-light.svg')]",
+        "bg-cover",
+    ],
     attrParams: {
         "data-action": "remove",
     },
@@ -10119,6 +10139,7 @@ var textPreviewParams = {
         "text-base",
         "font-medium",
         "text-stone-600",
+        "dark:text-stone-200",
     ],
     attrParams: {
         "data-note-text": "",
@@ -10467,6 +10488,7 @@ var Filter = /** @class */ (function (_super) {
             ],
             attrParams: {
                 type: "search",
+                placeholder: "Filter...",
             },
             id: "inputSearch",
             eventType: "input",
