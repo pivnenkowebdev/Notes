@@ -1,5 +1,6 @@
 import { ElementParams } from "../../utilities/types";
 import View from "../../utilities/view";
+import { checkTrust } from "../../utilities/helper";
 
 export default class Filter extends View {
     constructor() {
@@ -18,7 +19,7 @@ export default class Filter extends View {
                 "outline-none",
             ],
             attrParams: {
-                input: "search",
+                type: "search",
             },
             id: "inputSearch",
             eventType: "input",
@@ -29,7 +30,34 @@ export default class Filter extends View {
         this.configureView();
     }
 
-    configureView() {}
+    private configureView() {}
 
-    filterCurrentNotes() {}
+    private filterCurrentNotes() {
+        const component = this.getComponent();
+
+        if (component instanceof HTMLInputElement) {
+            const inputValueLowerCase = component.value.toLowerCase();
+            const notes = document.querySelectorAll("[data-note]");
+
+            notes.forEach((note) => {
+                const htmlNote = note as HTMLElement;
+
+                const noteTitle = note.querySelector("[data-note-title]");
+                const noteText = note.querySelector("[data-note-text]");
+                checkTrust(noteTitle);
+                checkTrust(noteText);
+                const valueTitleLowerCase = noteTitle.innerHTML.toLowerCase();
+                const valueTextLowerCase = noteText.innerHTML.toLowerCase();
+
+                if (
+                    valueTextLowerCase.indexOf(inputValueLowerCase) != -1 ||
+                    valueTitleLowerCase.indexOf(inputValueLowerCase) != -1
+                ) {
+                    htmlNote.style.display = "block";
+                } else {
+                    htmlNote.style.display = "none";
+                }
+            });
+        }
+    }
 }

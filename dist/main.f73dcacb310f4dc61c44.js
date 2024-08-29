@@ -9208,7 +9208,7 @@ var Creator = /** @class */ (function (_super) {
     };
     Creator.prototype.setClassName = function (classList) {
         var _a;
-        if (classList.length > 0) {
+        if (classList && classList.length > 0) {
             (_a = this.element.classList).add.apply(_a, classList);
         }
     };
@@ -10041,6 +10041,9 @@ var titleParams = {
         "text-ellipsis",
         "overflow-hidden",
     ],
+    attrParams: {
+        "data-note-title": "",
+    }
 };
 var dateParams = {
     tagName: "p",
@@ -10117,6 +10120,9 @@ var textPreviewParams = {
         "font-medium",
         "text-stone-600",
     ],
+    attrParams: {
+        "data-note-text": "",
+    }
 };
 var ListNotesView = /** @class */ (function (_super) {
     list_notes_view_extends(ListNotesView, _super);
@@ -10423,6 +10429,65 @@ var NewNoteBtn = /** @class */ (function (_super) {
 }(view));
 /* harmony default export */ const new_note_btn = (NewNoteBtn);
 
+;// CONCATENATED MODULE: ./src/core/main/search/search.ts
+var search_extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+var Filter = /** @class */ (function (_super) {
+    search_extends(Filter, _super);
+    function Filter() {
+        var _this = this;
+        var inputSearchParams = {
+            tagName: "input",
+            classList: [
+                "max-w-md",
+                "w-full",
+                "py-1",
+                "px-2",
+                "rounded-md",
+                "border-2",
+                "border-cyan-600",
+                "dark:bg-gray-50",
+                "hover:opacity-80",
+                "outline-none",
+            ],
+            attrParams: {
+                type: "search",
+            },
+            id: "inputSearch",
+            eventType: "input",
+            callback: function () { return _this.filterCurrentNotes(); },
+        };
+        _this = _super.call(this, inputSearchParams) || this;
+        _this.configureView();
+        return _this;
+    }
+    Filter.prototype.configureView = function () { };
+    Filter.prototype.filterCurrentNotes = function () {
+        var listNotes = document.querySelector("#list");
+        var notes = listNotes === null || listNotes === void 0 ? void 0 : listNotes.querySelectorAll("[data-note]");
+        if (this.component instanceof HTMLInputElement) {
+            var inputValueLowerCase = this.component.value.toLowerCase;
+            console.log(inputValueLowerCase);
+        }
+    };
+    return Filter;
+}(view));
+/* harmony default export */ const search = (Filter);
+
 ;// CONCATENATED MODULE: ./src/core/main/controls/control-elements-view.ts
 var control_elements_view_extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -10442,6 +10507,7 @@ var control_elements_view_extends = (undefined && undefined.__extends) || (funct
 
 
 
+
 var sectionControllParams = {
     tagName: "section",
     classList: ["pt-8", "pb-12", "flex", "flex-col", "gap-4", "items-center"],
@@ -10452,7 +10518,6 @@ var ControlElementsView = /** @class */ (function (_super) {
         var _this = this;
         var mainParams = {
             tagName: "section",
-            classList: ["container"],
         };
         _this = _super.call(this, mainParams) || this;
         _this.configureView();
@@ -10461,6 +10526,8 @@ var ControlElementsView = /** @class */ (function (_super) {
     ControlElementsView.prototype.configureView = function () {
         var sectionControll = this.createElement(sectionControllParams);
         this.addInnerElement(this.component.getHtmlElement(), sectionControll);
+        var inputSearch = new search();
+        this.addInnerElement(sectionControll, inputSearch);
         var nav = new nav_view();
         this.addInnerElement(sectionControll, nav);
         var newNoteBtn = new new_note_btn();

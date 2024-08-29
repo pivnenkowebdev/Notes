@@ -13,7 +13,6 @@ export default class ControlElementsView extends View {
     constructor() {
         const mainParams: ElementParams = {
             tagName: "section",
-            classList: ["container"],
         };
 
         super(mainParams);

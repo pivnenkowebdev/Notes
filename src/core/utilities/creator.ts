@@ -40,8 +40,8 @@ export default class Creator extends BaseClassCreator {
         return this.element;
     }
 
-    protected setClassName(classList: string[]): void {
-        if (classList.length > 0) {
+    protected setClassName(classList?: string[]): void {
+        if (classList && classList.length > 0) {
             this.element.classList.add(...classList);
         }
     }

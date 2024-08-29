@@ -4,7 +4,7 @@ export interface AttributeParams {
 
 export interface ElementParams {
     tagName: string;
-    classList: string[];
+    classList?: string[];
     textContent?: string;
     id?: string | number;
     href?: string;

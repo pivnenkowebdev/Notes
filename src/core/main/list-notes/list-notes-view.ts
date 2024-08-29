@@ -42,6 +42,9 @@ const titleParams: ElementParams = {
         "text-ellipsis",
         "overflow-hidden",
     ],
+    attrParams: {
+        "data-note-title": "",
+    },
 };
 
 const dateParams: ElementParams = {
@@ -126,6 +129,9 @@ const textPreviewParams: ElementParams = {
         "font-medium",
         "text-stone-600",
     ],
+    attrParams: {
+        "data-note-text": "",
+    },
 };
 
 export default class ListNotesView extends View {
