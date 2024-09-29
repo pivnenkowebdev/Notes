@@ -216,5 +216,3 @@ export default class DataHandler {
         );
     }
 }
-
-// 1. Фильтрация

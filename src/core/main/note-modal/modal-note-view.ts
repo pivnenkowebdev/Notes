@@ -183,7 +183,6 @@ const buttonEditParams: ElementParams = {
         "data-controll": "edit",
     },
 };
-// подсвечивать звезду в модалке
 
 export default class ModalNoteView extends View {
     fade: HTMLElement;

@@ -26,3 +26,8 @@ export default class App {
         );
     }
 }
+
+const testFunc = () => {
+    console.log(1);
+};
+testFunc();

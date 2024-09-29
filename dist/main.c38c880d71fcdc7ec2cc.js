@@ -9715,7 +9715,6 @@ var buttonEditParams = {
         "data-controll": "edit",
     },
 };
-// подсвечивать звезду в модалке
 var ModalNoteView = /** @class */ (function (_super) {
     modal_note_view_extends(ModalNoteView, _super);
     function ModalNoteView(status, noteObj) {
@@ -9991,7 +9990,6 @@ var DataHandler = /** @class */ (function () {
     return DataHandler;
 }());
 /* harmony default export */ const data_handler = (DataHandler);
-// 1. Фильтрация
 
 ;// CONCATENATED MODULE: ./src/core/main/list-notes/list-notes-view.ts
 var list_notes_view_extends = (undefined && undefined.__extends) || (function () {
