@@ -27,7 +27,6 @@ export default class App {
     }
 }
 
-const testFunc = () => {
-    console.log(1);
-};
-testFunc();
+// const testFunc = () => {
+//     console.log(1);
+// };
