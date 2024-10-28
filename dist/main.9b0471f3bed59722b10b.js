@@ -10476,7 +10476,7 @@ var App = /** @class */ (function () {
 // Imports
 var ___HTML_LOADER_IMPORT_0___ = (/* unused pure expression or super */ null && (/* unused asset import */ undefined));
 // Module
-var code = (/* unused pure expression or super */ null && (`<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width,initial-scale=1"> <title></title> <link rel="shortcut icon" href="${___HTML_LOADER_IMPORT_0___}" type="image/x-icon"> </head> <body> <h1>Helloo!</h1> </body> </html> `));
+var code = (/* unused pure expression or super */ null && (`<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width,initial-scale=1"> <title></title> <link rel="shortcut icon" href="${___HTML_LOADER_IMPORT_0___}" type="image/x-icon"> </head> <body></body> </html> `));
 // Exports
 /* harmony default export */ const src = ((/* unused pure expression or super */ null && (code)));
 ;// ./src/index.ts
